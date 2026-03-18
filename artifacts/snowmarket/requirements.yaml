@@ -1,0 +1,16 @@
+packages:
+  "framer-motion": "Smooth page transitions and scroll-triggered animations for a premium feel"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility function to efficiently merge Tailwind CSS classes"
+
+images:
+  - path: "artifacts/snowmarket/public/images/hero-bg.png"
+    description: "Stunning cinematic photography of a snowy mountain peak at sunrise, soft warm light hitting the snow, extremely high quality, 8k, wide shot, deep icy blues and bright white snow"
+    aspect_ratio: "16:9"
+  - path: "artifacts/snowmarket/public/images/logo.png"
+    description: "Minimalist geometric logo mark of a mountain peak and a snowflake combined, sleek, premium, deep blue color on a transparent background"
+    aspect_ratio: "1:1"
+
+notes:
+  - Using generated API client from @workspace/api-client-react
+  - Inferring fallback behavior if API returns no data
