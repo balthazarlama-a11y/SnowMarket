@@ -8,6 +8,9 @@ import NotFound from "@/pages/not-found";
 import { Home } from "./pages/Home";
 import { Apartments } from "./pages/Apartments";
 import { Equipment } from "./pages/Equipment";
+import { AlpineLodgePage } from "./pages/AlpineLodgePage";
+import { MidnightProPage } from "./pages/MidnightProPage";
+import { PowderDayPage } from "./pages/PowderDayPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +27,9 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/apartments" component={Apartments} />
       <Route path="/equipment" component={Equipment} />
+      <Route path="/theme/alpine-lodge" component={AlpineLodgePage} />
+      <Route path="/theme/midnight-pro" component={MidnightProPage} />
+      <Route path="/theme/powder-day" component={PowderDayPage} />
       {/* Dynamic route placeholders - these can be implemented later */}
       <Route path="/apartments/:id">
         {() => <div className="p-20 text-center text-2xl font-bold">Detalle de Alojamiento (Próximamente)</div>}
