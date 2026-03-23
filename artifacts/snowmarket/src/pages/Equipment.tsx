@@ -36,15 +36,15 @@ export function Equipment() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f8f5ef] flex flex-col">
+    <div className="min-h-screen bg-[#f4f8fc] flex flex-col">
       <Navbar />
 
       <main className="flex-1 pt-36 pb-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           {/* Header */}
-          <div className="mb-10 border-b border-[#e8dfce] pb-8">
-            <h1 className="font-display text-5xl text-[#1a3d2b] mb-3">Equipamiento Esencial</h1>
-            <p className="text-[#5a5a5a] text-lg font-light">
+          <div className="mb-10 border-b border-[#d8e8f4] pb-8">
+            <h1 className="font-display text-5xl text-[#0d2137] mb-3">Equipamiento Esencial</h1>
+            <p className="text-[#3f5d75] text-lg font-light">
               Compra y vende con nuestra Bodega Verificada.
             </p>
           </div>
@@ -52,18 +52,18 @@ export function Equipment() {
           {/* Search */}
           <div className="mb-8">
             <div className="relative max-w-md">
-              <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#8a8a8a]" />
+              <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#6e8fa6]" />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscar por nombre, marca o categoría..."
-                className="w-full pl-10 pr-10 py-3 border border-[#e8dfce] bg-white focus:outline-none focus:border-[#c9882a] transition-colors text-sm text-[#2c2c2c] placeholder:text-[#a0a0a0]"
+                className="w-full pl-10 pr-10 py-3 border border-[#d8e8f4] bg-white focus:outline-none focus:border-[#3b9fd6] transition-colors text-sm text-[#0d2137] placeholder:text-[#89a8bc]"
               />
               {query && (
                 <button
                   onClick={() => setQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a8a8a] hover:text-[#2c2c2c] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6e8fa6] hover:text-[#0d2137] transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -79,8 +79,8 @@ export function Equipment() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`shrink-0 px-5 py-2 text-sm tracking-wide uppercase transition-colors border ${
                   selectedCategory === cat
-                    ? "bg-[#1a3d2b] text-[#f8f5ef] border-[#1a3d2b]"
-                    : "bg-white text-[#5a5a5a] border-[#e8dfce] hover:border-[#1a3d2b] hover:text-[#1a3d2b]"
+                    ? "bg-[#0d2137] text-[#f4f8fc] border-[#0d2137]"
+                    : "bg-white text-[#3f5d75] border-[#d8e8f4] hover:border-[#0d2137] hover:text-[#0d2137]"
                 }`}
               >
                 {cat}
@@ -90,7 +90,7 @@ export function Equipment() {
 
           {/* Results count */}
           {!isLoading && all.length > 0 && (
-            <p className="text-sm text-[#8a8a8a] mb-8 uppercase tracking-widest">
+            <p className="text-sm text-[#6e8fa6] mb-8 uppercase tracking-widest">
               {filtered.length} {filtered.length === 1 ? "artículo" : "artículos"} encontrados
             </p>
           )}
@@ -100,22 +100,22 @@ export function Equipment() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="aspect-square bg-[#e8dfce] rounded-xl mb-4" />
-                  <div className="h-3 bg-[#e8dfce] rounded w-1/4 mb-3" />
-                  <div className="h-5 bg-[#e8dfce] rounded w-3/4 mb-2" />
-                  <div className="h-3 bg-[#e8dfce] rounded w-1/2" />
+                  <div className="aspect-square bg-[#d8e8f4] rounded-xl mb-4" />
+                  <div className="h-3 bg-[#d8e8f4] rounded w-1/4 mb-3" />
+                  <div className="h-5 bg-[#d8e8f4] rounded w-3/4 mb-2" />
+                  <div className="h-3 bg-[#d8e8f4] rounded w-1/2" />
                 </div>
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-24 border border-[#e8dfce] bg-white rounded-xl">
-              <h3 className="font-display text-2xl text-[#1a3d2b] mb-2">Sin resultados</h3>
-              <p className="text-[#5a5a5a] font-light mb-6">
+            <div className="text-center py-24 border border-[#d8e8f4] bg-white rounded-xl">
+              <h3 className="font-display text-2xl text-[#0d2137] mb-2">Sin resultados</h3>
+              <p className="text-[#3f5d75] font-light mb-6">
                 No encontramos equipos que coincidan con tu búsqueda.
               </p>
               <button
                 onClick={() => { setQuery(""); setSelectedCategory("Todos"); }}
-                className="px-8 py-3 border border-[#1a3d2b] text-[#1a3d2b] uppercase tracking-widest text-sm hover:bg-[#1a3d2b] hover:text-[#f8f5ef] transition-colors"
+                className="px-8 py-3 border border-[#0d2137] text-[#0d2137] uppercase tracking-widest text-sm hover:bg-[#0d2137] hover:text-[#f4f8fc] transition-colors"
               >
                 Limpiar filtros
               </button>

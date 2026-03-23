@@ -36,7 +36,7 @@ export function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f5ef] text-[#2c2c2c]">
+    <div className="min-h-screen bg-[#f4f8fc] text-[#0d2137]">
       <Navbar />
 
       {/* Hero */}
@@ -46,34 +46,52 @@ export function Home() {
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
             alt="Montaña nevada"
             className="w-full h-full object-cover"
-            style={{ filter: "sepia(30%) saturate(70%) brightness(0.9)" }}
+            style={{ filter: "saturate(60%) brightness(0.82) hue-rotate(200deg)" }}
             onError={(e) => {
               (e.target as HTMLImageElement).src =
-                "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1600";
+                "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1600&q=80";
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1a3d2b]/80 via-[#2c2a20]/60 to-[#f8f5ef]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0d2137]/75 via-[#081828]/55 to-[#f4f8fc]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,159,214,0.12)_0%,transparent_60%)]" />
+        </div>
+
+        {/* Snowflake decorations */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          {[
+            { top: "10%", left: "8%", size: 24, opacity: 0.15 },
+            { top: "22%", left: "88%", size: 18, opacity: 0.1 },
+            { top: "65%", left: "5%", size: 14, opacity: 0.08 },
+            { top: "35%", left: "94%", size: 28, opacity: 0.12 },
+            { top: "80%", left: "80%", size: 16, opacity: 0.07 },
+          ].map((sf, i) => (
+            <svg key={i} style={{ position: "absolute", top: sf.top, left: sf.left, width: sf.size, height: sf.size, opacity: sf.opacity }} viewBox="0 0 24 24" fill="white">
+              <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M12 6l-2-2M12 6l2-2M12 18l-2 2M12 18l2 2M6 12l-2-2M6 12l-2 2M18 12l2-2M18 12l2 2" stroke="white" strokeWidth="1" strokeLinecap="round"/>
+            </svg>
+          ))}
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12 text-center w-full mt-10">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-[#f8f5ef] mb-6 leading-[1.1] drop-shadow-lg">
-            La montaña,{" "}
+          <p className="text-xs uppercase tracking-[0.35em] text-[#d8e8f4]/70 mb-6 font-light">Chile · Temporada 2025</p>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.1] drop-shadow-2xl">
+            Nieve pura,{" "}
             <br className="hidden md:block" />
-            <span className="italic text-[#c9882a]">reinventada.</span>
+            <span className="italic text-[#7ac8f0]">experiencia única.</span>
           </h1>
-          <p className="text-lg md:text-xl text-[#e8dfce] max-w-2xl mx-auto mb-16 font-light tracking-wide drop-shadow-md">
-            Una colección curada de refugios alpinos y el equipamiento esencial para tu próxima expedición.
+          <p className="text-lg md:text-xl text-[#cde6f7] max-w-2xl mx-auto mb-16 font-light tracking-wide drop-shadow-md">
+            El primer marketplace de la nieve en Chile. Refugios certificados y equipamiento de temporada, todo en un solo lugar.
           </p>
 
           {/* Search Widget */}
-          <div className="max-w-4xl mx-auto bg-[#f8f5ef] rounded-xl shadow-[0_20px_40px_rgba(26,61,43,0.15)] p-3 md:p-4 border border-[#e8dfce]">
+          <div className="max-w-4xl mx-auto bg-white/96 backdrop-blur-sm rounded-xl shadow-[0_20px_50px_rgba(13,33,55,0.25)] p-3 md:p-4 border border-[#d8e8f4]">
             <div className="flex gap-4 mb-4 px-4 pt-2 justify-center md:justify-start">
               <button
                 onClick={() => setSearchTab("apartments")}
                 className={`px-2 py-1 text-sm tracking-widest uppercase transition-all duration-300 border-b-2 ${
                   searchTab === "apartments"
-                    ? "border-[#c9882a] text-[#1a3d2b] font-bold"
-                    : "border-transparent text-[#8a8a8a] hover:text-[#1a3d2b]"
+                    ? "border-[#3b9fd6] text-[#0d2137] font-bold"
+                    : "border-transparent text-[#6e8fa6] hover:text-[#0d2137]"
                 }`}
               >
                 Refugios
@@ -82,8 +100,8 @@ export function Home() {
                 onClick={() => setSearchTab("equipment")}
                 className={`px-2 py-1 text-sm tracking-widest uppercase transition-all duration-300 border-b-2 ${
                   searchTab === "equipment"
-                    ? "border-[#c9882a] text-[#1a3d2b] font-bold"
-                    : "border-transparent text-[#8a8a8a] hover:text-[#1a3d2b]"
+                    ? "border-[#3b9fd6] text-[#0d2137] font-bold"
+                    : "border-transparent text-[#6e8fa6] hover:text-[#0d2137]"
                 }`}
               >
                 Equipamiento
@@ -92,23 +110,23 @@ export function Home() {
 
             {searchTab === "apartments" ? (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <div className="flex items-center bg-white rounded p-4 border border-[#e8dfce] md:col-span-3">
-                  <MapPin className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
+                <div className="flex items-center bg-white rounded p-4 border border-[#d8e8f4] md:col-span-3">
+                  <MapPin className="w-5 h-5 text-[#3b9fd6] mr-3 shrink-0" />
                   <div className="text-left w-full">
-                    <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Destino o nombre</div>
+                    <div className="text-xs text-[#6e8fa6] uppercase tracking-wider mb-1">Destino o nombre</div>
                     <input
                       type="text"
                       value={apartmentSearch}
                       onChange={(e) => setApartmentSearch(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && handleSearchApartments()}
                       placeholder="Ej. Valle Nevado"
-                      className="bg-transparent border-none outline-none text-sm text-[#1a3d2b] placeholder:text-[#a0a0a0] w-full"
+                      className="bg-transparent border-none outline-none text-sm text-[#0d2137] placeholder:text-[#89a8bc] w-full"
                     />
                   </div>
                 </div>
                 <button
                   onClick={handleSearchApartments}
-                  className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded p-4 flex items-center justify-center gap-2 transition-colors"
+                  className="bg-[#0d2137] hover:bg-[#081828] text-[#f4f8fc] rounded p-4 flex items-center justify-center gap-2 transition-colors"
                 >
                   <Search className="w-4 h-4" />
                   <span className="tracking-wide text-sm">Explorar</span>
@@ -116,20 +134,20 @@ export function Home() {
               </div>
             ) : (
               <div className="flex flex-col md:flex-row gap-3">
-                <div className="flex-1 flex items-center bg-white rounded p-4 border border-[#e8dfce]">
-                  <Search className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
+                <div className="flex-1 flex items-center bg-white rounded p-4 border border-[#d8e8f4]">
+                  <Search className="w-5 h-5 text-[#3b9fd6] mr-3 shrink-0" />
                   <input
                     type="text"
                     value={equipmentSearch}
                     onChange={(e) => setEquipmentSearch(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearchEquipment()}
                     placeholder="Busca tablas, botas, antiparras..."
-                    className="bg-transparent border-none outline-none text-sm text-[#1a3d2b] placeholder:text-[#a0a0a0] w-full"
+                    className="bg-transparent border-none outline-none text-sm text-[#0d2137] placeholder:text-[#89a8bc] w-full"
                   />
                 </div>
                 <button
                   onClick={handleSearchEquipment}
-                  className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded px-10 py-4 flex items-center justify-center gap-2 transition-colors"
+                  className="bg-[#0d2137] hover:bg-[#081828] text-[#f4f8fc] rounded px-10 py-4 flex items-center justify-center gap-2 transition-colors"
                 >
                   <span className="tracking-wide text-sm">Buscar Equipo</span>
                 </button>
@@ -140,18 +158,18 @@ export function Home() {
       </section>
 
       {/* Apartments */}
-      <section className="py-24 bg-[#f8f5ef]">
+      <section className="py-24 bg-[#f4f8fc]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-[#e8dfce] pb-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-[#d8e8f4] pb-8">
             <div className="max-w-2xl">
-              <h2 className="font-display text-4xl text-[#1a3d2b] mb-4">La Colección</h2>
-              <p className="text-[#5a5a5a] text-lg leading-relaxed">
-                Refugios inspeccionados rigurosamente por nuestro equipo. Espacios que invitan al descanso después de la tormenta.
+              <h2 className="font-display text-4xl text-[#0d2137] mb-4">La Colección</h2>
+              <p className="text-[#3f5d75] text-lg leading-relaxed">
+                Propiedades a pie de pista inspeccionadas por nuestro equipo. Despierta con la nieve al otro lado de la ventana.
               </p>
             </div>
             <Link
               href="/apartments"
-              className="hidden md:flex items-center gap-2 text-[#c9882a] hover:text-[#a66e1d] transition-colors uppercase tracking-widest text-xs font-bold mt-6 md:mt-0"
+              className="hidden md:flex items-center gap-2 text-[#3b9fd6] hover:text-[#2d85b8] transition-colors uppercase tracking-widest text-xs font-bold mt-6 md:mt-0"
             >
               Ver el catálogo <ArrowRight className="w-4 h-4" />
             </Link>
@@ -165,7 +183,7 @@ export function Home() {
 
           <Link
             href="/apartments"
-            className="mt-12 flex md:hidden items-center justify-center w-full py-4 border border-[#1a3d2b] text-[#1a3d2b] uppercase tracking-widest text-sm hover:bg-[#1a3d2b] hover:text-[#f8f5ef] transition-colors"
+            className="mt-12 flex md:hidden items-center justify-center w-full py-4 border border-[#0d2137] text-[#0d2137] uppercase tracking-widest text-sm hover:bg-[#0d2137] hover:text-[#f4f8fc] transition-colors"
           >
             Ver el catálogo
           </Link>
@@ -173,11 +191,11 @@ export function Home() {
       </section>
 
       {/* Equipment */}
-      <section className="py-24 bg-white border-y border-[#e8dfce]">
+      <section className="py-24 bg-white border-y border-[#d8e8f4]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="font-display text-4xl text-[#1a3d2b] mb-4">Equipamiento Esencial</h2>
-            <p className="text-[#5a5a5a] text-lg leading-relaxed">
+            <h2 className="font-display text-4xl text-[#0d2137] mb-4">Equipamiento Esencial</h2>
+            <p className="text-[#3f5d75] text-lg leading-relaxed">
               Herramientas probadas para la montaña. Compra y venta entre entusiastas con nuestra garantía de autenticidad.
             </p>
           </div>
@@ -191,7 +209,7 @@ export function Home() {
           <div className="mt-16 text-center">
             <Link
               href="/equipment"
-              className="inline-flex items-center gap-3 text-[#1a3d2b] border-b border-[#1a3d2b] pb-1 uppercase tracking-widest text-xs font-bold hover:text-[#c9882a] hover:border-[#c9882a] transition-all"
+              className="inline-flex items-center gap-3 text-[#0d2137] border-b border-[#0d2137] pb-1 uppercase tracking-widest text-xs font-bold hover:text-[#3b9fd6] hover:border-[#3b9fd6] transition-all"
             >
               Explorar el bazar <ArrowRight className="w-4 h-4" />
             </Link>
@@ -200,48 +218,48 @@ export function Home() {
       </section>
 
       {/* Trust / Philosophy */}
-      <section className="py-32 bg-[#1a3d2b] text-[#f8f5ef] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#132c1f] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 opacity-50 pointer-events-none" />
+      <section className="py-32 bg-[#0d2137] text-[#f4f8fc] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#081828] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 opacity-50 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="font-display text-4xl md:text-6xl mb-8 leading-[1.1]">
                 Nuestra <br />
-                <i className="text-[#c9882a]">filosofía.</i>
+                <i className="text-[#3b9fd6]">filosofía.</i>
               </h2>
-              <p className="text-lg text-[#e8dfce] mb-8 font-light leading-relaxed max-w-md">
+              <p className="text-lg text-[#d8e8f4] mb-8 font-light leading-relaxed max-w-md">
                 Creemos en la elegancia de lo simple y en el valor de la confianza. Snowmarket no es solo una plataforma, es un refugio para los puristas de la montaña.
               </p>
               <Link
                 href="/publish"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-[#c9882a] text-white text-sm uppercase tracking-widest hover:bg-[#a66e1d] transition-colors"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-[#3b9fd6] text-white text-sm uppercase tracking-widest hover:bg-[#2d85b8] transition-colors"
               >
                 Publicar mi propiedad <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <div className="border-l border-[#c9882a]/30 pl-6">
-                <ShieldCheck className="w-8 h-8 text-[#c9882a] mb-4" />
+              <div className="border-l border-[#3b9fd6]/30 pl-6">
+                <ShieldCheck className="w-8 h-8 text-[#3b9fd6] mb-4" />
                 <h3 className="font-display text-xl mb-3">Rigurosa Selección</h3>
-                <p className="text-[#a0a0a0] font-light leading-relaxed text-sm">
+                <p className="text-[#89a8bc] font-light leading-relaxed text-sm">
                   Inspeccionamos físicamente las propiedades y curamos el inventario. La calidad precede a la cantidad.
                 </p>
               </div>
 
-              <div className="border-l border-[#c9882a]/30 pl-6">
-                <Users className="w-8 h-8 text-[#c9882a] mb-4" />
+              <div className="border-l border-[#3b9fd6]/30 pl-6">
+                <Users className="w-8 h-8 text-[#3b9fd6] mb-4" />
                 <h3 className="font-display text-xl mb-3">Círculo Íntimo</h3>
-                <p className="text-[#a0a0a0] font-light leading-relaxed text-sm">
+                <p className="text-[#89a8bc] font-light leading-relaxed text-sm">
                   Una comunidad de entusiastas que comparten el respeto por el entorno alpino y el equipo bien cuidado.
                 </p>
               </div>
 
-              <div className="border-l border-[#c9882a]/30 pl-6 md:col-span-2">
-                <Tag className="w-8 h-8 text-[#c9882a] mb-4" />
+              <div className="border-l border-[#3b9fd6]/30 pl-6 md:col-span-2">
+                <Tag className="w-8 h-8 text-[#3b9fd6] mb-4" />
                 <h3 className="font-display text-xl mb-3">Trato Justo</h3>
-                <p className="text-[#a0a0a0] font-light leading-relaxed text-sm max-w-md">
+                <p className="text-[#89a8bc] font-light leading-relaxed text-sm max-w-md">
                   Transparencia absoluta. Facilitamos la conexión directa, protegiendo ambas partes sin intermediarios innecesarios.
                 </p>
               </div>

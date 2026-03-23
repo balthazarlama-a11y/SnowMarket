@@ -28,18 +28,18 @@ export function Navbar() {
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 border-b ${
         transparent
           ? "bg-transparent border-transparent py-6"
-          : "bg-[#f8f5ef]/95 backdrop-blur-md border-[#e8dfce] shadow-[0_4px_20px_rgba(26,61,43,0.05)] py-4"
+          : "bg-[#f4f8fc]/95 backdrop-blur-md border-[#d8e8f4] shadow-[0_4px_20px_rgba(26,61,43,0.05)] py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded bg-[#1a3d2b] flex items-center justify-center shadow-md shadow-[#1a3d2b]/20">
-              <Package className="w-5 h-5 text-[#f8f5ef]" />
+            <div className="w-10 h-10 rounded bg-[#0d2137] flex items-center justify-center shadow-md shadow-[#0d2137]/20">
+              <Package className="w-5 h-5 text-[#f4f8fc]" />
             </div>
             <span
               className={`font-display font-bold text-2xl tracking-tight transition-colors duration-300 ${
-                transparent ? "text-[#f8f5ef]" : "text-[#1a3d2b]"
+                transparent ? "text-[#f4f8fc]" : "text-[#0d2137]"
               }`}
             >
               Snowmarket
@@ -53,10 +53,10 @@ export function Navbar() {
                 href={link.href}
                 className={`text-sm tracking-wide transition-colors duration-300 ${
                   location === link.href
-                    ? transparent ? "text-white font-semibold" : "text-[#c9882a]"
+                    ? transparent ? "text-white font-semibold" : "text-[#3b9fd6]"
                     : transparent
-                      ? "text-[#f8f5ef]/80 hover:text-white"
-                      : "text-[#5a5a5a] hover:text-[#c9882a]"
+                      ? "text-[#f4f8fc]/80 hover:text-white"
+                      : "text-[#3f5d75] hover:text-[#3b9fd6]"
                 }`}
               >
                 {link.name}
@@ -67,21 +67,21 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <button
               className={`text-sm transition-colors duration-300 ${
-                transparent ? "text-white" : "text-[#1a3d2b]"
-              } hover:text-[#c9882a]`}
+                transparent ? "text-white" : "text-[#0d2137]"
+              } hover:text-[#3b9fd6]`}
             >
               Ingresar
             </button>
             <Link
               href="/publish"
-              className="px-6 py-2.5 bg-[#1a3d2b] text-[#f8f5ef] text-sm tracking-wide shadow-lg shadow-[#1a3d2b]/20 hover:bg-[#132c1f] transition-all duration-300 border border-[#1a3d2b]"
+              className="px-6 py-2.5 bg-[#0d2137] text-[#f4f8fc] text-sm tracking-wide shadow-lg shadow-[#0d2137]/20 hover:bg-[#081828] transition-all duration-300 border border-[#0d2137]"
             >
               Publicar
             </Link>
           </div>
 
           <button
-            className={`md:hidden p-2 ${transparent ? "text-white" : "text-[#1a3d2b]"}`}
+            className={`md:hidden p-2 ${transparent ? "text-white" : "text-[#0d2137]"}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -90,15 +90,15 @@ export function Navbar() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-[#f8f5ef] border-b border-[#e8dfce] p-6 flex flex-col gap-6 shadow-2xl">
-          <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#e8dfce]/50 ${location === "/" ? "text-[#c9882a]" : "text-[#1a3d2b]"}`}>Inicio</Link>
-          <Link href="/apartments" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#e8dfce]/50 ${location === "/apartments" ? "text-[#c9882a]" : "text-[#1a3d2b]"}`}>Alojamientos</Link>
-          <Link href="/equipment" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#e8dfce]/50 ${location === "/equipment" ? "text-[#c9882a]" : "text-[#1a3d2b]"}`}>Equipamiento</Link>
+        <div className="md:hidden absolute top-full left-0 w-full bg-[#f4f8fc] border-b border-[#d8e8f4] p-6 flex flex-col gap-6 shadow-2xl">
+          <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#d8e8f4]/50 ${location === "/" ? "text-[#3b9fd6]" : "text-[#0d2137]"}`}>Inicio</Link>
+          <Link href="/apartments" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#d8e8f4]/50 ${location === "/apartments" ? "text-[#3b9fd6]" : "text-[#0d2137]"}`}>Alojamientos</Link>
+          <Link href="/equipment" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#d8e8f4]/50 ${location === "/equipment" ? "text-[#3b9fd6]" : "text-[#0d2137]"}`}>Equipamiento</Link>
           <div className="flex flex-col gap-4 mt-4">
-            <button className="px-6 py-3 w-full border border-[#1a3d2b] text-[#1a3d2b] font-display text-lg">
+            <button className="px-6 py-3 w-full border border-[#0d2137] text-[#0d2137] font-display text-lg">
               Ingresar
             </button>
-            <Link href="/publish" onClick={() => setMobileMenuOpen(false)} className="px-6 py-3 w-full bg-[#1a3d2b] text-[#f8f5ef] font-display text-lg text-center">
+            <Link href="/publish" onClick={() => setMobileMenuOpen(false)} className="px-6 py-3 w-full bg-[#0d2137] text-[#f4f8fc] font-display text-lg text-center">
               Publicar
             </Link>
           </div>
