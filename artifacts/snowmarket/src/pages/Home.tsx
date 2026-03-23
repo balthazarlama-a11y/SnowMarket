@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, MapPin, Calendar, ShieldCheck, Users, Tag, ArrowRight } from "lucide-react";
+import { Link, useLocation } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ApartmentCard } from "@/components/ApartmentCard";
@@ -8,12 +9,31 @@ import { useListApartments, useListEquipment } from "@workspace/api-client-react
 
 export function Home() {
   const [searchTab, setSearchTab] = useState<"apartments" | "equipment">("apartments");
+  const [apartmentSearch, setApartmentSearch] = useState("");
+  const [equipmentSearch, setEquipmentSearch] = useState("");
+  const [, navigate] = useLocation();
 
   const { data: apartments } = useListApartments();
   const { data: equipment } = useListEquipment();
 
-  const displayApartments = apartments?.length ? apartments : DUMMY_APARTMENTS as any[];
-  const displayEquipment = equipment?.length ? equipment : DUMMY_EQUIPMENT as any[];
+  const displayApartments = apartments?.length ? apartments : (DUMMY_APARTMENTS as any[]);
+  const displayEquipment = equipment?.length ? equipment : (DUMMY_EQUIPMENT as any[]);
+
+  function handleSearchApartments() {
+    if (apartmentSearch.trim()) {
+      navigate(`/apartments?q=${encodeURIComponent(apartmentSearch.trim())}`);
+    } else {
+      navigate("/apartments");
+    }
+  }
+
+  function handleSearchEquipment() {
+    if (equipmentSearch.trim()) {
+      navigate(`/equipment?q=${encodeURIComponent(equipmentSearch.trim())}`);
+    } else {
+      navigate("/equipment");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] text-[#2c2c2c]">
@@ -72,32 +92,24 @@ export function Home() {
 
             {searchTab === "apartments" ? (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <div className="flex items-center bg-white rounded p-4 border border-[#e8dfce]">
+                <div className="flex items-center bg-white rounded p-4 border border-[#e8dfce] md:col-span-3">
                   <MapPin className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
                   <div className="text-left w-full">
-                    <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Destino</div>
+                    <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Destino o nombre</div>
                     <input
                       type="text"
+                      value={apartmentSearch}
+                      onChange={(e) => setApartmentSearch(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSearchApartments()}
                       placeholder="Ej. Valle Nevado"
                       className="bg-transparent border-none outline-none text-sm text-[#1a3d2b] placeholder:text-[#a0a0a0] w-full"
                     />
                   </div>
                 </div>
-                <div className="flex items-center bg-white rounded p-4 border border-[#e8dfce] md:col-span-2">
-                  <Calendar className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
-                  <div className="text-left w-full flex gap-4">
-                    <div className="flex-1">
-                      <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Llegada</div>
-                      <div className="text-sm text-[#1a3d2b] opacity-60">Seleccionar</div>
-                    </div>
-                    <div className="w-px h-8 bg-[#e8dfce]" />
-                    <div className="flex-1">
-                      <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Salida</div>
-                      <div className="text-sm text-[#1a3d2b] opacity-60">Seleccionar</div>
-                    </div>
-                  </div>
-                </div>
-                <button className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded p-4 flex items-center justify-center gap-2 transition-colors">
+                <button
+                  onClick={handleSearchApartments}
+                  className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded p-4 flex items-center justify-center gap-2 transition-colors"
+                >
                   <Search className="w-4 h-4" />
                   <span className="tracking-wide text-sm">Explorar</span>
                 </button>
@@ -108,11 +120,17 @@ export function Home() {
                   <Search className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
                   <input
                     type="text"
+                    value={equipmentSearch}
+                    onChange={(e) => setEquipmentSearch(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearchEquipment()}
                     placeholder="Busca tablas, botas, antiparras..."
                     className="bg-transparent border-none outline-none text-sm text-[#1a3d2b] placeholder:text-[#a0a0a0] w-full"
                   />
                 </div>
-                <button className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded px-10 py-4 flex items-center justify-center gap-2 transition-colors">
+                <button
+                  onClick={handleSearchEquipment}
+                  className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded px-10 py-4 flex items-center justify-center gap-2 transition-colors"
+                >
                   <span className="tracking-wide text-sm">Buscar Equipo</span>
                 </button>
               </div>
@@ -131,12 +149,12 @@ export function Home() {
                 Refugios inspeccionados rigurosamente por nuestro equipo. Espacios que invitan al descanso después de la tormenta.
               </p>
             </div>
-            <a
+            <Link
               href="/apartments"
               className="hidden md:flex items-center gap-2 text-[#c9882a] hover:text-[#a66e1d] transition-colors uppercase tracking-widest text-xs font-bold mt-6 md:mt-0"
             >
               Ver el catálogo <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -145,12 +163,12 @@ export function Home() {
             ))}
           </div>
 
-          <a
+          <Link
             href="/apartments"
-            className="mt-12 flex md:hidden items-center justify-center w-full py-4 border border-[#1a3d2b] text-[#1a3d2b] uppercase tracking-widest text-sm"
+            className="mt-12 flex md:hidden items-center justify-center w-full py-4 border border-[#1a3d2b] text-[#1a3d2b] uppercase tracking-widest text-sm hover:bg-[#1a3d2b] hover:text-[#f8f5ef] transition-colors"
           >
             Ver el catálogo
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -171,12 +189,12 @@ export function Home() {
           </div>
 
           <div className="mt-16 text-center">
-            <a
+            <Link
               href="/equipment"
               className="inline-flex items-center gap-3 text-[#1a3d2b] border-b border-[#1a3d2b] pb-1 uppercase tracking-widest text-xs font-bold hover:text-[#c9882a] hover:border-[#c9882a] transition-all"
             >
               Explorar el bazar <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -195,6 +213,12 @@ export function Home() {
               <p className="text-lg text-[#e8dfce] mb-8 font-light leading-relaxed max-w-md">
                 Creemos en la elegancia de lo simple y en el valor de la confianza. Snowmarket no es solo una plataforma, es un refugio para los puristas de la montaña.
               </p>
+              <Link
+                href="/publish"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-[#c9882a] text-white text-sm uppercase tracking-widest hover:bg-[#a66e1d] transition-colors"
+              >
+                Publicar mi propiedad <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

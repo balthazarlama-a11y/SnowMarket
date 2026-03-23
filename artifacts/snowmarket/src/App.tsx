@@ -4,10 +4,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
-// Pages
 import { Home } from "./pages/Home";
 import { Apartments } from "./pages/Apartments";
 import { Equipment } from "./pages/Equipment";
+import { ApartmentDetail } from "./pages/ApartmentDetail";
+import { EquipmentDetail } from "./pages/EquipmentDetail";
+import { Publish } from "./pages/Publish";
 import { AlpineLodgePage } from "./pages/AlpineLodgePage";
 import { MidnightProPage } from "./pages/MidnightProPage";
 import { PowderDayPage } from "./pages/PowderDayPage";
@@ -26,17 +28,13 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/apartments" component={Apartments} />
+      <Route path="/apartments/:id" component={ApartmentDetail} />
       <Route path="/equipment" component={Equipment} />
+      <Route path="/equipment/:id" component={EquipmentDetail} />
+      <Route path="/publish" component={Publish} />
       <Route path="/theme/alpine-lodge" component={AlpineLodgePage} />
       <Route path="/theme/midnight-pro" component={MidnightProPage} />
       <Route path="/theme/powder-day" component={PowderDayPage} />
-      {/* Dynamic route placeholders - these can be implemented later */}
-      <Route path="/apartments/:id">
-        {() => <div className="p-20 text-center text-2xl font-bold">Detalle de Alojamiento (Próximamente)</div>}
-      </Route>
-      <Route path="/equipment/:id">
-        {() => <div className="p-20 text-center text-2xl font-bold">Detalle de Equipo (Próximamente)</div>}
-      </Route>
       <Route component={NotFound} />
     </Switch>
   );

@@ -7,6 +7,8 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const isHeroPage = location === "/";
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -16,15 +18,17 @@ export function Navbar() {
   const navLinks = [
     { name: "Alojamientos", href: "/apartments" },
     { name: "Equipamiento", href: "/equipment" },
-    { name: "Experiencias", href: "/experiences" },
+    { name: "Publicar", href: "/publish" },
   ];
+
+  const transparent = isHeroPage && !isScrolled;
 
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 border-b ${
-        isScrolled
-          ? "bg-[#f8f5ef]/95 backdrop-blur-md border-[#e8dfce] shadow-[0_4px_20px_rgba(26,61,43,0.05)] py-4"
-          : "bg-transparent border-transparent py-6"
+        transparent
+          ? "bg-transparent border-transparent py-6"
+          : "bg-[#f8f5ef]/95 backdrop-blur-md border-[#e8dfce] shadow-[0_4px_20px_rgba(26,61,43,0.05)] py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -35,7 +39,7 @@ export function Navbar() {
             </div>
             <span
               className={`font-display font-bold text-2xl tracking-tight transition-colors duration-300 ${
-                isScrolled ? "text-[#1a3d2b]" : "text-[#f8f5ef]"
+                transparent ? "text-[#f8f5ef]" : "text-[#1a3d2b]"
               }`}
             >
               Snowmarket
@@ -49,10 +53,10 @@ export function Navbar() {
                 href={link.href}
                 className={`text-sm tracking-wide transition-colors duration-300 ${
                   location === link.href
-                    ? isScrolled ? "text-[#c9882a]" : "text-white font-semibold"
-                    : isScrolled
-                      ? "text-[#5a5a5a] hover:text-[#c9882a]"
-                      : "text-[#f8f5ef]/80 hover:text-white"
+                    ? transparent ? "text-white font-semibold" : "text-[#c9882a]"
+                    : transparent
+                      ? "text-[#f8f5ef]/80 hover:text-white"
+                      : "text-[#5a5a5a] hover:text-[#c9882a]"
                 }`}
               >
                 {link.name}
@@ -63,18 +67,21 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <button
               className={`text-sm transition-colors duration-300 ${
-                isScrolled ? "text-[#1a3d2b]" : "text-white"
+                transparent ? "text-white" : "text-[#1a3d2b]"
               } hover:text-[#c9882a]`}
             >
               Ingresar
             </button>
-            <button className="px-6 py-2.5 bg-[#1a3d2b] text-[#f8f5ef] text-sm tracking-wide shadow-lg shadow-[#1a3d2b]/20 hover:bg-[#132c1f] transition-all duration-300 border border-[#1a3d2b]">
+            <Link
+              href="/publish"
+              className="px-6 py-2.5 bg-[#1a3d2b] text-[#f8f5ef] text-sm tracking-wide shadow-lg shadow-[#1a3d2b]/20 hover:bg-[#132c1f] transition-all duration-300 border border-[#1a3d2b]"
+            >
               Publicar
-            </button>
+            </Link>
           </div>
 
           <button
-            className={`md:hidden p-2 ${isScrolled ? "text-[#1a3d2b]" : "text-white"}`}
+            className={`md:hidden p-2 ${transparent ? "text-white" : "text-[#1a3d2b]"}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -84,23 +91,16 @@ export function Navbar() {
 
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-[#f8f5ef] border-b border-[#e8dfce] p-6 flex flex-col gap-6 shadow-2xl">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="font-display text-xl text-[#1a3d2b] py-2 border-b border-[#e8dfce]/50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
+          <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#e8dfce]/50 ${location === "/" ? "text-[#c9882a]" : "text-[#1a3d2b]"}`}>Inicio</Link>
+          <Link href="/apartments" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#e8dfce]/50 ${location === "/apartments" ? "text-[#c9882a]" : "text-[#1a3d2b]"}`}>Alojamientos</Link>
+          <Link href="/equipment" onClick={() => setMobileMenuOpen(false)} className={`font-display text-xl py-2 border-b border-[#e8dfce]/50 ${location === "/equipment" ? "text-[#c9882a]" : "text-[#1a3d2b]"}`}>Equipamiento</Link>
           <div className="flex flex-col gap-4 mt-4">
             <button className="px-6 py-3 w-full border border-[#1a3d2b] text-[#1a3d2b] font-display text-lg">
               Ingresar
             </button>
-            <button className="px-6 py-3 w-full bg-[#1a3d2b] text-[#f8f5ef] font-display text-lg">
+            <Link href="/publish" onClick={() => setMobileMenuOpen(false)} className="px-6 py-3 w-full bg-[#1a3d2b] text-[#f8f5ef] font-display text-lg text-center">
               Publicar
-            </button>
+            </Link>
           </div>
         </div>
       )}
