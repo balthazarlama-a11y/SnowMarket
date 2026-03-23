@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Search, MapPin, Calendar, Users, ArrowRight, ShieldCheck, Tag } from "lucide-react";
-import { Link } from "wouter";
+import { Search, MapPin, Calendar, ShieldCheck, Users, Tag, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ApartmentCard } from "@/components/ApartmentCard";
@@ -10,57 +9,61 @@ import { useListApartments, useListEquipment } from "@workspace/api-client-react
 export function Home() {
   const [searchTab, setSearchTab] = useState<"apartments" | "equipment">("apartments");
 
-  const { data: apartments, isLoading: isLoadingApts } = useListApartments();
-  const { data: equipment, isLoading: isLoadingEq } = useListEquipment();
+  const { data: apartments } = useListApartments();
+  const { data: equipment } = useListEquipment();
 
-  // Fallback dummy data in case API returns empty arrays initially
-  const displayApartments = apartments?.length ? apartments : DUMMY_APARTMENTS;
-  const displayEquipment = equipment?.length ? equipment : DUMMY_EQUIPMENT;
+  const displayApartments = apartments?.length ? apartments : DUMMY_APARTMENTS as any[];
+  const displayEquipment = equipment?.length ? equipment : DUMMY_EQUIPMENT as any[];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#f8f5ef] text-[#2c2c2c]">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+
+      {/* Hero */}
+      <section className="relative pt-32 pb-24 lg:pt-56 lg:pb-40 overflow-hidden min-h-[90vh] flex flex-col justify-center">
         <div className="absolute inset-0 z-0">
-          <img 
+          <img
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-            alt="Mountain peaks at sunrise" 
+            alt="Montaña nevada"
             className="w-full h-full object-cover"
+            style={{ filter: "sepia(30%) saturate(70%) brightness(0.9)" }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src =
+                "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1600";
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a3d2b]/80 via-[#2c2a20]/60 to-[#f8f5ef]" />
         </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white mb-6 drop-shadow-lg tracking-tight">
-            La montaña te espera.
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">Nosotros te acercamos.</span>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12 text-center w-full mt-10">
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-[#f8f5ef] mb-6 leading-[1.1] drop-shadow-lg">
+            La montaña,{" "}
+            <br className="hidden md:block" />
+            <span className="italic text-[#c9882a]">reinventada.</span>
           </h1>
-          <p className="text-lg md:text-xl text-blue-50 max-w-2xl mx-auto mb-12 drop-shadow">
-            Alojamientos verificados a pasos de las pistas y el mejor marketplace de equipamiento de nieve.
+          <p className="text-lg md:text-xl text-[#e8dfce] max-w-2xl mx-auto mb-16 font-light tracking-wide drop-shadow-md">
+            Una colección curada de refugios alpinos y el equipamiento esencial para tu próxima expedición.
           </p>
 
-          {/* Search Box Widget */}
-          <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-2 md:p-3 backdrop-blur-xl bg-white/95">
-            <div className="flex gap-2 mb-3 px-3 pt-2">
-              <button 
+          {/* Search Widget */}
+          <div className="max-w-4xl mx-auto bg-[#f8f5ef] rounded-xl shadow-[0_20px_40px_rgba(26,61,43,0.15)] p-3 md:p-4 border border-[#e8dfce]">
+            <div className="flex gap-4 mb-4 px-4 pt-2 justify-center md:justify-start">
+              <button
                 onClick={() => setSearchTab("apartments")}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${
-                  searchTab === "apartments" 
-                    ? "bg-foreground text-background" 
-                    : "text-muted-foreground hover:bg-secondary"
+                className={`px-2 py-1 text-sm tracking-widest uppercase transition-all duration-300 border-b-2 ${
+                  searchTab === "apartments"
+                    ? "border-[#c9882a] text-[#1a3d2b] font-bold"
+                    : "border-transparent text-[#8a8a8a] hover:text-[#1a3d2b]"
                 }`}
               >
-                Alojamientos
+                Refugios
               </button>
-              <button 
+              <button
                 onClick={() => setSearchTab("equipment")}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${
-                  searchTab === "equipment" 
-                    ? "bg-foreground text-background" 
-                    : "text-muted-foreground hover:bg-secondary"
+                className={`px-2 py-1 text-sm tracking-widest uppercase transition-all duration-300 border-b-2 ${
+                  searchTab === "equipment"
+                    ? "border-[#c9882a] text-[#1a3d2b] font-bold"
+                    : "border-transparent text-[#8a8a8a] hover:text-[#1a3d2b]"
                 }`}
               >
                 Equipamiento
@@ -68,43 +71,49 @@ export function Home() {
             </div>
 
             {searchTab === "apartments" ? (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                <div className="flex items-center bg-secondary/50 rounded-2xl p-4 border border-transparent hover:border-border transition-colors">
-                  <MapPin className="w-5 h-5 text-primary mr-3" />
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="flex items-center bg-white rounded p-4 border border-[#e8dfce]">
+                  <MapPin className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
                   <div className="text-left w-full">
-                    <div className="text-xs text-muted-foreground font-semibold">Destino</div>
-                    <input type="text" placeholder="Ej. Valle Nevado" className="bg-transparent border-none outline-none text-sm font-bold w-full text-foreground placeholder:text-muted-foreground/70" />
+                    <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Destino</div>
+                    <input
+                      type="text"
+                      placeholder="Ej. Valle Nevado"
+                      className="bg-transparent border-none outline-none text-sm text-[#1a3d2b] placeholder:text-[#a0a0a0] w-full"
+                    />
                   </div>
                 </div>
-                <div className="flex items-center bg-secondary/50 rounded-2xl p-4 border border-transparent hover:border-border transition-colors md:col-span-2">
-                  <Calendar className="w-5 h-5 text-primary mr-3" />
+                <div className="flex items-center bg-white rounded p-4 border border-[#e8dfce] md:col-span-2">
+                  <Calendar className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
                   <div className="text-left w-full flex gap-4">
                     <div className="flex-1">
-                      <div className="text-xs text-muted-foreground font-semibold">Llegada</div>
-                      <div className="text-sm font-bold">Agregar fecha</div>
+                      <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Llegada</div>
+                      <div className="text-sm text-[#1a3d2b] opacity-60">Seleccionar</div>
                     </div>
-                    <div className="w-px h-8 bg-border"></div>
+                    <div className="w-px h-8 bg-[#e8dfce]" />
                     <div className="flex-1">
-                      <div className="text-xs text-muted-foreground font-semibold">Salida</div>
-                      <div className="text-sm font-bold">Agregar fecha</div>
+                      <div className="text-xs text-[#8a8a8a] uppercase tracking-wider mb-1">Salida</div>
+                      <div className="text-sm text-[#1a3d2b] opacity-60">Seleccionar</div>
                     </div>
                   </div>
                 </div>
-                <button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl p-4 flex items-center justify-center font-bold gap-2 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 transition-all active:scale-95">
-                  <Search className="w-5 h-5" />
-                  <span>Buscar</span>
+                <button className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded p-4 flex items-center justify-center gap-2 transition-colors">
+                  <Search className="w-4 h-4" />
+                  <span className="tracking-wide text-sm">Explorar</span>
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col md:flex-row gap-2">
-                <div className="flex-1 flex items-center bg-secondary/50 rounded-2xl p-4 border border-transparent hover:border-border transition-colors">
-                  <Search className="w-5 h-5 text-primary mr-3" />
-                  <div className="text-left w-full">
-                    <input type="text" placeholder="Busca tablas, botas, antiparras..." className="bg-transparent border-none outline-none text-sm font-bold w-full text-foreground placeholder:text-muted-foreground/70" />
-                  </div>
+              <div className="flex flex-col md:flex-row gap-3">
+                <div className="flex-1 flex items-center bg-white rounded p-4 border border-[#e8dfce]">
+                  <Search className="w-5 h-5 text-[#c9882a] mr-3 shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Busca tablas, botas, antiparras..."
+                    className="bg-transparent border-none outline-none text-sm text-[#1a3d2b] placeholder:text-[#a0a0a0] w-full"
+                  />
                 </div>
-                <button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl px-8 py-4 flex items-center justify-center font-bold gap-2 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 transition-all active:scale-95">
-                  Buscar
+                <button className="bg-[#1a3d2b] hover:bg-[#132c1f] text-[#f8f5ef] rounded px-10 py-4 flex items-center justify-center gap-2 transition-colors">
+                  <span className="tracking-wide text-sm">Buscar Equipo</span>
                 </button>
               </div>
             )}
@@ -112,93 +121,106 @@ export function Home() {
         </div>
       </section>
 
-      {/* Verified Apartments Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-10">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-foreground mb-2">Departamentos Verificados</h2>
-              <p className="text-muted-foreground text-lg">Alojamientos inspeccionados por nuestro equipo. 100% seguros.</p>
+      {/* Apartments */}
+      <section className="py-24 bg-[#f8f5ef]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-[#e8dfce] pb-8">
+            <div className="max-w-2xl">
+              <h2 className="font-display text-4xl text-[#1a3d2b] mb-4">La Colección</h2>
+              <p className="text-[#5a5a5a] text-lg leading-relaxed">
+                Refugios inspeccionados rigurosamente por nuestro equipo. Espacios que invitan al descanso después de la tormenta.
+              </p>
             </div>
-            <Link href="/apartments" className="hidden md:flex items-center gap-2 font-bold text-primary hover:text-primary/80 transition-colors">
-              Ver todos <ArrowRight className="w-4 h-4" />
-            </Link>
+            <a
+              href="/apartments"
+              className="hidden md:flex items-center gap-2 text-[#c9882a] hover:text-[#a66e1d] transition-colors uppercase tracking-widest text-xs font-bold mt-6 md:mt-0"
+            >
+              Ver el catálogo <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
 
-          {isLoadingApts ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="animate-pulse bg-secondary rounded-3xl h-96"></div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {displayApartments.slice(0, 3).map(apt => (
-                <ApartmentCard key={apt.id} apartment={apt} />
-              ))}
-            </div>
-          )}
-          
-          <Link href="/apartments" className="mt-8 flex md:hidden items-center justify-center w-full py-4 rounded-2xl border-2 border-border font-bold text-foreground">
-            Ver todos los alojamientos
-          </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {displayApartments.slice(0, 3).map((apt: any) => (
+              <ApartmentCard key={apt.id} apartment={apt} />
+            ))}
+          </div>
+
+          <a
+            href="/apartments"
+            className="mt-12 flex md:hidden items-center justify-center w-full py-4 border border-[#1a3d2b] text-[#1a3d2b] uppercase tracking-widest text-sm"
+          >
+            Ver el catálogo
+          </a>
         </div>
       </section>
 
-      {/* Equipment Marketplace Section */}
-      <section className="py-20 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-10">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-foreground mb-2">Últimos Equipos a la Venta</h2>
-              <p className="text-muted-foreground text-lg">Encuentra o vende tu equipo. Aprovecha nuestra compra protegida en Bodega.</p>
-            </div>
-            <Link href="/equipment" className="hidden md:flex items-center gap-2 font-bold text-primary hover:text-primary/80 transition-colors">
-              Explorar Market <ArrowRight className="w-4 h-4" />
-            </Link>
+      {/* Equipment */}
+      <section className="py-24 bg-white border-y border-[#e8dfce]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="font-display text-4xl text-[#1a3d2b] mb-4">Equipamiento Esencial</h2>
+            <p className="text-[#5a5a5a] text-lg leading-relaxed">
+              Herramientas probadas para la montaña. Compra y venta entre entusiastas con nuestra garantía de autenticidad.
+            </p>
           </div>
 
-          {isLoadingEq ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="animate-pulse bg-secondary rounded-2xl h-80"></div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {displayEquipment.slice(0, 4).map(eq => (
-                <EquipmentCard key={eq.id} equipment={eq} />
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {displayEquipment.slice(0, 4).map((eq: any) => (
+              <EquipmentCard key={eq.id} equipment={eq} />
+            ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <a
+              href="/equipment"
+              className="inline-flex items-center gap-3 text-[#1a3d2b] border-b border-[#1a3d2b] pb-1 uppercase tracking-widest text-xs font-bold hover:text-[#c9882a] hover:border-[#c9882a] transition-all"
+            >
+              Explorar el bazar <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Value Prop Section */}
-      <section className="py-24 bg-foreground text-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-16">¿Por qué elegir Snowmarket?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-6">
-                <ShieldCheck className="w-8 h-8 text-primary-foreground" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">100% Verificado</h3>
-              <p className="text-muted/80">Revisamos físicamente las propiedades y triangulamos las compras de equipos en nuestra bodega.</p>
+      {/* Trust / Philosophy */}
+      <section className="py-32 bg-[#1a3d2b] text-[#f8f5ef] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#132c1f] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 opacity-50 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="font-display text-4xl md:text-6xl mb-8 leading-[1.1]">
+                Nuestra <br />
+                <i className="text-[#c9882a]">filosofía.</i>
+              </h2>
+              <p className="text-lg text-[#e8dfce] mb-8 font-light leading-relaxed max-w-md">
+                Creemos en la elegancia de lo simple y en el valor de la confianza. Snowmarket no es solo una plataforma, es un refugio para los puristas de la montaña.
+              </p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-6">
-                <Users className="w-8 h-8 text-primary-foreground" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="border-l border-[#c9882a]/30 pl-6">
+                <ShieldCheck className="w-8 h-8 text-[#c9882a] mb-4" />
+                <h3 className="font-display text-xl mb-3">Rigurosa Selección</h3>
+                <p className="text-[#a0a0a0] font-light leading-relaxed text-sm">
+                  Inspeccionamos físicamente las propiedades y curamos el inventario. La calidad precede a la cantidad.
+                </p>
               </div>
-              <h3 className="text-xl font-bold mb-3">Comunidad Confiable</h3>
-              <p className="text-muted/80">Solo usuarios verificados. Reseñas reales de esquiadores como tú.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-6">
-                <Tag className="w-8 h-8 text-primary-foreground" />
+
+              <div className="border-l border-[#c9882a]/30 pl-6">
+                <Users className="w-8 h-8 text-[#c9882a] mb-4" />
+                <h3 className="font-display text-xl mb-3">Círculo Íntimo</h3>
+                <p className="text-[#a0a0a0] font-light leading-relaxed text-sm">
+                  Una comunidad de entusiastas que comparten el respeto por el entorno alpino y el equipo bien cuidado.
+                </p>
               </div>
-              <h3 className="text-xl font-bold mb-3">Las Mejores Tarifas</h3>
-              <p className="text-muted/80">Comisión transparente del 5% y trato directo con los dueños para mejores precios.</p>
+
+              <div className="border-l border-[#c9882a]/30 pl-6 md:col-span-2">
+                <Tag className="w-8 h-8 text-[#c9882a] mb-4" />
+                <h3 className="font-display text-xl mb-3">Trato Justo</h3>
+                <p className="text-[#a0a0a0] font-light leading-relaxed text-sm max-w-md">
+                  Transparencia absoluta. Facilitamos la conexión directa, protegiendo ambas partes sin intermediarios innecesarios.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -209,102 +231,15 @@ export function Home() {
   );
 }
 
-// Dummy data for visual completeness if backend is empty
 const DUMMY_APARTMENTS = [
-  {
-    id: 1,
-    title: "Penthouse Ski-in/Ski-out con vista panorámica",
-    location: "Edificio Valle de Condores",
-    resort: "Valle Nevado",
-    pricePerNight: 250000,
-    bedrooms: 3,
-    maxGuests: 6,
-    verified: true,
-    rating: 4.9,
-    reviewCount: 24,
-    imageUrl: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?w=800&h=600&fit=crop",
-    amenities: ["Ski-in/Ski-out", "Wifi", "Calefacción Central"]
-  },
-  {
-    id: 2,
-    title: "Depto Familiar a 5 min del andarivel",
-    location: "Sector Base",
-    resort: "El Colorado",
-    pricePerNight: 180000,
-    bedrooms: 2,
-    maxGuests: 4,
-    verified: true,
-    rating: 4.7,
-    reviewCount: 15,
-    imageUrl: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&h=600&fit=crop",
-    amenities: ["Estacionamiento", "Cocina Equipada"]
-  },
-  {
-    id: 3,
-    title: "Estudio moderno ideal para parejas",
-    location: "Centro La Parva",
-    resort: "La Parva",
-    pricePerNight: 120000,
-    bedrooms: 1,
-    maxGuests: 2,
-    verified: false,
-    rating: 4.5,
-    reviewCount: 8,
-    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-    amenities: ["Wifi", "Smart TV"]
-  }
-] as any;
+  { id: 1, title: "Chalet de Madera con Vista Panorámica", resort: "Valle Nevado", location: "Sector Alto", pricePerNight: 350000, bedrooms: 4, maxGuests: 8, verified: true, rating: 4.9, reviewCount: 12, imageUrl: "https://images.unsplash.com/photo-1605346434674-a440ca4dc4c0?w=800" },
+  { id: 2, title: "Refugio Íntimo entre los Bosques", resort: "Chillán", location: "Villa Nevados", pricePerNight: 190000, bedrooms: 2, maxGuests: 4, verified: true, rating: 4.8, reviewCount: 28, imageUrl: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?w=800" },
+  { id: 3, title: "Loft Minimalista Frente a las Pistas", resort: "La Parva", location: "Centro", pricePerNight: 210000, bedrooms: 1, maxGuests: 2, verified: false, rating: 4.6, reviewCount: 15, imageUrl: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800" },
+];
 
 const DUMMY_EQUIPMENT = [
-  {
-    id: 1,
-    title: "Tabla Snowboard Burton Custom 158",
-    category: "Tablas",
-    condition: "Usado - Como Nuevo",
-    price: 350000,
-    seller: "Juan P.",
-    verified: true,
-    purchaseType: "verified",
-    imageUrl: "https://images.unsplash.com/photo-1563299796-1759b81f13f1?w=600&h=600&fit=crop",
-    size: "158cm",
-    brand: "Burton"
-  },
-  {
-    id: 2,
-    title: "Botas Ski Salomon Shift Pro",
-    category: "Botas",
-    condition: "Nuevo",
-    price: 420000,
-    seller: "Tienda Andes",
-    verified: true,
-    purchaseType: "normal",
-    imageUrl: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=600&fit=crop",
-    size: "27.5",
-    brand: "Salomon"
-  },
-  {
-    id: 3,
-    title: "Antiparras Oakley Flight Deck",
-    category: "Accesorios",
-    condition: "Usado - Buen Estado",
-    price: 850000,
-    seller: "Maria S.",
-    verified: false,
-    purchaseType: "normal",
-    imageUrl: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=600&fit=crop",
-    brand: "Oakley"
-  },
-  {
-    id: 4,
-    title: "Chaqueta Gore-Tex North Face",
-    category: "Ropa",
-    condition: "Nuevo",
-    price: 290000,
-    seller: "Pedro C.",
-    verified: true,
-    purchaseType: "verified",
-    imageUrl: "https://images.unsplash.com/photo-1563299796-1759b81f13f1?w=600&h=600&fit=crop",
-    size: "L",
-    brand: "The North Face"
-  }
-] as any;
+  { id: 1, title: "Burton Family Tree Hometown Hero", category: "Tablas", brand: "Burton", condition: "Como Nuevo", price: 450000, purchaseType: "verified_warehouse", imageUrl: "https://images.unsplash.com/photo-1563299796-1759b81f13f1?w=600" },
+  { id: 2, title: "Casco POC Auric Cut Backcountry SPIN", category: "Protección", brand: "POC", condition: "Nuevo con etiquetas", price: 180000, purchaseType: "normal", imageUrl: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600" },
+  { id: 3, title: "Botas Ski Salomon Shift Pro", category: "Botas", brand: "Salomon", condition: "Usado - Buen Estado", price: 320000, purchaseType: "verified_warehouse", imageUrl: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6?w=600" },
+  { id: 4, title: "Chaqueta Gore-Tex Arc'teryx Rush", category: "Ropa", brand: "Arc'teryx", condition: "Nuevo", price: 580000, purchaseType: "normal", imageUrl: "https://images.unsplash.com/photo-1576858574144-9ae1ebcf5ae5?w=600" },
+];

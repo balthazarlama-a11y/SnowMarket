@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @plugin "@tailwindcss/typography";
 
 @theme inline {
   --font-sans: 'Plus Jakarta Sans', sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-display: 'Playfair Display', serif;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -40,67 +40,68 @@
 }
 
 :root {
-  --background: 210 20% 98%; /* Icy off-white */
-  --foreground: 222 47% 11%; /* Deep slate */
-  
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --card-border: 214 32% 91%;
-  
+  /* Alpine Lodge — Warm Editorial */
+  --background: 40 40% 96%;        /* parchment #f8f5ef */
+  --foreground: 0 0% 17%;          /* dark charcoal #2c2c2c */
+
+  --card: 0 0% 100%;               /* white */
+  --card-foreground: 0 0% 17%;
+  --card-border: 39 36% 86%;       /* warm cream #e8dfce */
+
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  
-  /* Deep trustworthiness blue */
-  --primary: 201 96% 32%;
-  --primary-foreground: 210 40% 98%;
-  
-  /* Icy light blue */
-  --secondary: 204 100% 97%;
-  --secondary-foreground: 201 96% 32%;
-  
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  
-  /* Frosty teal */
-  --accent: 185 81% 39%;
-  --accent-foreground: 210 40% 98%;
-  
+  --popover-foreground: 0 0% 17%;
+
+  /* Forest green #1a3d2b */
+  --primary: 149 40% 17%;
+  --primary-foreground: 40 40% 96%;
+
+  /* Light parchment for secondary surfaces */
+  --secondary: 40 30% 92%;
+  --secondary-foreground: 149 40% 17%;
+
+  --muted: 39 30% 90%;
+  --muted-foreground: 0 0% 35%;    /* warm gray #5a5a5a */
+
+  /* Amber gold #c9882a */
+  --accent: 35 65% 48%;
+  --accent-foreground: 0 0% 100%;
+
   --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive-foreground: 40 40% 96%;
 
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 201 96% 32%;
+  --border: 39 36% 86%;            /* warm cream #e8dfce */
+  --input: 39 36% 86%;
+  --ring: 35 65% 48%;              /* amber ring */
 
-  --radius: 0.75rem;
+  --radius: 0.5rem;                /* Alpine Lodge uses modest rounding */
 }
 
 .dark {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
-  
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 215 28% 17%;
-  
-  --primary: 201 96% 52%;
-  --primary-foreground: 222 47% 11%;
-  
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  
-  --accent: 185 81% 49%;
-  --accent-foreground: 222 47% 11%;
-  
-  --destructive: 0 62% 30%;
-  --destructive-foreground: 210 40% 98%;
+  --background: 149 40% 9%;
+  --foreground: 40 40% 96%;
 
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 201 96% 52%;
+  --card: 149 40% 12%;
+  --card-foreground: 40 40% 96%;
+  --card-border: 149 30% 20%;
+
+  --primary: 35 65% 48%;
+  --primary-foreground: 0 0% 10%;
+
+  --secondary: 149 30% 15%;
+  --secondary-foreground: 40 40% 96%;
+
+  --muted: 149 30% 15%;
+  --muted-foreground: 0 0% 65%;
+
+  --accent: 35 65% 48%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 40 40% 96%;
+
+  --border: 149 30% 20%;
+  --input: 149 30% 20%;
+  --ring: 35 65% 48%;
 }
 
 @layer base {

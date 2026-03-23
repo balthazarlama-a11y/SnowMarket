@@ -1,53 +1,49 @@
 import { Link } from "wouter";
+import { Package } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background py-16 mt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer className="bg-[#11261b] text-[#e8dfce] py-16 border-t border-[#1a3d2b]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 group mb-6">
-              <div className="w-8 h-8 rounded-lg bg-background flex items-center justify-center">
-                <img 
-                  src={`${import.meta.env.BASE_URL}images/logo.png`} 
-                  alt="Snowmarket Logo" 
-                  className="w-5 h-5" 
-                />
+            <Link href="/" className="flex items-center gap-3 mb-6 opacity-80 hover:opacity-100 transition-opacity">
+              <div className="w-8 h-8 rounded bg-[#f8f5ef] flex items-center justify-center">
+                <Package className="w-4 h-4 text-[#11261b]" />
               </div>
-              <span className="font-display font-bold text-2xl tracking-tight text-background">
+              <span className="font-display font-bold text-xl tracking-tight text-[#f8f5ef]">
                 Snowmarket
               </span>
             </Link>
-            <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
-              El marketplace premium para los amantes de la nieve. Encuentra alojamientos verificados y compra o vende equipamiento de ski y snowboard con total seguridad.
+            <p className="text-[#8a8a8a] max-w-sm font-light leading-relaxed">
+              Elevando la experiencia en la montaña. El primer refugio digital para la compra y arriendo alpino en Chile.
             </p>
           </div>
-          
+
           <div>
-            <h4 className="font-display font-bold text-lg mb-6">Plataforma</h4>
-            <ul className="space-y-4">
-              <li><Link href="/apartments" className="text-sm text-muted-foreground hover:text-white transition-colors">Alojamientos</Link></li>
-              <li><Link href="/equipment" className="text-sm text-muted-foreground hover:text-white transition-colors">Equipamiento</Link></li>
-              <li><Link href="/how-it-works" className="text-sm text-muted-foreground hover:text-white transition-colors">Cómo funciona la Bodega</Link></li>
+            <h4 className="font-display text-[#f8f5ef] mb-6 uppercase tracking-widest text-xs">Descubrir</h4>
+            <ul className="space-y-4 font-light text-sm text-[#8a8a8a]">
+              <li><Link href="/apartments" className="hover:text-[#c9882a] transition-colors">La Colección</Link></li>
+              <li><Link href="/equipment" className="hover:text-[#c9882a] transition-colors">Equipamiento</Link></li>
+              <li><Link href="/how-it-works" className="hover:text-[#c9882a] transition-colors">Cómo funciona</Link></li>
             </ul>
           </div>
-          
+
           <div>
-            <h4 className="font-display font-bold text-lg mb-6">Soporte</h4>
-            <ul className="space-y-4">
-              <li><Link href="/faq" className="text-sm text-muted-foreground hover:text-white transition-colors">Preguntas Frecuentes</Link></li>
-              <li><Link href="/terms" className="text-sm text-muted-foreground hover:text-white transition-colors">Términos y Condiciones</Link></li>
-              <li><Link href="/contact" className="text-sm text-muted-foreground hover:text-white transition-colors">Contacto</Link></li>
+            <h4 className="font-display text-[#f8f5ef] mb-6 uppercase tracking-widest text-xs">Soporte</h4>
+            <ul className="space-y-4 font-light text-sm text-[#8a8a8a]">
+              <li><Link href="/faq" className="hover:text-[#c9882a] transition-colors">Asistencia</Link></li>
+              <li><Link href="/terms" className="hover:text-[#c9882a] transition-colors">Garantía de calidad</Link></li>
+              <li><Link href="/contact" className="hover:text-[#c9882a] transition-colors">Contacto</Link></li>
             </ul>
           </div>
         </div>
-        
-        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Snowmarket. Todos los derechos reservados.
-          </p>
-          <div className="flex gap-4 text-sm text-muted-foreground">
-            <span>Hecho para la montaña 🏔️</span>
+
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-[#1a3d2b] text-xs text-[#5a5a5a] uppercase tracking-widest">
+          <p>&copy; {new Date().getFullYear()} Snowmarket.</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <Link href="/privacy" className="hover:text-[#e8dfce] transition-colors">Privacidad</Link>
+            <Link href="/terms" className="hover:text-[#e8dfce] transition-colors">Términos</Link>
           </div>
         </div>
       </div>
