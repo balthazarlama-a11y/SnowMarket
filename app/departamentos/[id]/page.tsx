@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Building2, MapPin } from "lucide-react";
+import { ArrowLeft, Building2, MapPin, CalendarDays } from "lucide-react";
+import { PropertyCalendar } from "./PropertyCalendar";
 
 export default async function PropertyDetailPage({
   params,
@@ -69,7 +70,7 @@ export default async function PropertyDetailPage({
         </div>
 
         {/* Info panel */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-4">
           <Card>
             <CardContent className="space-y-4 p-6">
               <Badge variant="secondary" className="gap-1.5">
@@ -115,6 +116,17 @@ export default async function PropertyDetailPage({
                 entityType="property"
                 adminPhone={ADMIN_WHATSAPP}
               />
+            </CardContent>
+          </Card>
+
+          {/* Calendar */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="mb-4 flex items-center gap-2">
+                <CalendarDays className="size-4 text-primary" />
+                <h2 className="text-sm font-medium">Disponibilidad</h2>
+              </div>
+              <PropertyCalendar />
             </CardContent>
           </Card>
         </div>

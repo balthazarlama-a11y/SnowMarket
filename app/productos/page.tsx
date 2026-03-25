@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getProducts } from "@/actions/products";
 import { ProductCatalog } from "./ProductCatalog";
 
@@ -26,7 +27,9 @@ export default async function ProductosPage() {
         </div>
       )}
 
-      <ProductCatalog products={products ?? []} />
+      <Suspense fallback={null}>
+        <ProductCatalog products={products ?? []} />
+      </Suspense>
     </div>
   );
 }

@@ -1,54 +1,50 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
-  Mountain,
   ShoppingBag,
   Building2,
   ShieldCheck,
   MessageCircle,
   ArrowRight,
+  Mountain,
 } from "lucide-react";
+import { HeroGeometric } from "@/components/ui/shape-landing-hero";
 
 export default function Home() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-primary">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--color-accent)/0.15,_transparent_60%)]" />
-        <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-24 text-center sm:px-6 sm:py-32 lg:py-40">
-          <Badge variant="secondary" className="mb-6 gap-1.5 px-3 py-1 text-sm">
-            <Mountain className="size-3.5" />
-            Marketplace Premium de Nieve
-          </Badge>
-          <h1 className="font-heading text-4xl font-bold tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl">
-            Equipa tu aventura.
-            <br />
-            <span className="text-accent">Encuentra tu refugio.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-primary-foreground/70">
-            Compra y vende equipos de esquí verificados, y arrienda departamentos
-            en los mejores centros de ski de Chile — todo en un solo lugar.
-          </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" variant="secondary" render={<Link href="/productos" />}>
-              <ShoppingBag className="size-4" data-icon="inline-start" />
-              Explorar Productos
-              <ArrowRight className="size-4" data-icon="inline-end" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-              render={<Link href="/departamentos" />}
-            >
-              <Building2 className="size-4" data-icon="inline-start" />
-              Ver Departamentos
-            </Button>
-          </div>
+      {/* Hero with animated geometric shapes */}
+      <HeroGeometric
+        badge="Marketplace Premium de Nieve"
+        title1="Equipa tu aventura."
+        title2="Encuentra tu refugio."
+      >
+        <p className="text-base sm:text-lg md:text-xl text-white/50 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
+          Compra y vende equipos de esquí verificados, y arrienda departamentos
+          en los mejores centros de ski de Chile — todo en un solo lugar.
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button
+            size="lg"
+            className="bg-white text-slate-900 hover:bg-white/90"
+            render={<Link href="/productos" />}
+          >
+            <ShoppingBag className="size-4" data-icon="inline-start" />
+            Explorar Productos
+            <ArrowRight className="size-4" data-icon="inline-end" />
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10 hover:text-white"
+            render={<Link href="/departamentos" />}
+          >
+            <Building2 className="size-4" data-icon="inline-start" />
+            Ver Departamentos
+          </Button>
         </div>
-      </section>
+      </HeroGeometric>
 
       {/* Value Propositions */}
       <section className="border-b bg-background py-16 sm:py-20">
@@ -73,7 +69,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-heading text-lg font-semibold">Arriendos Premium</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Departamentos en Valle Nevado, Portillo, Nevados de Chillán y más centros de esquí.
+                  Departamentos en Valle Nevado, La Parva, El Colorado, Farellones y más centros de esquí.
                 </p>
               </CardContent>
             </Card>

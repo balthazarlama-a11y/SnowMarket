@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, LogIn } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
 import { MobileNav } from "./MobileNav";
+import { SearchBar } from "./SearchBar";
 
 export async function Navbar() {
   const user = await getCurrentUser();
@@ -12,8 +13,8 @@ export async function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-2 transition-opacity hover:opacity-80">
           <Mountain className="size-6 text-primary" />
           <span className="font-heading text-xl font-bold tracking-tight text-primary">
             SnowMarket
@@ -31,7 +32,11 @@ export async function Navbar() {
           </Button>
         </div>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden flex-1 justify-center md:flex">
+          <SearchBar />
+        </div>
+
+        <div className="hidden shrink-0 items-center gap-2 md:flex">
           {user ? (
             <>
               <Button variant="ghost" size="sm" render={<Link href="/mis-productos" />}>
@@ -58,7 +63,9 @@ export async function Navbar() {
           )}
         </div>
 
-        <MobileNav user={user} isAdmin={isAdmin} />
+        <div className="flex flex-1 justify-end md:hidden">
+          <MobileNav user={user} isAdmin={isAdmin} />
+        </div>
       </nav>
     </header>
   );

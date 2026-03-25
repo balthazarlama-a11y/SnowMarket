@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,12 +28,15 @@ interface ProductCatalogProps {
 }
 
 export function ProductCatalog({ products }: ProductCatalogProps) {
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
 
   const filtered = products.filter((p) => {
     if (selectedCategory && p.category !== selectedCategory) return false;
     if (verifiedOnly && !p.is_verified) return false;
+    if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.description?.toLowerCase().includes(queryParam)) return false;
     return true;
   });
 
