@@ -1,41 +1,65 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/actions/auth";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, LogIn } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
+import { MobileNav } from "./MobileNav";
 
 export async function Navbar() {
   const user = await getCurrentUser();
   const isAdmin = user?.app_metadata?.role === "admin";
 
   return (
-    <nav style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "1rem 2rem",
-      borderBottom: "1px solid #e5e5e5",
-      background: "#fafafa",
-    }}>
-      <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-        <Link href="/" style={{ fontWeight: "bold", fontSize: "1.2rem", textDecoration: "none", color: "#111" }}>
-          SnowMarket
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+          <Mountain className="size-6 text-primary" />
+          <span className="font-heading text-xl font-bold tracking-tight text-primary">
+            SnowMarket
+          </span>
         </Link>
-        <Link href="/productos" style={{ textDecoration: "none", color: "#555" }}>Productos</Link>
-        <Link href="/departamentos" style={{ textDecoration: "none", color: "#555" }}>Departamentos</Link>
-      </div>
-      <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        {user ? (
-          <>
-            <Link href="/mis-productos" style={{ textDecoration: "none", color: "#555" }}>Mis Productos</Link>
-            {isAdmin && (
-              <Link href="/dashboard" style={{ textDecoration: "none", color: "#0070f3", fontWeight: 600 }}>Admin</Link>
-            )}
-            <span style={{ color: "#888", fontSize: "0.85rem" }}>{user.email}</span>
-            <SignOutButton />
-          </>
-        ) : (
-          <Link href="/auth/sign-in" style={{ textDecoration: "none", color: "#0070f3" }}>Iniciar Sesion</Link>
-        )}
-      </div>
-    </nav>
+
+        <div className="hidden items-center gap-1 md:flex">
+          <Button variant="ghost" size="sm" render={<Link href="/productos" />}>
+            <ShoppingBag className="size-4" data-icon="inline-start" />
+            Productos
+          </Button>
+          <Button variant="ghost" size="sm" render={<Link href="/departamentos" />}>
+            <Building2 className="size-4" data-icon="inline-start" />
+            Departamentos
+          </Button>
+        </div>
+
+        <div className="hidden items-center gap-2 md:flex">
+          {user ? (
+            <>
+              <Button variant="ghost" size="sm" render={<Link href="/mis-productos" />}>
+                <Package className="size-4" data-icon="inline-start" />
+                Mis Productos
+              </Button>
+              {isAdmin && (
+                <Button variant="secondary" size="sm" render={<Link href="/dashboard" />}>
+                  <LayoutDashboard className="size-4" data-icon="inline-start" />
+                  Admin
+                </Button>
+              )}
+              <Separator orientation="vertical" className="mx-1 h-6" />
+              <span className="max-w-[160px] truncate text-xs text-muted-foreground">
+                {user.email}
+              </span>
+              <SignOutButton />
+            </>
+          ) : (
+            <Button size="sm" render={<Link href="/auth/sign-in" />}>
+              <LogIn className="size-4" data-icon="inline-start" />
+              Iniciar Sesión
+            </Button>
+          )}
+        </div>
+
+        <MobileNav user={user} isAdmin={isAdmin} />
+      </nav>
+    </header>
   );
 }

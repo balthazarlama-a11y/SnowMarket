@@ -1,45 +1,124 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 import { getPropertyById } from "@/actions/properties";
 import { WhatsAppButton } from "@/app/components/WhatsAppButton";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
-import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ArrowLeft, Building2, MapPin } from "lucide-react";
 
-export default async function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PropertyDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const { data: property, error } = await getPropertyById(id);
 
   if (error || !property) return notFound();
 
   return (
-    <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 2rem" }}>
-      <Link href="/departamentos" style={{ color: "#0070f3", textDecoration: "none" }}>← Volver a departamentos</Link>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <Button variant="ghost" size="sm" className="mb-6" render={<Link href="/departamentos" />}>
+        <ArrowLeft className="size-4" data-icon="inline-start" />
+        Volver a departamentos
+      </Button>
 
-      <h1 style={{ marginTop: "1rem" }}>{property.title}</h1>
-      <p style={{ color: "#888" }}>{property.location}</p>
-
-      {property.images?.length > 0 && (
-        <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem", overflowX: "auto" }}>
-          {property.images.map((img: string, i: number) => (
-            <img key={i} src={img} alt={`${property.title} ${i + 1}`} style={{ width: 350, height: 220, objectFit: "cover", borderRadius: 8 }} />
-          ))}
+      <div className="grid gap-8 lg:grid-cols-5">
+        {/* Images */}
+        <div className="lg:col-span-3">
+          {property.images?.length > 0 ? (
+            <div className="space-y-3">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-secondary/50">
+                <Image
+                  src={property.images[0]}
+                  alt={property.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  priority
+                />
+              </div>
+              {property.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {property.images.slice(1).map((img: string, i: number) => (
+                    <div
+                      key={i}
+                      className="relative size-20 shrink-0 overflow-hidden rounded-lg sm:size-24"
+                    >
+                      <Image
+                        src={img}
+                        alt={`${property.title} ${i + 2}`}
+                        fill
+                        className="object-cover"
+                        sizes="96px"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex aspect-[16/10] items-center justify-center rounded-xl bg-secondary/50">
+              <Building2 className="size-16 text-muted-foreground/20" />
+            </div>
+          )}
         </div>
-      )}
 
-      <p style={{ fontSize: "1.5rem", fontWeight: 700, color: "#0070f3", marginTop: "1rem" }}>
-        ${Number(property.price).toLocaleString("es-CL")} /noche
-      </p>
+        {/* Info panel */}
+        <div className="lg:col-span-2">
+          <Card>
+            <CardContent className="space-y-4 p-6">
+              <Badge variant="secondary" className="gap-1.5">
+                <Building2 className="size-3" />
+                Gestionado por SnowMarket
+              </Badge>
 
-      <p style={{ lineHeight: 1.6, marginTop: "0.5rem" }}>{property.description}</p>
+              <h1 className="font-heading text-2xl font-bold tracking-tight">
+                {property.title}
+              </h1>
 
-      <div style={{ marginTop: "1.5rem" }}>
-        <WhatsAppButton
-          phone={property.whatsapp_contact}
-          itemName={property.title}
-          price={Number(property.price)}
-          entityType="property"
-          adminPhone={ADMIN_WHATSAPP}
-        />
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <MapPin className="size-4" />
+                {property.location}
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-primary">
+                  ${Number(property.price).toLocaleString("es-CL")}
+                </span>
+                <span className="text-muted-foreground">/noche</span>
+              </div>
+
+              <Separator />
+
+              <div>
+                <h2 className="mb-2 text-sm font-medium text-muted-foreground">
+                  Descripción
+                </h2>
+                <p className="leading-relaxed">{property.description}</p>
+              </div>
+
+              <Separator />
+
+              <div className="rounded-lg bg-secondary/50 p-3 text-center text-xs text-muted-foreground">
+                Las consultas de arriendo son gestionadas directamente por el equipo de SnowMarket.
+              </div>
+
+              <WhatsAppButton
+                phone={property.whatsapp_contact}
+                itemName={property.title}
+                price={Number(property.price)}
+                entityType="property"
+                adminPhone={ADMIN_WHATSAPP}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

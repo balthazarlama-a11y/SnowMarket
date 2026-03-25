@@ -1,14 +1,14 @@
 "use client";
 
 import { signOut } from "@/actions/auth";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 export function SignOutButton() {
   return (
-    <button
-      onClick={() => signOut()}
-      style={{ background: "none", border: "1px solid #ccc", padding: "0.3rem 0.75rem", cursor: "pointer", borderRadius: 4 }}
-    >
+    <Button variant="ghost" size="sm" onClick={() => signOut()}>
+      <LogOut className="size-4" data-icon="inline-start" />
       Salir
-    </button>
+    </Button>
   );
 }

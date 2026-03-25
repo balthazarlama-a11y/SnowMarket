@@ -1,6 +1,8 @@
 "use client";
 
 import { generateWhatsAppLink, type EntityType } from "@/lib/whatsapp";
+import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
 
 interface Props {
   phone: string;
@@ -19,22 +21,13 @@ export function WhatsAppButton({ phone, itemName, price, entityType, adminPhone 
   }
 
   return (
-    <a
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        display: "inline-block",
-        padding: "0.6rem 1.5rem",
-        background: "#25D366",
-        color: "white",
-        textDecoration: "none",
-        borderRadius: 6,
-        fontWeight: 600,
-        fontSize: "0.95rem",
-      }}
+    <Button
+      size="lg"
+      className="w-full gap-2 bg-[#25D366] text-white hover:bg-[#1da851]"
+      render={<a href={link} target="_blank" rel="noopener noreferrer" />}
     >
+      <MessageCircle className="size-5" data-icon="inline-start" />
       Contactar por WhatsApp
-    </a>
+    </Button>
   );
 }
