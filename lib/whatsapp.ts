@@ -74,3 +74,58 @@ export function generateWhatsAppLink(params: WhatsAppLinkParams): string {
 
   return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
 }
+
+/** Enlace wa.me con mensaje libre (ej. publicar propiedad). */
+export function buildWhatsAppUrlWithText(phone: string, text: string): string {
+  if (!isValidChileanPhone(phone)) {
+    throw new Error(`Numero de telefono invalido: ${phone}`);
+  }
+  const cleanPhone = sanitizePhone(phone);
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+}
+
+export const LIST_PROPERTY_WHATSAPP_MESSAGE = `¡Perfecto! Para poder publicar tu propiedad en la plataforma, necesito validar algunos datos 👇
+
+🏔️ *Ubicación exacta:*
+🏠 *Tipo de propiedad:* (depto, casa, cabaña)
+👥 *Capacidad (personas):*
+🛏️ *Dormitorios:*
+🛁 *Baños:*
+
+📅 *Disponibilidad:* (fechas o meses)
+💰 *Precio por noche (CLP):*
+
+📸 *Fotos reales del departamento:* (mínimo 5)
+
+📝 *Extras:* (ej: ski-in/ski-out, estacionamiento, jacuzzi, etc.)
+
+---
+
+🔐 *Validación:*
+
+👤 Nombre completo:
+🆔 RUT:
+📱 Teléfono:
+
+📍 Dirección exacta del departamento
+
+📄 Algún respaldo de que eres dueño o administrador (puede ser contribuciones, contrato o similar)
+
+---
+
+🤝 *Gestión de reservas:*
+
+* Nosotros te enviaremos cada solicitud de arriendo
+* Tú podrás **aceptar o rechazar al cliente antes de confirmar la reserva**
+
+---
+
+💼 *Condiciones de la plataforma:*
+
+* Trabajamos con una comisión del 7% por reserva confirmada
+* Nosotros gestionamos los pagos para mayor seguridad
+* No se comparte contacto directo con clientes antes de la reserva
+
+---
+
+Con eso puedo revisar y dejar tu propiedad lista para publicar 🙌`;

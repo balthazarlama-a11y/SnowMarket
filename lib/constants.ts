@@ -1,4 +1,4 @@
-export const ADMIN_WHATSAPP = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP ?? "+56912345678";
+export const ADMIN_WHATSAPP = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP ?? "+56986910656";
 
 export const CATEGORY_LABELS: Record<string, string> = {
   esquis: "Esquis",
