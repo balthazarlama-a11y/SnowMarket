@@ -1,12 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Tag } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { AMENITY_LABELS } from "@/lib/validations/property";
+import {
+  Building2,
+  MapPin,
+  Tag,
+  X,
+  SlidersHorizontal,
+  Users,
+  BedDouble,
+  CalendarDays,
+  Minus,
+  Plus,
+} from "lucide-react";
 
 const LOCATION_FILTERS = [
   { value: "La Parva", label: "La Parva" },
@@ -15,6 +30,8 @@ const LOCATION_FILTERS = [
   { value: "Valle Nevado", label: "Valle Nevado" },
 ] as const;
 
+const ALL_AMENITIES = Object.keys(AMENITY_LABELS);
+
 interface Property {
   id: string;
   title: string;
@@ -22,70 +39,290 @@ interface Property {
   location: string;
   images: string[];
   description?: string;
+  max_guests?: number;
+  bedrooms?: number;
+  amenities?: string[];
+}
+
+interface Reservation {
+  property_id: string;
+  start_date: string;
+  end_date: string;
 }
 
 interface DepartamentosCatalogProps {
   properties: Property[];
+  reservations?: Reservation[];
 }
 
-export function DepartamentosCatalog({ properties }: DepartamentosCatalogProps) {
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useState(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  });
+  if (debounced !== value) setDebounced(value);
+  return debounced;
+}
+
+function Stepper({
+  value,
+  onChange,
+  min = 0,
+  label,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  min?: number;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-sm">{label}</span>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(min, value - 1))}
+          className="flex size-7 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-secondary"
+        >
+          <Minus className="size-3" />
+        </button>
+        <span className="w-6 text-center text-sm font-medium">{value}</span>
+        <button
+          type="button"
+          onClick={() => onChange(value + 1)}
+          className="flex size-7 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-secondary"
+        >
+          <Plus className="size-3" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function DepartamentosCatalog({ properties, reservations = [] }: DepartamentosCatalogProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
   const locationParam = searchParams.get("location");
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(
-    locationParam ?? null
-  );
 
-  const filtered = properties.filter((p) => {
-    if (selectedLocation && !p.location?.toLowerCase().includes(selectedLocation.toLowerCase())) {
-      return false;
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(locationParam ?? null);
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
+  const [dateFrom, setDateFrom] = useState(searchParams.get("from") ?? "");
+  const [dateTo, setDateTo] = useState(searchParams.get("to") ?? "");
+  const [guests, setGuests] = useState(0);
+  const [bedrooms, setBedrooms] = useState(0);
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+
+  const hasFilters =
+    selectedLocation !== null ||
+    priceMin !== "" ||
+    priceMax !== "" ||
+    dateFrom !== "" ||
+    dateTo !== "" ||
+    guests > 0 ||
+    bedrooms > 0 ||
+    selectedAmenities.length > 0;
+
+  function clearFilters() {
+    setSelectedLocation(null);
+    setPriceMin("");
+    setPriceMax("");
+    setDateFrom("");
+    setDateTo("");
+    setGuests(0);
+    setBedrooms(0);
+    setSelectedAmenities([]);
+  }
+
+  function toggleAmenity(a: string) {
+    setSelectedAmenities((prev) =>
+      prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
+    );
+  }
+
+  const bookedPropertyIds = useMemo(() => {
+    if (!dateFrom || !dateTo) return new Set<string>();
+    const ids = new Set<string>();
+    for (const r of reservations) {
+      if (r.start_date < dateTo && r.end_date > dateFrom) {
+        ids.add(r.property_id);
+      }
     }
-    if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.location?.toLowerCase().includes(queryParam)) {
-      return false;
-    }
-    return true;
-  });
+    return ids;
+  }, [reservations, dateFrom, dateTo]);
+
+  const filtered = useMemo(() => {
+    return properties.filter((p) => {
+      if (selectedLocation && !p.location?.toLowerCase().includes(selectedLocation.toLowerCase())) return false;
+      if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.location?.toLowerCase().includes(queryParam)) return false;
+      const pMin = priceMin ? Number(priceMin) : 0;
+      const pMax = priceMax ? Number(priceMax) : Infinity;
+      if (p.price < pMin || p.price > pMax) return false;
+      if (dateFrom && dateTo && bookedPropertyIds.has(p.id)) return false;
+      if (guests > 0 && (p.max_guests ?? 2) < guests) return false;
+      if (bedrooms > 0 && (p.bedrooms ?? 1) < bedrooms) return false;
+      if (selectedAmenities.length > 0) {
+        const propAmenities = p.amenities ?? [];
+        if (!selectedAmenities.every((a) => propAmenities.includes(a))) return false;
+      }
+      return true;
+    });
+  }, [properties, selectedLocation, queryParam, priceMin, priceMax, dateFrom, dateTo, bookedPropertyIds, guests, bedrooms, selectedAmenities]);
+
+  const filterContent = (
+    <div className="space-y-6">
+      {hasFilters && (
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <X className="size-3" />
+          Limpiar filtros
+        </button>
+      )}
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Centro de Ski
+        </p>
+        <div className="flex flex-col gap-1">
+          <Button
+            variant={selectedLocation === null ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setSelectedLocation(null)}
+          >
+            <Tag className="size-3.5" data-icon="inline-start" />
+            Todos
+          </Button>
+          {LOCATION_FILTERS.map((loc) => (
+            <Button
+              key={loc.value}
+              variant={selectedLocation === loc.value ? "secondary" : "ghost"}
+              size="sm"
+              className="justify-start"
+              onClick={() => setSelectedLocation(loc.value)}
+            >
+              <MapPin className="size-3.5" data-icon="inline-start" />
+              {loc.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <CalendarDays className="size-3" />
+          Fechas de Estancia
+        </p>
+        <div className="space-y-2">
+          <div>
+            <Label className="text-xs text-muted-foreground">Check-in</Label>
+            <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="h-8 text-xs" />
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Check-out</Label>
+            <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} min={dateFrom || undefined} className="h-8 text-xs" />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Precio por noche (CLP)
+        </p>
+        <div className="flex items-center gap-2">
+          <Input
+            type="number"
+            placeholder="Mín"
+            value={priceMin}
+            onChange={(e) => setPriceMin(e.target.value)}
+            className="h-8 text-xs"
+            min={0}
+          />
+          <span className="text-xs text-muted-foreground">—</span>
+          <Input
+            type="number"
+            placeholder="Máx"
+            value={priceMax}
+            onChange={(e) => setPriceMax(e.target.value)}
+            className="h-8 text-xs"
+            min={0}
+          />
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <Users className="size-3" />
+          Capacidad
+        </p>
+        <div className="space-y-3">
+          <Stepper label="Huéspedes" value={guests} onChange={setGuests} />
+          <Stepper label="Habitaciones" value={bedrooms} onChange={setBedrooms} />
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Comodidades
+        </p>
+        <div className="space-y-2">
+          {ALL_AMENITIES.map((a) => (
+            <label key={a} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedAmenities.includes(a)}
+                onChange={() => toggleAmenity(a)}
+                className="rounded border-input"
+              />
+              {AMENITY_LABELS[a]}
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
-      <aside className="w-full shrink-0 lg:w-64">
+      <aside className="hidden w-full shrink-0 lg:block lg:w-64">
         <div className="sticky top-20 space-y-6 rounded-xl border bg-card p-5">
-          <div>
-            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Centro de Ski
-            </p>
-            <div className="flex flex-col gap-1">
-              <Button
-                variant={selectedLocation === null ? "secondary" : "ghost"}
-                size="sm"
-                className="justify-start"
-                onClick={() => setSelectedLocation(null)}
-              >
-                <Tag className="size-3.5" data-icon="inline-start" />
-                Todos
-              </Button>
-              {LOCATION_FILTERS.map((loc) => (
-                <Button
-                  key={loc.value}
-                  variant={selectedLocation === loc.value ? "secondary" : "ghost"}
-                  size="sm"
-                  className="justify-start"
-                  onClick={() => setSelectedLocation(loc.value)}
-                >
-                  <MapPin className="size-3.5" data-icon="inline-start" />
-                  {loc.label}
-                </Button>
-              ))}
-            </div>
-          </div>
+          {filterContent}
         </div>
       </aside>
 
       <div className="flex-1">
-        <div className="mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "departamento" : "departamentos"}
           </p>
+          <div className="lg:hidden">
+            <Sheet>
+              <SheetTrigger
+                render={
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    <SlidersHorizontal className="size-3.5" />
+                    Filtros
+                    {hasFilters && (
+                      <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                        !
+                      </span>
+                    )}
+                  </Button>
+                }
+              />
+              <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-8">
+                <div className="p-4">
+                  <h3 className="mb-4 font-heading text-lg font-semibold">Filtros</h3>
+                  {filterContent}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
 
         {filtered.length === 0 ? (
@@ -96,11 +333,7 @@ export function DepartamentosCatalog({ properties }: DepartamentosCatalogProps) 
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((property) => (
-              <Link
-                key={property.id}
-                href={`/departamentos/${property.id}`}
-                className="group"
-              >
+              <Link key={property.id} href={`/departamentos/${property.id}`} className="group">
                 <Card className="overflow-hidden transition-shadow hover:shadow-lg">
                   <div className="relative aspect-[16/10] overflow-hidden bg-secondary/50">
                     {property.images?.[0] ? (
@@ -128,6 +361,18 @@ export function DepartamentosCatalog({ properties }: DepartamentosCatalogProps) 
                           <span className="truncate">{property.location}</span>
                         </div>
                       </div>
+                    </div>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      {(property.max_guests ?? 0) > 0 && (
+                        <span className="flex items-center gap-1">
+                          <Users className="size-3" />{property.max_guests}
+                        </span>
+                      )}
+                      {(property.bedrooms ?? 0) > 0 && (
+                        <span className="flex items-center gap-1">
+                          <BedDouble className="size-3" />{property.bedrooms}
+                        </span>
+                      )}
                     </div>
                     <div className="mt-3 flex items-baseline gap-1">
                       <span className="text-xl font-bold text-primary">

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getProperties } from "@/actions/properties";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 import {
   buildWhatsAppUrlWithText,
@@ -17,7 +18,14 @@ export const metadata = {
 };
 
 export default async function DepartamentosPage() {
-  const { data: properties, error } = await getProperties();
+  const [{ data: properties, error }, supabase] = await Promise.all([
+    getProperties(),
+    createSupabaseServerClient(),
+  ]);
+  const { data: reservations } = await supabase
+    .from("reservations")
+    .select("property_id, start_date, end_date")
+    .gte("end_date", new Date().toISOString().split("T")[0]);
   const listPropertyWhatsAppHref = buildWhatsAppUrlWithText(
     ADMIN_WHATSAPP,
     LIST_PROPERTY_WHATSAPP_MESSAGE
@@ -65,7 +73,10 @@ export default async function DepartamentosPage() {
       )}
 
       <Suspense fallback={null}>
-        <DepartamentosCatalog properties={(properties as any[]) ?? []} />
+        <DepartamentosCatalog
+          properties={(properties as any[]) ?? []}
+          reservations={(reservations as any[]) ?? []}
+        />
       </Suspense>
     </div>
   );

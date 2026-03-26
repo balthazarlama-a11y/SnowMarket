@@ -11,6 +11,35 @@ export const PRODUCT_CATEGORIES = [
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
+export const PRODUCT_CONDITIONS = [
+  "nuevo",
+  "usado_como_nuevo",
+  "usado_buen_estado",
+] as const;
+
+export type ProductCondition = (typeof PRODUCT_CONDITIONS)[number];
+
+export const CONDITION_LABELS: Record<string, string> = {
+  nuevo: "Nuevo",
+  usado_como_nuevo: "Usado - Como nuevo",
+  usado_buen_estado: "Usado - Buen estado",
+};
+
+export const POPULAR_BRANDS = [
+  "Burton",
+  "Salomon",
+  "Rossignol",
+  "K2",
+  "Head",
+  "Atomic",
+  "Nordica",
+  "Fischer",
+  "Dynastar",
+  "Otra",
+] as const;
+
+export const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
+
 const chileanPhoneRegex = /^(\+?56)?\s?0?9\s?\d{8}$/;
 
 export const createProductSchema = z.object({
@@ -30,6 +59,10 @@ export const createProductSchema = z.object({
     .string()
     .regex(chileanPhoneRegex, "Numero de WhatsApp chileno no valido"),
   images: z.array(z.string().url()).default([]),
+  brand: z.string().nullish(),
+  condition: z.enum(PRODUCT_CONDITIONS).nullish(),
+  size_label: z.string().nullish(),
+  size_value: z.number().nullish(),
 });
 
 export const updateProductSchema = createProductSchema.partial().extend({

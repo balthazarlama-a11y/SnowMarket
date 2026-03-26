@@ -3,6 +3,7 @@
 import { useState, useRef, type FormEvent } from "react";
 import { createProperty } from "@/actions/properties";
 import { uploadImages } from "@/actions/upload";
+import { AMENITY_OPTIONS, AMENITY_LABELS } from "@/lib/validations/property";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,6 +67,10 @@ export default function AdminPropertiesPage() {
     const latRaw = form.get("latitude") as string;
     const lngRaw = form.get("longitude") as string;
 
+    const selectedAmenities = AMENITY_OPTIONS.filter(
+      (a) => form.get(`amenity_${a}`) === "on"
+    );
+
     const result = await createProperty({
       title: form.get("title") as string,
       description: form.get("description") as string,
@@ -75,6 +80,9 @@ export default function AdminPropertiesPage() {
       images: imageUrls,
       latitude: latRaw ? Number(latRaw) : null,
       longitude: lngRaw ? Number(lngRaw) : null,
+      max_guests: Number(form.get("max_guests")) || 2,
+      bedrooms: Number(form.get("bedrooms")) || 1,
+      amenities: selectedAmenities as string[],
     });
 
     setLoading(false);
@@ -132,6 +140,29 @@ export default function AdminPropertiesPage() {
               <div className="space-y-2">
                 <Label htmlFor="location">Ubicación</Label>
                 <Input id="location" name="location" required placeholder="Valle Nevado, Chile" />
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="max_guests">Huéspedes máx.</Label>
+                <Input id="max_guests" name="max_guests" type="number" min={1} defaultValue={2} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bedrooms">Habitaciones</Label>
+                <Input id="bedrooms" name="bedrooms" type="number" min={0} defaultValue={1} />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Comodidades</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {AMENITY_OPTIONS.map((a) => (
+                  <label key={a} className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" name={`amenity_${a}`} className="rounded border-input" />
+                    {AMENITY_LABELS[a]}
+                  </label>
+                ))}
               </div>
             </div>
 

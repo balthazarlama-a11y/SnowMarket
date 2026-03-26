@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -9,10 +9,24 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SearchBar } from "@/app/components/SearchBar";
 import { CATEGORY_LABELS } from "@/lib/constants";
-import { PRODUCT_CATEGORIES } from "@/lib/validations/product";
-import { ShieldCheck, ShoppingBag, Tag } from "lucide-react";
+import {
+  PRODUCT_CATEGORIES,
+  PRODUCT_CONDITIONS,
+  CONDITION_LABELS,
+  POPULAR_BRANDS,
+  CLOTHING_SIZES,
+} from "@/lib/validations/product";
+import {
+  ShieldCheck,
+  ShoppingBag,
+  Tag,
+  X,
+  SlidersHorizontal,
+} from "lucide-react";
 
 interface Product {
   id: string;
@@ -22,6 +36,10 @@ interface Product {
   is_verified: boolean;
   images: string[];
   description?: string;
+  brand?: string | null;
+  condition?: string | null;
+  size_label?: string | null;
+  size_value?: number | null;
 }
 
 interface ProductCatalogProps {
@@ -31,73 +49,270 @@ interface ProductCatalogProps {
 export function ProductCatalog({ products }: ProductCatalogProps) {
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
+  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [sizeMin, setSizeMin] = useState("");
+  const [sizeMax, setSizeMax] = useState("");
 
-  const filtered = products.filter((p) => {
-    if (selectedCategory && p.category !== selectedCategory) return false;
-    if (verifiedOnly && !p.is_verified) return false;
-    if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.description?.toLowerCase().includes(queryParam)) return false;
-    return true;
-  });
+  const hasFilters =
+    selectedCategory !== null ||
+    verifiedOnly ||
+    priceMin !== "" ||
+    priceMax !== "" ||
+    selectedConditions.length > 0 ||
+    selectedBrands.length > 0 ||
+    selectedSizes.length > 0 ||
+    sizeMin !== "" ||
+    sizeMax !== "";
+
+  function clearFilters() {
+    setSelectedCategory(null);
+    setVerifiedOnly(false);
+    setPriceMin("");
+    setPriceMax("");
+    setSelectedConditions([]);
+    setSelectedBrands([]);
+    setSelectedSizes([]);
+    setSizeMin("");
+    setSizeMax("");
+  }
+
+  function toggleItem(list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>, item: string) {
+    setList((prev) =>
+      prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item]
+    );
+  }
+
+  const showClothingSizes = selectedCategory === "ropa_de_esqui";
+  const showCmRange = selectedCategory === "esquis" || selectedCategory === null;
+  const showBootSizes = selectedCategory === "botas";
+
+  const filtered = useMemo(() => {
+    return products.filter((p) => {
+      if (selectedCategory && p.category !== selectedCategory) return false;
+      if (verifiedOnly && !p.is_verified) return false;
+      if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.description?.toLowerCase().includes(queryParam)) return false;
+      const pMin = priceMin ? Number(priceMin) : 0;
+      const pMax = priceMax ? Number(priceMax) : Infinity;
+      if (p.price < pMin || p.price > pMax) return false;
+      if (selectedConditions.length > 0 && (!p.condition || !selectedConditions.includes(p.condition))) return false;
+      if (selectedBrands.length > 0 && (!p.brand || !selectedBrands.includes(p.brand))) return false;
+      if (selectedSizes.length > 0 && (!p.size_label || !selectedSizes.includes(p.size_label))) return false;
+      if (sizeMin && p.size_value != null && p.size_value < Number(sizeMin)) return false;
+      if (sizeMax && p.size_value != null && p.size_value > Number(sizeMax)) return false;
+      return true;
+    });
+  }, [products, selectedCategory, verifiedOnly, queryParam, priceMin, priceMax, selectedConditions, selectedBrands, selectedSizes, sizeMin, sizeMax]);
+
+  const filterContent = (
+    <div className="space-y-6">
+      {hasFilters && (
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <X className="size-3" />
+          Limpiar filtros
+        </button>
+      )}
+
+      <div className="flex items-center justify-between gap-3">
+        <Label htmlFor="verified-toggle" className="flex items-center gap-2 text-sm font-medium">
+          <ShieldCheck className="size-4 text-accent" />
+          Solo Verificados
+        </Label>
+        <Switch
+          id="verified-toggle"
+          checked={verifiedOnly}
+          onCheckedChange={setVerifiedOnly}
+        />
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Categoría
+        </p>
+        <div className="flex flex-col gap-1">
+          <Button
+            variant={selectedCategory === null ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setSelectedCategory(null)}
+          >
+            <Tag className="size-3.5" data-icon="inline-start" />
+            Todas
+          </Button>
+          {PRODUCT_CATEGORIES.map((cat) => (
+            <Button
+              key={cat}
+              variant={selectedCategory === cat ? "secondary" : "ghost"}
+              size="sm"
+              className="justify-start"
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {CATEGORY_LABELS[cat]}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Precio (CLP)
+        </p>
+        <div className="flex items-center gap-2">
+          <Input
+            type="number"
+            placeholder="Mín"
+            value={priceMin}
+            onChange={(e) => setPriceMin(e.target.value)}
+            className="h-8 text-xs"
+            min={0}
+          />
+          <span className="text-xs text-muted-foreground">—</span>
+          <Input
+            type="number"
+            placeholder="Máx"
+            value={priceMax}
+            onChange={(e) => setPriceMax(e.target.value)}
+            className="h-8 text-xs"
+            min={0}
+          />
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Estado
+        </p>
+        <div className="space-y-2">
+          {PRODUCT_CONDITIONS.map((c) => (
+            <label key={c} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedConditions.includes(c)}
+                onChange={() => toggleItem(selectedConditions, setSelectedConditions, c)}
+                className="rounded border-input"
+              />
+              {CONDITION_LABELS[c]}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Marca
+        </p>
+        <div className="max-h-40 space-y-2 overflow-y-auto">
+          {POPULAR_BRANDS.map((b) => (
+            <label key={b} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedBrands.includes(b)}
+                onChange={() => toggleItem(selectedBrands, setSelectedBrands, b)}
+                className="rounded border-input"
+              />
+              {b}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {showClothingSizes && (
+        <div>
+          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Talla Ropa
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {CLOTHING_SIZES.map((s) => (
+              <Button
+                key={s}
+                variant={selectedSizes.includes(s) ? "secondary" : "outline"}
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => toggleItem(selectedSizes, setSelectedSizes, s)}
+              >
+                {s}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(showCmRange || showBootSizes) && (
+        <div>
+          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {showBootSizes ? "Talla (Mondopoint cm)" : "Longitud (cm)"}
+          </p>
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              placeholder="Mín"
+              value={sizeMin}
+              onChange={(e) => setSizeMin(e.target.value)}
+              className="h-8 text-xs"
+              min={0}
+            />
+            <span className="text-xs text-muted-foreground">—</span>
+            <Input
+              type="number"
+              placeholder="Máx"
+              value={sizeMax}
+              onChange={(e) => setSizeMax(e.target.value)}
+              className="h-8 text-xs"
+              min={0}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
-      {/* Filters sidebar */}
-      <aside className="w-full shrink-0 lg:w-64">
+      <aside className="hidden w-full shrink-0 lg:block lg:w-64">
         <div className="sticky top-20 space-y-6 rounded-xl border bg-card p-5">
-          {/* Verified toggle */}
-          <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="verified-toggle" className="flex items-center gap-2 text-sm font-medium">
-              <ShieldCheck className="size-4 text-accent" />
-              Solo Verificados
-            </Label>
-            <Switch
-              id="verified-toggle"
-              checked={verifiedOnly}
-              onCheckedChange={setVerifiedOnly}
-            />
-          </div>
-
-          {/* Category filter */}
-          <div>
-            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Categoría
-            </p>
-            <div className="flex flex-col gap-1">
-              <Button
-                variant={selectedCategory === null ? "secondary" : "ghost"}
-                size="sm"
-                className="justify-start"
-                onClick={() => setSelectedCategory(null)}
-              >
-                <Tag className="size-3.5" data-icon="inline-start" />
-                Todas
-              </Button>
-              {PRODUCT_CATEGORIES.map((cat) => (
-                <Button
-                  key={cat}
-                  variant={selectedCategory === cat ? "secondary" : "ghost"}
-                  size="sm"
-                  className="justify-start"
-                  onClick={() => setSelectedCategory(cat)}
-                >
-                  {CATEGORY_LABELS[cat]}
-                </Button>
-              ))}
-            </div>
-          </div>
+          {filterContent}
         </div>
       </aside>
 
-      {/* Product grid */}
       <div className="flex-1">
-        {/* Results count + publish CTA */}
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "producto" : "productos"}
           </p>
           <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <div className="lg:hidden">
+              <Sheet>
+                <SheetTrigger
+                  render={
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      <SlidersHorizontal className="size-3.5" />
+                      Filtros
+                      {hasFilters && (
+                        <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                          !
+                        </span>
+                      )}
+                    </Button>
+                  }
+                />
+                <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-8">
+                  <div className="p-4">
+                    <h3 className="mb-4 font-heading text-lg font-semibold">Filtros</h3>
+                    {filterContent}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
             <SearchBar />
             <Button size="sm" render={<Link href="/mis-productos/nuevo" />}>
               <ShoppingBag className="size-4" data-icon="inline-start" />
@@ -153,9 +368,19 @@ function ProductCard({ product }: { product: Product }) {
           <p className="mt-1 text-lg font-bold text-primary">
             ${Number(product.price).toLocaleString("es-CL")}
           </p>
-          <Badge variant="outline" className="mt-2">
-            {CATEGORY_LABELS[product.category] ?? product.category}
-          </Badge>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <Badge variant="outline">
+              {CATEGORY_LABELS[product.category] ?? product.category}
+            </Badge>
+            {product.brand && (
+              <Badge variant="secondary" className="text-xs">{product.brand}</Badge>
+            )}
+            {product.condition && (
+              <Badge variant="secondary" className="text-xs">
+                {CONDITION_LABELS[product.condition] ?? product.condition}
+              </Badge>
+            )}
+          </div>
         </CardContent>
       </Card>
     </Link>

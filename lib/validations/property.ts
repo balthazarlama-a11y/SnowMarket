@@ -2,6 +2,20 @@ import { z } from "zod";
 
 const chileanPhoneRegex = /^(\+?56)?\s?0?9\s?\d{8}$/;
 
+export const AMENITY_OPTIONS = [
+  "ski_in_out",
+  "estacionamiento",
+  "calefaccion",
+  "wifi",
+] as const;
+
+export const AMENITY_LABELS: Record<string, string> = {
+  ski_in_out: "Ski-in / Ski-out",
+  estacionamiento: "Estacionamiento",
+  calefaccion: "Calefacción",
+  wifi: "WiFi",
+};
+
 export const createPropertySchema = z.object({
   title: z
     .string()
@@ -19,6 +33,9 @@ export const createPropertySchema = z.object({
   images: z.array(z.string().url()).default([]),
   latitude: z.number().min(-90).max(90).nullish(),
   longitude: z.number().min(-180).max(180).nullish(),
+  max_guests: z.number().int().min(1).default(2),
+  bedrooms: z.number().int().min(0).default(1),
+  amenities: z.array(z.string()).default([]),
 });
 
 export const updatePropertySchema = createPropertySchema.partial().extend({

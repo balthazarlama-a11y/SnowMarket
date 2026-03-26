@@ -6,6 +6,10 @@ import { createProduct } from "@/actions/products";
 import { uploadImages } from "@/actions/upload";
 import {
   PRODUCT_CATEGORIES,
+  PRODUCT_CONDITIONS,
+  CONDITION_LABELS,
+  POPULAR_BRANDS,
+  CLOTHING_SIZES,
   type ProductCategory,
 } from "@/lib/validations/product";
 import { CATEGORY_LABELS } from "@/lib/constants";
@@ -70,6 +74,7 @@ export default function NuevoProductoPage() {
       }
     }
 
+    const sizeVal = form.get("size_value") as string;
     const result = await createProduct({
       title: form.get("title") as string,
       description: form.get("description") as string,
@@ -77,6 +82,10 @@ export default function NuevoProductoPage() {
       category: form.get("category") as ProductCategory,
       whatsapp_number: form.get("whatsapp_number") as string,
       images: imageUrls,
+      brand: (form.get("brand") as string) || null,
+      condition: (form.get("condition") as any) || null,
+      size_label: (form.get("size_label") as string) || null,
+      size_value: sizeVal ? Number(sizeVal) : null,
     });
 
     setLoading(false);
@@ -162,6 +171,46 @@ export default function NuevoProductoPage() {
                     </option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="brand">Marca (opcional)</Label>
+                <select
+                  id="brand"
+                  name="brand"
+                  className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  <option value="">Sin especificar</option>
+                  {POPULAR_BRANDS.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="condition">Estado (opcional)</Label>
+                <select
+                  id="condition"
+                  name="condition"
+                  className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  <option value="">Sin especificar</option>
+                  {PRODUCT_CONDITIONS.map((c) => (
+                    <option key={c} value={c}>{CONDITION_LABELS[c]}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="size_label">Talla (opcional)</Label>
+                <Input id="size_label" name="size_label" placeholder="Ej: L, 27.5, 170cm" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="size_value">Medida en cm (opcional)</Label>
+                <Input id="size_value" name="size_value" type="number" step="0.1" placeholder="170" />
               </div>
             </div>
 
