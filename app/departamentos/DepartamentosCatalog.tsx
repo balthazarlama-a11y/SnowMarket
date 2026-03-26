@@ -31,7 +31,10 @@ interface DepartamentosCatalogProps {
 export function DepartamentosCatalog({ properties }: DepartamentosCatalogProps) {
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const locationParam = searchParams.get("location");
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(
+    locationParam ?? null
+  );
 
   const filtered = properties.filter((p) => {
     if (selectedLocation && !p.location?.toLowerCase().includes(selectedLocation.toLowerCase())) {

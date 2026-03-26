@@ -17,6 +17,8 @@ export const createPropertySchema = z.object({
     .string()
     .regex(chileanPhoneRegex, "Numero de WhatsApp chileno no valido"),
   images: z.array(z.string().url()).default([]),
+  latitude: z.number().min(-90).max(90).nullish(),
+  longitude: z.number().min(-180).max(180).nullish(),
 });
 
 export const updatePropertySchema = createPropertySchema.partial().extend({

@@ -20,8 +20,11 @@ import {
   HelpCircle,
   CheckCircle2,
   Star,
+  CalendarDays,
+  KeyRound,
 } from "lucide-react";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
+import { HeroSearchForm } from "./components/HeroSearchForm";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 
 export default function Home() {
@@ -58,6 +61,7 @@ export default function Home() {
             <ArrowRight className="size-4" data-icon="inline-end" />
           </Button>
         </div>
+        <HeroSearchForm />
       </HeroGeometric>
 
       {/* Value Propositions */}
@@ -196,7 +200,7 @@ export default function Home() {
                 </div>
                 <div className="px-6 py-5 sm:px-8 space-y-3">
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-600" />
+                    <KeyRound className="mt-0.5 size-4 shrink-0 text-green-600" />
                     <span className="text-sm">Publicación y gestión de tu propiedad</span>
                   </div>
                   <div className="flex items-start gap-2.5">
@@ -204,7 +208,7 @@ export default function Home() {
                     <span className="text-sm">Comunicación directa con arrendatarios</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-600" />
+                    <CalendarDays className="mt-0.5 size-4 shrink-0 text-green-600" />
                     <span className="text-sm">Verificación de disponibilidad y reserva</span>
                   </div>
                   <div className="flex items-start gap-2.5">
@@ -217,6 +221,10 @@ export default function Home() {
 
             {/* Articulos Verificados */}
             <Card className="relative overflow-hidden border-2 border-amber-400/40">
+              <Badge className="absolute right-4 top-4 z-10 bg-amber-500 text-white hover:bg-amber-500 gap-1 shadow-md">
+                <Star className="size-3" />
+                Premium
+              </Badge>
               <div className="absolute -right-8 -top-8 size-24 rounded-full bg-amber-400/10 blur-2xl" />
               <CardContent className="p-0">
                 <div className="bg-amber-50 px-6 py-5 sm:px-8 dark:bg-amber-400/5">
@@ -252,11 +260,14 @@ export default function Home() {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-500" />
-                    <span className="text-sm">Sello de confianza SnowMarket visible en el listing</span>
+                    <span className="text-sm">
+                      <ShieldCheck className="mr-1 inline size-3.5 text-amber-500" />
+                      Sello de confianza SnowMarket visible en el listing
+                    </span>
                   </div>
                   <Separator className="my-1" />
-                  <div className="rounded-lg bg-amber-50 p-3 text-xs text-amber-800 leading-relaxed dark:bg-amber-400/5 dark:text-amber-200">
-                    <Truck className="mb-1 inline-block size-3.5 mr-1" />
+                  <div className="rounded-lg bg-amber-50 p-4 text-sm text-amber-800 leading-relaxed dark:bg-amber-400/5 dark:text-amber-200">
+                    <Truck className="mb-1 inline-block size-4 mr-1.5" />
                     <strong>Servicio puerta a puerta:</strong> Nosotros vamos a buscar el artículo a la casa
                     del vendedor, lo verificamos y lo entregamos directamente al comprador.
                   </div>

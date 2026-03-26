@@ -1,6 +1,7 @@
 import { getProducts } from "@/actions/products";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { AdminDeleteButton } from "./AdminDeleteButton";
+import { VerifyToggle } from "./VerifyToggle";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -94,7 +95,14 @@ export default async function ModerationPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="flex shrink-0 items-center gap-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground">Verificado</span>
+                    <VerifyToggle
+                      productId={p.id}
+                      initialVerified={!!p.is_verified}
+                    />
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"

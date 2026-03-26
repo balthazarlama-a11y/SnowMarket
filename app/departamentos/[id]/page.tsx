@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getPropertyById } from "@/actions/properties";
+import { getReservationsByProperty } from "@/actions/reservations";
 import { WhatsAppButton } from "@/app/components/WhatsAppButton";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +18,17 @@ export default async function PropertyDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { data: property, error } = await getPropertyById(id);
+  const [{ data: property, error }, { data: reservations }] = await Promise.all([
+    getPropertyById(id),
+    getReservationsByProperty(id),
+  ]);
 
   if (error || !property) return notFound();
+
+  const hasCoords = property.latitude != null && property.longitude != null;
+  const mapsUrl = hasCoords
+    ? `https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}`
+    : null;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -87,6 +96,20 @@ export default async function PropertyDetailPage({
                 {property.location}
               </div>
 
+              {mapsUrl && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5"
+                  render={
+                    <a href={mapsUrl} target="_blank" rel="noopener noreferrer" />
+                  }
+                >
+                  <MapPin className="size-3.5" data-icon="inline-start" />
+                  Ver ruta en Google Maps
+                </Button>
+              )}
+
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-primary">
                   ${Number(property.price).toLocaleString("es-CL")}
@@ -126,7 +149,7 @@ export default async function PropertyDetailPage({
                 <CalendarDays className="size-4 text-primary" />
                 <h2 className="text-sm font-medium">Disponibilidad</h2>
               </div>
-              <PropertyCalendar />
+              <PropertyCalendar reservations={(reservations as any[]) ?? []} />
             </CardContent>
           </Card>
         </div>

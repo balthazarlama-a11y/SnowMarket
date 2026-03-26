@@ -63,6 +63,9 @@ export default function AdminPropertiesPage() {
       }
     }
 
+    const latRaw = form.get("latitude") as string;
+    const lngRaw = form.get("longitude") as string;
+
     const result = await createProperty({
       title: form.get("title") as string,
       description: form.get("description") as string,
@@ -70,6 +73,8 @@ export default function AdminPropertiesPage() {
       location: form.get("location") as string,
       whatsapp_contact: form.get("whatsapp_contact") as string,
       images: imageUrls,
+      latitude: latRaw ? Number(latRaw) : null,
+      longitude: lngRaw ? Number(lngRaw) : null,
     });
 
     setLoading(false);
@@ -127,6 +132,17 @@ export default function AdminPropertiesPage() {
               <div className="space-y-2">
                 <Label htmlFor="location">Ubicación</Label>
                 <Input id="location" name="location" required placeholder="Valle Nevado, Chile" />
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="latitude">Latitud (opcional)</Label>
+                <Input id="latitude" name="latitude" type="number" step="any" placeholder="-33.3547" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="longitude">Longitud (opcional)</Label>
+                <Input id="longitude" name="longitude" type="number" step="any" placeholder="-70.2563" />
               </div>
             </div>
 

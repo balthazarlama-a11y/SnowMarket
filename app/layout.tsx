@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Navbar } from "./components/Navbar";
+import { WhatsAppFAB } from "./components/WhatsAppFAB";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background font-sans antialiased">
         <Navbar />
         {children}
+        <WhatsAppFAB />
         <Toaster position="bottom-right" richColors />
       </body>
     </html>

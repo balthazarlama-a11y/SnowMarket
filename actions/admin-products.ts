@@ -102,3 +102,38 @@ export async function adminDeleteProduct(
   revalidatePath("/productos");
   return { success: true, data: null };
 }
+
+export async function toggleProductVerified(
+  id: string
+): Promise<ActionResult<{ is_verified: boolean }>> {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || user.app_metadata?.role !== "admin") {
+    return { success: false, error: "Solo administradores" };
+  }
+
+  const { data: product, error: fetchError } = await supabase
+    .from("products")
+    .select("is_verified")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !product) {
+    return { success: false, error: "Producto no encontrado" };
+  }
+
+  const newValue = !product.is_verified;
+  const { error } = await supabase
+    .from("products")
+    .update({ is_verified: newValue })
+    .eq("id", id);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/moderation");
+  revalidatePath("/productos");
+  return { success: true, data: { is_verified: newValue } };
+}

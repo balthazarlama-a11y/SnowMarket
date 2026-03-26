@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Building2, Package, Shield, ArrowRight } from "lucide-react";
+import { ShieldCheck, Building2, Package, Shield, ArrowRight, Settings2 } from "lucide-react";
 
 export const metadata = {
   title: "Panel de Administración",
@@ -48,14 +48,32 @@ export default function DashboardPage() {
             <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10">
               <Building2 className="size-5 text-primary" />
             </div>
-            <CardTitle className="font-heading">Propiedades</CardTitle>
+            <CardTitle className="font-heading">Crear Propiedad</CardTitle>
             <CardDescription>
-              Publica y gestiona departamentos en centros de esquí.
+              Publica nuevos departamentos en centros de esquí.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button variant="secondary" className="w-full" render={<Link href="/dashboard/properties" />}>
-              Gestionar Propiedades
+              Crear Propiedad
+              <ArrowRight className="size-4" data-icon="inline-end" />
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="transition-shadow hover:shadow-md">
+          <CardHeader>
+            <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-blue-500/10">
+              <Settings2 className="size-5 text-blue-600" />
+            </div>
+            <CardTitle className="font-heading">Estado Propiedades</CardTitle>
+            <CardDescription>
+              Cambia el estado de las propiedades: activo, pausado, arrendado o vendido.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="secondary" className="w-full" render={<Link href="/dashboard/properties/manage" />}>
+              Gestionar Estados
               <ArrowRight className="size-4" data-icon="inline-end" />
             </Button>
           </CardContent>
