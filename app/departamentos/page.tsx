@@ -50,7 +50,7 @@ export default async function DepartamentosPage() {
           }
         >
           <MessageCircle className="size-4" data-icon="inline-start" />
-          Cómo subir departamento
+          ¡Sube tu departamento por aquí!
         </Button>
       </div>
 
