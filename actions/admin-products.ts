@@ -1,8 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createProductSchema } from "@/lib/validations/product";
 import type { ActionResult } from "@/lib/types";
+
+const BUCKET = "snowmarket-images";
 
 export async function createVerifiedProduct(
   input: {
@@ -45,4 +48,57 @@ export async function createVerifiedProduct(
   }
 
   return { success: true, data: { id: data.id } };
+}
+
+/**
+ * Extracts the storage path from a public Supabase URL.
+ * e.g. ".../storage/v1/object/public/snowmarket-images/products/abc.jpg"
+ *   -> "products/abc.jpg"
+ */
+function storagePathFromUrl(url: string): string | null {
+  const marker = `/storage/v1/object/public/${BUCKET}/`;
+  const idx = url.indexOf(marker);
+  if (idx === -1) return null;
+  return url.slice(idx + marker.length);
+}
+
+export async function adminDeleteProduct(
+  id: string
+): Promise<ActionResult<null>> {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || user.app_metadata?.role !== "admin") {
+    return { success: false, error: "Solo administradores" };
+  }
+
+  const { data: product, error: fetchError } = await supabase
+    .from("products")
+    .select("images")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !product) {
+    return { success: false, error: "Producto no encontrado" };
+  }
+
+  const storagePaths = (product.images as string[])
+    .map(storagePathFromUrl)
+    .filter((p): p is string => p !== null);
+
+  if (storagePaths.length > 0) {
+    await supabase.storage.from(BUCKET).remove(storagePaths);
+  }
+
+  const { error } = await supabase.from("products").delete().eq("id", id);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/moderation");
+  revalidatePath("/productos");
+  return { success: true, data: null };
 }

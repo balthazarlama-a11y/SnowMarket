@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Building2, Package, ArrowRight } from "lucide-react";
+import { ShieldCheck, Building2, Package, Shield, ArrowRight } from "lucide-react";
 
 export const metadata = {
   title: "Panel de Administración",
@@ -24,7 +24,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="transition-shadow hover:shadow-md">
           <CardHeader>
             <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-accent/10">
@@ -56,6 +56,24 @@ export default function DashboardPage() {
           <CardContent>
             <Button variant="secondary" className="w-full" render={<Link href="/dashboard/properties" />}>
               Gestionar Propiedades
+              <ArrowRight className="size-4" data-icon="inline-end" />
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="transition-shadow hover:shadow-md">
+          <CardHeader>
+            <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-destructive/10">
+              <Shield className="size-5 text-destructive" />
+            </div>
+            <CardTitle className="font-heading">Moderar Publicaciones</CardTitle>
+            <CardDescription>
+              Revisa y elimina productos que no cumplan con las normas de la plataforma.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="destructive" className="w-full" render={<Link href="/dashboard/moderation" />}>
+              Moderar
               <ArrowRight className="size-4" data-icon="inline-end" />
             </Button>
           </CardContent>
