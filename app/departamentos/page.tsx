@@ -7,6 +7,7 @@ import {
 } from "@/lib/whatsapp";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SearchBar } from "@/app/components/SearchBar";
 import { Building2, MessageCircle } from "lucide-react";
 import { DepartamentosCatalog } from "./DepartamentosCatalog";
 
@@ -38,20 +39,23 @@ export default async function DepartamentosPage() {
             centros de esquí de Chile. Contacto directo con nuestro equipo.
           </p>
         </div>
-        <Button
-          size="default"
-          className="w-full shrink-0 gap-2 bg-[#25D366] text-white hover:bg-[#1da851] sm:w-auto"
-          render={
-            <a
-              href={listPropertyWhatsAppHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-          }
-        >
-          <MessageCircle className="size-4" data-icon="inline-start" />
-          ¡Sube tu departamento por aquí!
-        </Button>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:min-w-[420px] sm:flex-row sm:items-center sm:justify-end">
+          <SearchBar />
+          <Button
+            size="default"
+            className="w-full shrink-0 gap-2 bg-[#25D366] text-white hover:bg-[#1da851] sm:w-auto"
+            render={
+              <a
+                href={listPropertyWhatsAppHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+          >
+            <MessageCircle className="size-4" data-icon="inline-start" />
+            ¡Sube tu departamento por aquí!
+          </Button>
+        </div>
       </div>
 
       {error && (

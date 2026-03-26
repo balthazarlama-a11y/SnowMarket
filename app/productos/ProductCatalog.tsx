@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { SearchBar } from "@/app/components/SearchBar";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { PRODUCT_CATEGORIES } from "@/lib/validations/product";
 import { ShieldCheck, ShoppingBag, Tag } from "lucide-react";
@@ -92,14 +93,17 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
       {/* Product grid */}
       <div className="flex-1">
         {/* Results count + publish CTA */}
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "producto" : "productos"}
           </p>
-          <Button size="sm" render={<Link href="/mis-productos/nuevo" />}>
-            <ShoppingBag className="size-4" data-icon="inline-start" />
-            Publicar
-          </Button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <SearchBar />
+            <Button size="sm" render={<Link href="/mis-productos/nuevo" />}>
+              <ShoppingBag className="size-4" data-icon="inline-start" />
+              Publicar
+            </Button>
+          </div>
         </div>
 
         {filtered.length === 0 ? (

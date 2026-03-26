@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, LogIn, PlusCircle } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
 import { MobileNav } from "./MobileNav";
-import { SearchBar } from "./SearchBar";
 
 export async function Navbar() {
   const user = await getCurrentUser();
@@ -32,11 +31,7 @@ export async function Navbar() {
           </Button>
         </div>
 
-        <div className="hidden flex-1 justify-center md:flex">
-          <SearchBar />
-        </div>
-
-        <div className="hidden shrink-0 items-center gap-2 md:flex">
+        <div className="hidden ml-auto shrink-0 items-center gap-2 md:flex">
           <Button
             size="sm"
             className="gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
