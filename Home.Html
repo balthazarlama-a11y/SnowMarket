@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SnowMarket</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+<style data-purpose="custom-styles">body {
+    font-family: "Inter", sans-serif;
+    background-color: #f8fafc
+    }
+.hero-bg {
+    background-color: #1e293b;
+    background-image: none;
+    background-size: cover;
+    background-position: center
+    }</style>
+</head>
+<body class="text-slate-800 antialiased">
+<header class="absolute top-0 w-full z-50 text-white p-6">
+<div class="max-w-7xl mx-auto flex justify-between items-center">
+<div class="flex items-center gap-2">
+<i class="fa-solid fa-mountain text-2xl text-blue-300"></i>
+<span class="text-xl font-bold tracking-tight">SnowMarket</span>
+</div>
+<nav class="flex gap-4 items-center text-sm font-medium">
+<a class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md transition" href="#">Publicar Equipo</a>
+<a class="border border-white/50 hover:bg-white/10 px-4 py-2 rounded-md transition" href="#">Publicar Departamento</a>
+<a class="hover:text-blue-200 ml-4 transition" href="#">Iniciar Sesión</a>
+</nav>
+</div>
+</header>
+<section class="hero-bg relative pt-40 pb-32 text-center text-white">
+<div class="absolute inset-0 bg-slate-900/40"></div>
+<div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+<h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-md">
+                Equipa tu aventura.<br/>
+<span style="color: #7CC4F2">Encuentra tu refugio.</span>
+</h1>
+<p class="text-lg text-slate-200 mb-10 drop-shadow">Encuentra tu refugio, si tienes un equipo o aventura.</p>
+<div class="bg-white rounded-lg shadow-xl p-2 max-w-3xl mx-auto text-slate-800 text-left">
+<div class="flex gap-2 mb-2 p-1">
+<button class="bg-white text-slate-800 px-6 py-2 rounded-md font-semibold text-sm shadow-sm border border-slate-200">Productos</button>
+<button class="bg-orange-500 text-white px-6 py-2 rounded-md font-semibold text-sm shadow-sm">Departamentos</button>
+</div>
+<div class="flex flex-col md:flex-row gap-2">
+<div class="relative flex-grow">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+<input class="w-full pl-10 pr-4 py-3 rounded-md border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Buscar refugio..." type="text"/>
+</div>
+<div class="relative md:w-40">
+<i class="fa-regular fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+<input class="w-full pl-10 pr-4 py-3 rounded-md border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Llegada" type="text"/>
+</div>
+<div class="relative md:w-40">
+<i class="fa-regular fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+<input class="w-full pl-10 pr-4 py-3 rounded-md border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Salida" type="text"/>
+</div>
+<button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-md flex items-center justify-center gap-2 transition md:w-auto">
+                        Buscar Refugio <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+</div>
+</div>
+</div>
+</section>
+<main class="max-w-7xl mx-auto px-6 py-16 space-y-24">
+<section>
+<h2 class="text-2xl font-bold mb-8">Featured Products</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<img alt="Skis" class="h-32 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8pSq1cyNjlKULADfxS7AVwY2dUvKXf1sq3t0o8XsFZbBAQiyYq_txglqyaZMXJHAgVMIc275fGxqdJ9qdc0eI-3pNZGcc0kKlTUb7RFvJn3VuQDX-jQc5SrS6U8VfcErXUlbDRvqfaqpa_xVlSVAe_6U2WOG1pjLvVYLRT_zn7a2iZUzoOceO8FCf__J8pa0s15mvCmxZYmI4FO9I1ZL2ZFs7AlYrrNgLZaCdA_GFljn2L3xsSTxjpUdYg-_f1sfmOsmafFU93jQ"/>
+<h3 class="font-semibold text-sm mb-1 line-clamp-1">Ski...</h3>
+<p class="font-bold text-slate-800 mb-4">$1,300</p>
+<button class="mt-auto w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold py-2 rounded transition">Ver Detalles</button>
+</div>
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<img alt="Boots" class="h-32 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoNltbzLEQBOyuqp1FHe7hmO7o_g7oXbE280QwliVyeiXeU81tfF7-tHX2nLJis4SYVQ4qRuP09gU6PtZUHIPUXtGDyUsWdUGd2vIWXLUPMabnK-evXBYk-f6NoC4xLMd89EtWcMMZrg8A0xeCAAWrnQYpIk9FfDwolyLkTw9R2qud9vhAiksQGuvLswS7romUnEMAih3npEvYbgnbQHe71Kj-Sw9XUmux47_P6I_k46uTfIvHuC7isvU6FKa5NOWLcgaHcwuRgU8"/>
+<h3 class="font-semibold text-sm mb-1 line-clamp-1">Boots Boots</h3>
+<p class="font-bold text-slate-800 mb-4">$3,000</p>
+<button class="mt-auto w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold py-2 rounded transition">Ver Detalles</button>
+</div>
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<img alt="Skis" class="h-32 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJwHWoAUA3qvdLwCUCHdlK6ODR33B-D68X6BCUZD2eoXGng0LHCXcplIp86UyxKWln1o2hiiMsVTD6Gq-p1s-w__0t1sy2GtI0xhv_abWUHnk9gKmdK013fbHIlYB38BP4fiJGaw1QHaF6qRwGxIHkFYCnbNmTvGOaQY8m9vlMwYOLUc149owIhNt52JGQag_IyNwUzMgiCmPe83YaIYE1jaC04LaEI2EWh72DbgFyCSqQLS-GcvOmQPWQkJ76Gkr3vFFXy4TWJRE"/>
+<h3 class="font-semibold text-sm mb-1 line-clamp-1">Ski S...</h3>
+<p class="font-bold text-slate-800 mb-4">$1,790</p>
+<button class="mt-auto w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold py-2 rounded transition">Ver Detalles</button>
+</div>
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<img alt="Skis" class="h-32 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_MLr6J1eY287UQw8rnVVJJj36qv-hl_UIi-eT6jD1J6thrJUerbMlB-u-e7k8dTQ_eyBhk7QohUOmPTBEQX8NOdJFmb5JFw2LrYpt1Y_iWrX987F3kUw-3Ur_2YWtTj3uAG96gCObdkU9sf0twpanP5wfAet_m2NgTXqkijxsSlgPblqhmzykE8SQqSACr9OpNfsfx_T42TPz6myUKP2fjD4_5CKGx6-ATqVZhEK2QFlcyspMwNGBrqewvBqAVeg_Zcm1Z1PXq64"/>
+<h3 class="font-semibold text-sm mb-1 line-clamp-1">Ski S...</h3>
+<p class="font-bold text-slate-800 mb-4">$1,950</p>
+<button class="mt-auto w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold py-2 rounded transition">Ver Detalles</button>
+</div>
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<img alt="Helmet" class="h-32 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU-oT11kKqUGLU7c1UooOC-N10tyN_0Zyj-TFEPtPxgTTJuFndTbGje6PpJwpNAWa-BmDE2jeG8swyt7RnSjfCZOeV9vBea1DI9_X7OKXnqB1T8UeKQTdA3qwZQ-ShvcPY9EJVI9kee0zGuXUIjIHTTKSm34dV2d0y0tKQW3MYxEvr3yMpq8ho0x6uMGVoQxp56SrH9KcOMVAp9WJU266MguSTpVTrwPGFi7C91UuxFRkOifz53PIgP5aiejz9y3UupNFolDv51xc"/>
+<h3 class="font-semibold text-sm mb-1 line-clamp-1">Helmet</h3>
+<p class="font-bold text-slate-800 mb-4">$1,200</p>
+<button class="mt-auto w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold py-2 rounded transition">Ver Detalles</button>
+</div>
+<div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<img alt="Jacket" class="h-32 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANuB4sjuzc9lXFENvgiDSuwC8EWMnUD40IxWW4Ixl8QYKDP4p8QWSR2Y4LX4XZZEKbMcKnUCjD1lB6eK4Jh__TGCT0hf8uQKIVM1j4qMTOG_If7nWyvt1rhpG3hoZXZVR4BdH2EMhV0ihT7HujqbHJoTAD3bTXvycGKvnzoFg2A6IhxmABZSTjl1HizORoOqNCaAL921NQAPuGQmgMD9NxSTnK1jQ1OvvmxGtZ98TEgE4LwNRaq65UFyp3PPJa5rSHvDkumBvLUZg"/>
+<h3 class="font-semibold text-sm mb-1 line-clamp-1">Jacket</h3>
+<p class="font-bold text-slate-800 mb-4">$1,000</p>
+<button class="mt-auto w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold py-2 rounded transition">Ver Detalles</button>
+</div>
+</div>
+</section>
+<section>
+<div class="mb-8">
+<h2 class="text-2xl font-bold">Premium Rentals</h2>
+<p class="text-slate-500 text-sm">Apartamentos de high-end: sub y los apartamentos.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
+<div class="relative h-48">
+<img alt="Apartment" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDszqPcmWcTT0ZI4FsOgMUkAfK5gRJTtJ7J42IWGtUU5xscLEwJ_TDBqjSYyXJaM21MVD12qd22Xy9cPjWTU1Sn7XA2RE2PYLOsQrVr-WXwE30OutXf9kM-02UY5wSthHbqxAPgb3tbUUEFlgOxR3Rw3JQnzC2-et--u8TqfCH5SCFEIptWH4F8hxtwXuX09m1pBq6QgDrwL4TbZPJ7t0EzSYZCMR5-yWeNrF0SgMEbNefwjjIvRj8M4Y7eRMBGn8VbBQhIMYSQjl4"/>
+<span class="absolute bottom-2 left-2 bg-slate-900/70 text-white text-xs px-2 py-1 rounded">Apartamento</span>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="text-lg font-bold">El Colorado</h3>
+<p class="text-xl font-bold text-slate-800 mb-1">$130 <span class="text-sm font-normal text-slate-500">night</span></p>
+<p class="text-xs text-slate-500 mb-4">Agumiste</p>
+<div class="grid grid-cols-2 gap-2 text-sm text-slate-600 mb-6">
+<div class="flex items-center gap-2"><i class="fa-solid fa-bed w-4"></i> 2 bedrooms</div>
+<div class="flex items-center gap-2"><i class="fa-regular fa-eye w-4"></i> View</div>
+<div class="flex items-center gap-2"><i class="fa-solid fa-bath w-4"></i> 1 Bathroom</div>
+<div class="flex items-center gap-2"><i class="fa-solid fa-wifi w-4"></i> Amenities</div>
+</div>
+<a class="mt-auto text-sm font-semibold text-slate-800 hover:text-blue-600 transition flex items-center gap-1" href="#">Ver detalles <i class="fa-solid fa-arrow-right text-xs"></i></a>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
+<div class="relative h-48">
+<img alt="Valle Nevado" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDssfBmdczZFRXzV4tJNNgVFxsblcmhRHXV4GpsJtrGXjhL6eStO2tfWwfkpez7UUnNp0R0mS7WHsc7TI0WIttXQGMj3finCg116_FKBk236ND5fywz2PA4ZpA07lpIAEQ1fXFOGxIbOrkwQkCCr_6OSevSjSqL6eryqhedmE-p5cow2mDN9PcawrBZSDkk5T4qidK4eZF8uGKf8JgJvV4sClyITChlDf6vr6UqvPGBmvc6zIYYlq8gRXRIqCgVRiKvbYOvfA63vPo"/>
+<span class="absolute bottom-2 left-2 bg-slate-900/70 text-white text-xs px-2 py-1 rounded">Valle Nevado</span>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="text-lg font-bold">Valle Nevado</h3>
+<p class="text-xl font-bold text-slate-800 mb-1">$143 <span class="text-sm font-normal text-slate-500">night</span></p>
+<p class="text-xs text-slate-500 mb-4">Agumiste</p>
+<div class="grid grid-cols-2 gap-2 text-sm text-slate-600 mb-6">
+<div class="flex items-center gap-2"><i class="fa-solid fa-bed w-4"></i> 2 bedrooms</div>
+<div class="flex items-center gap-2"><i class="fa-regular fa-eye w-4"></i> View</div>
+<div class="flex items-center gap-2"><i class="fa-solid fa-bath w-4"></i> 1 Bathroom</div>
+<div class="flex items-center gap-2"><i class="fa-solid fa-wifi w-4"></i> Amenities</div>
+</div>
+<a class="mt-auto text-sm font-semibold text-slate-800 hover:text-blue-600 transition flex items-center gap-1" href="#">Ver detalles <i class="fa-solid fa-arrow-right text-xs"></i></a>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
+<div class="relative h-48">
+<img alt="Cabin" class="w-full h-full object-cover" src="https://placeholder.pics/svg/300"/>
+<span class="absolute bottom-2 left-2 bg-slate-900/70 text-white text-xs px-2 py-1 rounded">Cabaña</span>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="text-lg font-bold">Cabaña del Bosque</h3>
+<p class="text-xl font-bold text-slate-800 mb-1">$120 <span class="text-sm font-normal text-slate-500">night</span></p>
+<p class="text-xs text-slate-500 mb-4">San Martín de los Andes</p>
+<div class="grid grid-cols-2 gap-2 text-sm text-slate-600 mb-6">
+<div class="flex items-center gap-2"><i class="fa-solid fa-bed w-4"></i> 3 bedrooms</div>
+<div class="flex items-center gap-2"><i class="fa-regular fa-eye w-4"></i> Forest</div>
+<div class="flex items-center gap-2"><i class="fa-solid fa-bath w-4"></i> 2 Bathroom</div>
+<div class="flex items-center gap-2"><i class="fa-solid fa-wifi w-4"></i> Amenities</div>
+</div>
+<a class="mt-auto text-sm font-semibold text-slate-800 hover:text-blue-600 transition flex items-center gap-1" href="#">Ver detalles <i class="fa-solid fa-arrow-right text-xs"></i></a>
+</div>
+</div></div>
+</section>
+<section class="text-center py-10">
+<h2 class="text-3xl font-bold mb-2">How it Works</h2>
+<p class="text-slate-500 mb-12">Pasos para unirte en un clic, venta mas facil para ti.</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex flex-col items-center">
+<i class="fa-regular fa-user text-4xl text-slate-700 mb-4"></i>
+<h3 class="font-bold text-lg mb-2">1. Crea tu Cuenta</h3>
+<p class="text-sm text-slate-600 px-4">Crea tu cuenta y comienza a vender tu equipo entrando a tu cuenta.</p>
+</div>
+<div class="flex flex-col items-center">
+<i class="fa-regular fa-pen-to-square text-4xl text-slate-700 mb-4"></i>
+<h3 class="font-bold text-lg mb-2">2. Publica tu Articulo</h3>
+<p class="text-sm text-slate-600 px-4">Publica tu articulo y amenities, llega a más gente con tu articulo.</p>
+</div>
+<div class="flex flex-col items-center">
+<i class="fa-solid fa-handshake-angle text-4xl text-slate-700 mb-4"></i>
+<h3 class="font-bold text-lg mb-2">3. Conecta y Vende</h3>
+<p class="text-sm text-slate-600 px-4">Conecta y vende de forma segura, facil y rapido, sin comision oculta.</p>
+</div>
+</div>
+</section>
+<section class="text-center py-10 bg-slate-50 rounded-2xl">
+<h2 class="text-3xl font-bold mb-2">Commissions</h2>
+<p class="text-slate-500 mb-12">Transparent commissions on SnowMarket.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+<div class="bg-[#FDF8F0] border border-orange-100 rounded-xl p-8 shadow-sm">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-xl font-bold text-slate-800">Departamentos</h3>
+<p class="text-sm text-slate-500">Comisión de promoción</p>
+</div>
+<span class="font-bold text-slate-800 text-5xl">7%</span>
+</div>
+<ul class="space-y-3 text-sm text-slate-700">
+<li class="flex items-center gap-2"><i class="fa-solid fa-check text-slate-400"></i> Beneficio de anuncios</li>
+<li class="flex items-center gap-2"><i class="fa-solid fa-check text-slate-400"></i> Beneficio de departamentos</li>
+<li class="flex items-center gap-2"><i class="fa-solid fa-check text-slate-400"></i> Beneficios de agentes</li>
+</ul>
+</div>
+<div class="bg-[#FDF8F0] border border-orange-100 rounded-xl p-8 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-orange-100/50 rounded-bl-full -z-10"></div>
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-xl font-bold text-slate-800">Articulos Verificados</h3>
+<p class="text-sm text-slate-500">Comisión de promoción</p>
+</div>
+<span class="font-bold text-slate-800 text-5xl">10%</span>
+</div>
+<ul class="space-y-3 text-sm text-slate-700">
+<li class="flex items-center gap-2"><i class="fa-solid fa-check text-slate-400"></i> Compras ex-press <i class="fa-solid fa-circle-check text-blue-500 text-xs"></i></li>
+<li class="flex items-center gap-2"><i class="fa-solid fa-check text-slate-400"></i> Articulos Verificados</li>
+<li class="flex items-center gap-2"><i class="fa-solid fa-check text-slate-400"></i> Beneficios de alta demanda <i class="fa-solid fa-circle-check text-blue-500 text-xs"></i></li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-[#111827] text-white pt-16 pb-8">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 pb-12 border-b border-slate-700/50">
+<div>
+<h3 class="text-xl font-bold mb-2">¿Tienes equipo para vender?</h3>
+<p class="text-slate-400 text-sm mb-4">Tienes equipo para vender o buscas en SnowMarket.</p>
+<button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-md transition text-sm">¿Tienes equipo para vender?</button>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-2">¿Necesitas ayuda?</h3>
+<p class="text-slate-400 text-sm mb-4">Necesitas ayuda envianos un mensaje a nuestro soporte.</p>
+<button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-md transition text-sm">¿Necesitas ayuda?</button>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm">
+<p>SnowMarket</p>
+<div class="flex gap-4 mt-4 md:mt-0">
+<a class="hover:text-white transition" href="#"><i class="fa-brands fa-twitter"></i></a>
+<a class="hover:text-white transition" href="#"><i class="fa-brands fa-instagram"></i></a>
+<a class="hover:text-white transition" href="#"><i class="fa-brands fa-youtube"></i></a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
