@@ -54,12 +54,12 @@ export default function Home() {
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
         {/* Background image */}
         <Image
-          src="/images/hero-skier.png"
-          alt="Esquiador en acción en los Andes"
+          src="/images/hero-mountain.jpg"
+          alt="Majestuosas montañas nevadas de los Andes"
           fill
           className="object-cover object-center"
           priority
-          quality={85}
+          quality={100}
         />
         {/* Dark overlay with blue tint */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628]/70 via-[#0a1628]/50 to-[#0a1628]/80" />
