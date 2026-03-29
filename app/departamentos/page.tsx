@@ -43,7 +43,7 @@ export default async function DepartamentosPage() {
             Departamentos en la Nieve
           </h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Propiedades seleccionadas y gestionadas por SnowMarket en los principales
+            Propiedades seleccionadas y gestionadas por AndesMarket en los principales
             centros de esquí de Chile. Contacto directo con nuestro equipo.
           </p>
         </div>

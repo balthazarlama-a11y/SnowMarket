@@ -34,7 +34,7 @@ export default function SignInPage() {
           </div>
           <CardTitle className="font-heading text-2xl">Iniciar Sesión</CardTitle>
           <CardDescription>
-            Ingresa a tu cuenta de SnowMarket
+            Ingresa a tu cuenta de AndesMarket
           </CardDescription>
         </CardHeader>
         <CardContent>

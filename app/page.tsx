@@ -219,7 +219,7 @@ export default function Home() {
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
               <Image
                 src="/images/hero-market.png"
-                alt="SnowMarket — Mercado de equipos de esquí"
+                alt="AndesMarket — Mercado de equipos de esquí"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -238,7 +238,7 @@ export default function Home() {
                 Nuestra Comunidad
               </Badge>
               <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl mb-6">
-                ¿Cómo funciona SnowMarket?
+                ¿Cómo funciona AndesMarket?
               </h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
                 <p>
@@ -248,7 +248,7 @@ export default function Home() {
                 </p>
                 <p>
                   Imagina un mercado vibrante donde cada rack de esquís, cada par de botas y cada chaqueta
-                  encuentra un nuevo dueño que los llevará a las pistas. Eso es SnowMarket: <strong className="text-foreground">gente real, equipos reales, experiencias reales.</strong>
+                  encuentra un nuevo dueño que los llevará a las pistas. Eso es AndesMarket: <strong className="text-foreground">gente real, equipos reales, experiencias reales.</strong>
                 </p>
               </div>
 
@@ -419,7 +419,7 @@ export default function Home() {
               Comisiones claras, sin sorpresas
             </h2>
             <p className="mt-3 mx-auto max-w-2xl text-muted-foreground">
-              En SnowMarket creemos en la transparencia total. Aquí te explicamos nuestro modelo.
+              En AndesMarket creemos en la transparencia total. Aquí te explicamos nuestro modelo.
             </p>
           </div>
 
@@ -454,7 +454,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-600" />
-                    <span className="text-sm">Soporte continuo del equipo SnowMarket</span>
+                    <span className="text-sm">Soporte continuo del equipo AndesMarket</span>
                   </div>
                 </div>
               </CardContent>
@@ -503,7 +503,7 @@ export default function Home() {
                     <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-500" />
                     <span className="text-sm">
                       <ShieldCheck className="mr-1 inline size-3.5 text-amber-500" />
-                      Sello de confianza SnowMarket visible en el listing
+                      Sello de confianza AndesMarket visible en el listing
                     </span>
                   </div>
                   <Separator className="my-1" />
@@ -581,7 +581,7 @@ export default function Home() {
                   className="mt-1"
                   render={
                     <a
-                      href={`https://wa.me/${ADMIN_WHATSAPP.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hola, necesito ayuda con SnowMarket")}`}
+                      href={`https://wa.me/${ADMIN_WHATSAPP.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hola, necesito ayuda con AndesMarket")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     />
@@ -604,10 +604,10 @@ export default function Home() {
                   variant="outline"
                   size="sm"
                   className="mt-1"
-                  render={<a href="mailto:soporte@snowmarket.cl" />}
+                  render={<a href="mailto:soporte@andesmarket.cl" />}
                 >
                   <Mail className="size-3.5" data-icon="inline-start" />
-                  soporte@snowmarket.cl
+                  soporte@andesmarket.cl
                 </Button>
               </CardContent>
             </Card>
@@ -647,7 +647,7 @@ export default function Home() {
                 <div className="inline-flex items-center justify-center rounded-xl bg-white/95 px-4 py-2 shadow-sm">
                   <Image
                     src="/images/logo.png"
-                    alt="SnowMarket"
+                    alt="AndesMarket"
                     width={150}
                     height={38}
                     className="h-10 w-auto"
@@ -717,9 +717,9 @@ export default function Home() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:soporte@snowmarket.cl" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
+                  <a href="mailto:soporte@andesmarket.cl" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
                     <Mail className="size-3.5" />
-                    soporte@snowmarket.cl
+                    soporte@andesmarket.cl
                   </a>
                 </li>
               </ul>
@@ -728,7 +728,7 @@ export default function Home() {
 
           {/* Bottom bar */}
           <div className="border-t border-primary-foreground/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-primary-foreground/50">
-            <p>© {new Date().getFullYear()} SnowMarket. Marketplace premium para la nieve chilena.</p>
+            <p>© {new Date().getFullYear()} AndesMarket. Marketplace premium para la nieve chilena.</p>
             <div className="flex items-center gap-1">
               <Snowflake className="size-3" />
               <span>Hecho con ❄️ en Santiago, Chile</span>

@@ -21,8 +21,8 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "SnowMarket",
-    template: "%s | SnowMarket",
+    default: "AndesMarket",
+    template: "%s | AndesMarket",
   },
   description:
     "Marketplace de equipos de esquí y arriendo de departamentos en la nieve — Chile",

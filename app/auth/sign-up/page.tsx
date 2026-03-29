@@ -38,7 +38,7 @@ export default function SignUpPage() {
           </div>
           <CardTitle className="font-heading text-2xl">Crear Cuenta</CardTitle>
           <CardDescription>
-            Únete a SnowMarket y publica tus equipos de esquí
+            Únete a AndesMarket y publica tus equipos de esquí
           </CardDescription>
         </CardHeader>
         <CardContent>

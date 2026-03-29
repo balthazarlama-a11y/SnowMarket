@@ -104,7 +104,7 @@ export default function AdminProductsPage() {
             </Badge>
           </div>
           <CardDescription>
-            Este producto se marcará como verificado por SnowMarket. El contacto
+            Este producto se marcará como verificado por AndesMarket. El contacto
             de WhatsApp se asociará al administrador.
           </CardDescription>
         </CardHeader>

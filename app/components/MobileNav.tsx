@@ -48,7 +48,7 @@ export function MobileNav({ user, isAdmin }: MobileNavProps) {
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
               <Mountain className="size-5 text-primary" />
-              SnowMarket
+              AndesMarket
             </SheetTitle>
           </SheetHeader>
 

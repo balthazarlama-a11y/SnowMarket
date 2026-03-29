@@ -17,7 +17,7 @@ export default async function ProductosPage() {
           Productos de Esquí
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Explora equipos verificados por SnowMarket y publicaciones de la comunidad.
+          Explora equipos verificados por AndesMarket y publicaciones de la comunidad.
         </p>
       </div>
 

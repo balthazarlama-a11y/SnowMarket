@@ -16,7 +16,7 @@ export async function Navbar() {
         <Link href="/" className="flex shrink-0 items-center gap-2 transition-opacity hover:opacity-80">
           <Mountain className="size-6 text-primary" />
           <span className="font-heading text-xl font-bold tracking-tight text-primary">
-            SnowMarket
+            AndesMarket
           </span>
         </Link>
 

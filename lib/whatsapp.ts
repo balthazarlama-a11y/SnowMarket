@@ -1,5 +1,5 @@
 /**
- * Motor de enlaces WhatsApp para SnowMarket.
+ * Motor de enlaces WhatsApp para AndesMarket.
  * Valida numeros chilenos, sanitiza y genera links wa.me contextuales.
  */
 
@@ -42,11 +42,11 @@ function buildMessage(
 
   switch (entityType) {
     case "product_user":
-      return `¡Hola! Vi tu producto "${itemName}" por ${formattedPrice} en SnowMarket y me interesa.`;
+      return `¡Hola! Vi tu producto "${itemName}" por ${formattedPrice} en AndesMarket y me interesa.`;
     case "product_verified":
-      return `¡Hola SnowMarket! Me interesa el producto verificado "${itemName}" por ${formattedPrice}.`;
+      return `¡Hola AndesMarket! Me interesa el producto verificado "${itemName}" por ${formattedPrice}.`;
     case "property":
-      return `¡Hola SnowMarket! Me interesa el departamento "${itemName}" por ${formattedPrice}. ¿Podemos coordinar una visita?`;
+      return `¡Hola AndesMarket! Me interesa el departamento "${itemName}" por ${formattedPrice}. ¿Podemos coordinar una visita?`;
   }
 }
 

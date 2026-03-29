@@ -73,7 +73,7 @@ describe("generateWhatsAppLink", () => {
     const link = generateWhatsAppLink(baseParams);
     expect(link).toContain("https://wa.me/56912345678?text=");
     expect(link).toContain("Esqu%C3%ADs%20Rossignol");
-    expect(link).toContain("SnowMarket");
+    expect(link).toContain("AndesMarket");
   });
 
   it("usa numero admin para producto verificado", () => {

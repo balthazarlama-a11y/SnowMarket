@@ -6,7 +6,7 @@ import { MessageCircle } from "lucide-react";
 
 export function WhatsAppFAB() {
   const phone = sanitizePhone(ADMIN_WHATSAPP);
-  const href = `https://wa.me/${phone}?text=${encodeURIComponent("Hola, necesito ayuda con SnowMarket")}`;
+  const href = `https://wa.me/${phone}?text=${encodeURIComponent("Hola, necesito ayuda con AndesMarket")}`;
 
   return (
     <a

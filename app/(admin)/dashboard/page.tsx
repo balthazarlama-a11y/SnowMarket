@@ -20,7 +20,7 @@ export default function DashboardPage() {
           Panel de Administración
         </h1>
         <p className="mt-1 text-muted-foreground">
-          Gestiona productos verificados y propiedades de SnowMarket.
+          Gestiona productos verificados y propiedades de AndesMarket.
         </p>
       </div>
 
@@ -32,7 +32,7 @@ export default function DashboardPage() {
             </div>
             <CardTitle className="font-heading">Productos Verificados</CardTitle>
             <CardDescription>
-              Publica equipos certificados por SnowMarket con la insignia de verificado.
+              Publica equipos certificados por AndesMarket con la insignia de verificado.
             </CardDescription>
           </CardHeader>
           <CardContent>
