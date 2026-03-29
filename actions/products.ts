@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   createProductSchema,
@@ -43,6 +44,8 @@ export async function createProduct(
     return { success: false, error: error.message };
   }
 
+  revalidatePath("/mis-productos");
+  revalidatePath("/productos");
   return { success: true, data: { id: data.id } };
 }
 
@@ -71,12 +74,16 @@ export async function updateProduct(
   const { error } = await supabase
     .from("products")
     .update(updates)
-    .eq("id", id);
+    .eq("id", id)
+    .eq("owner_id", user.id); // Security: ensure they own the product they are updating
 
   if (error) {
     return { success: false, error: error.message };
   }
 
+  revalidatePath("/mis-productos");
+  revalidatePath("/productos");
+  revalidatePath(`/productos/${id}`);
   return { success: true, data: null };
 }
 

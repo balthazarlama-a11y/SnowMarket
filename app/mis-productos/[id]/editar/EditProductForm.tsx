@@ -1,0 +1,305 @@
+"use client";
+
+import { useState, useRef, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { updateProduct } from "@/actions/products";
+import { uploadImages } from "@/actions/upload";
+import {
+  PRODUCT_CATEGORIES,
+  PRODUCT_CONDITIONS,
+  CONDITION_LABELS,
+  POPULAR_BRANDS,
+  type ProductCategory,
+} from "@/lib/validations/product";
+import { CATEGORY_LABELS } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Loader2, Upload, X, ImagePlus, Save } from "lucide-react";
+import { toast } from "sonner";
+
+export function EditProductForm({ product }: { product: any }) {
+  const router = useRouter();
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [loading, setLoading] = useState(false);
+  
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  
+  // Existing images from DB
+  const [existingImages, setExistingImages] = useState<string[]>(product.images || []);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = Array.from(e.target.files ?? []);
+    const validFiles = selected.filter((f) => {
+      if (f.size > 6 * 1024 * 1024) {
+        toast.error(`${f.name} excede 6MB`);
+        return false;
+      }
+      return true;
+    });
+
+    setNewFiles((prev) => [...prev, ...validFiles]);
+    setNewPreviews((prev) => [
+      ...prev,
+      ...validFiles.map((f) => URL.createObjectURL(f)),
+    ]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function removeNewFile(index: number) {
+    URL.revokeObjectURL(newPreviews[index]);
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+    setNewPreviews((prev) => prev.filter((_, i) => i !== index));
+  }
+  
+  function removeExistingImage(index: number) {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setFieldErrors({});
+    setLoading(true);
+
+    const form = new FormData(e.currentTarget);
+
+    let finalImages = [...existingImages];
+    
+    if (newFiles.length > 0) {
+      const uploadData = new FormData();
+      newFiles.forEach((f) => uploadData.append("files", f));
+      const uploadResult = await uploadImages(uploadData, "products");
+      if (uploadResult.success) {
+        finalImages = [...finalImages, ...uploadResult.data.urls];
+      } else {
+        toast.error(`Error subiendo imágenes nuevas: ${uploadResult.error}`);
+        setLoading(false);
+        return;
+      }
+    }
+
+    const sizeVal = form.get("size_value") as string;
+    const result = await updateProduct({
+      id: product.id,
+      title: form.get("title") as string,
+      description: form.get("description") as string,
+      price: Number(form.get("price")),
+      category: form.get("category") as ProductCategory,
+      whatsapp_number: form.get("whatsapp_number") as string,
+      images: finalImages,
+      brand: (form.get("brand") as string) || null,
+      condition: (form.get("condition") as any) || null,
+      size_label: (form.get("size_label") as string) || null,
+      size_value: sizeVal ? Number(sizeVal) : null,
+    });
+
+    setLoading(false);
+
+    if (result.success) {
+      toast.success("Producto modificado exitosamente");
+      router.push("/mis-productos");
+    } else {
+      toast.error(result.error);
+      if (result.fieldErrors) setFieldErrors(result.fieldErrors);
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="font-heading text-2xl">
+          Editar Producto
+        </CardTitle>
+        <CardDescription>
+          Modifica los detalles de tu publicación.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="title">Título</Label>
+            <Input
+              id="title"
+              name="title"
+              required
+              minLength={3}
+              defaultValue={product.title}
+              placeholder="Ej: Esquís Rossignol Hero 170cm"
+            />
+            {fieldErrors.title && (
+              <p className="text-sm text-destructive">{fieldErrors.title[0]}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea
+              id="description"
+              name="description"
+              required
+              rows={4}
+              defaultValue={product.description}
+              placeholder="Describe el estado, talla, temporadas de uso..."
+            />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="price">Precio (CLP)</Label>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                min={0}
+                step="1"
+                required
+                defaultValue={product.price}
+                placeholder="150000"
+              />
+              {fieldErrors.price && (
+                <p className="text-sm text-destructive">
+                  {fieldErrors.price[0]}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Categoría</Label>
+              <select
+                id="category"
+                name="category"
+                required
+                defaultValue={product.category}
+                className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                <option value="">Seleccionar...</option>
+                {PRODUCT_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {CATEGORY_LABELS[cat]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="brand">Marca (opcional)</Label>
+              <select
+                id="brand"
+                name="brand"
+                defaultValue={product.brand || ""}
+                className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                <option value="">Sin especificar</option>
+                {POPULAR_BRANDS.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="condition">Estado (opcional)</Label>
+              <select
+                id="condition"
+                name="condition"
+                defaultValue={product.condition || ""}
+                className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                <option value="">Sin especificar</option>
+                {PRODUCT_CONDITIONS.map((c) => (
+                  <option key={c} value={c}>{CONDITION_LABELS[c]}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="size_label">Talla (opcional)</Label>
+              <Input id="size_label" name="size_label" defaultValue={product.size_label || ""} placeholder="Ej: L, 27.5, 170cm" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="size_value">Medida en cm (opcional)</Label>
+              <Input id="size_value" name="size_value" type="number" step="0.1" defaultValue={product.size_value || ""} placeholder="170" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="whatsapp_number">Tu WhatsApp</Label>
+            <Input
+              id="whatsapp_number"
+              name="whatsapp_number"
+              required
+              defaultValue={product.whatsapp_number}
+              placeholder="+56 9 1234 5678"
+            />
+            {fieldErrors.whatsapp_number && (
+              <p className="text-sm text-destructive">
+                {fieldErrors.whatsapp_number[0]}
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Número chileno con código +56. Los compradores te contactarán aquí.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Imágenes ({(existingImages.length + newPreviews.length)} en total)</Label>
+            
+            <div className="flex flex-wrap gap-2 pt-1 pb-3">
+              {existingImages.map((src: string, i: number) => (
+                <div key={`exist-${i}`} className="group relative size-20 overflow-hidden rounded-lg ring-2 ring-primary/20">
+                  <img src={src} alt="Existente" className="size-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(i)}
+                    className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-destructive text-white"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </div>
+              ))}
+              {newPreviews.map((src, i) => (
+                <div key={`new-${i}`} className="group relative size-20 overflow-hidden rounded-lg">
+                  <img src={src} alt="Nueva" className="size-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeNewFile(i)}
+                    className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div
+              className="cursor-pointer rounded-lg border-2 border-dashed border-border p-5 text-center transition-colors hover:border-accent hover:bg-secondary/30"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <ImagePlus className="mx-auto mb-2 size-6 text-muted-foreground/50" />
+              <p className="text-sm text-muted-foreground">Agregar más fotos</p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full" size="lg" disabled={loading}>
+            {loading ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" data-icon="inline-start" />}
+            {loading ? "Guardando..." : "Guardar Cambios"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

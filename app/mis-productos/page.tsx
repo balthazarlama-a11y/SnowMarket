@@ -12,6 +12,7 @@ import {
   Package,
   Eye,
   ShieldCheck,
+  Pencil,
 } from "lucide-react";
 
 export const metadata = {
@@ -91,6 +92,10 @@ export default async function MisProductosPage() {
                   <Button variant="ghost" size="sm" render={<Link href={`/productos/${p.id}`} />}>
                     <Eye className="size-3.5" data-icon="inline-start" />
                     Ver
+                  </Button>
+                  <Button variant="ghost" size="sm" render={<Link href={`/mis-productos/${p.id}/editar`} />}>
+                    <Pencil className="size-3.5" data-icon="inline-start" />
+                    Editar
                   </Button>
                   <DeleteProductButton productId={p.id} />
                 </div>
