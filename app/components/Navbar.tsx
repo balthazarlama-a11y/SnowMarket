@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, LogIn, PlusCircle, Heart } from "lucide-react";
+import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, PlusCircle, Heart } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
 import { MobileNav } from "./MobileNav";
 
@@ -35,16 +35,16 @@ export async function Navbar() {
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors" render={<Link href="/favoritos" />}>
             <Heart className="size-5" />
           </Button>
-          <Button
-            size="sm"
-            className="gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
-            render={<Link href={user ? "/mis-productos/nuevo" : "/auth/sign-in"} />}
-          >
-            <PlusCircle className="size-4" data-icon="inline-start" />
-            Publicar Equipo
-          </Button>
           {user ? (
             <>
+              <Button
+                size="sm"
+                className="gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
+                render={<Link href="/mis-productos/nuevo" />}
+              >
+                <PlusCircle className="size-4" data-icon="inline-start" />
+                Publicar
+              </Button>
               <Button variant="ghost" size="sm" render={<Link href="/mis-productos" />}>
                 <Package className="size-4" data-icon="inline-start" />
                 Mis Productos
@@ -62,15 +62,21 @@ export async function Navbar() {
               <SignOutButton />
             </>
           ) : (
-            <>
-              <Button variant="ghost" size="sm" render={<Link href="/auth/sign-up" />}>
-                Registrarse
+            <div className="flex items-center gap-3">
+              <Link
+                href="/auth/sign-in"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Iniciar sesión
+              </Link>
+              <Button
+                size="sm"
+                className="gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
+                render={<Link href="/mis-productos/nuevo" />}
+              >
+                Publicar →
               </Button>
-              <Button size="sm" render={<Link href="/auth/sign-in" />}>
-                <LogIn className="size-4" data-icon="inline-start" />
-                Iniciar Sesión
-              </Button>
-            </>
+            </div>
           )}
         </div>
 

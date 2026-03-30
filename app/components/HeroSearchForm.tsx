@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Search, MapPin, CalendarDays } from "lucide-react";
 
 const DESTINATIONS = [
-  { value: "", label: "Todos los destinos" },
+  { value: "", label: "Valle Nevado, La Parva, El Colorado..." },
   { value: "Valle Nevado", label: "Valle Nevado" },
   { value: "La Parva", label: "La Parva" },
   { value: "El Colorado", label: "El Colorado" },
@@ -78,8 +78,8 @@ export function HeroSearchForm() {
         className="h-10 gap-1.5 rounded-lg bg-white text-slate-900 hover:bg-white/90 sm:rounded-full sm:px-6"
       >
         <Search className="size-4" />
-        <span className="hidden sm:inline">Buscar Refugio</span>
-        <span className="sm:hidden">Buscar</span>
+        <span className="hidden sm:inline">Buscar departamento</span>
+        <span className="sm:hidden">Buscar departamento</span>
       </Button>
     </form>
   );

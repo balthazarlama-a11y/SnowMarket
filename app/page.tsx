@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   ShoppingBag,
   Building2,
@@ -13,15 +13,12 @@ import {
   Upload,
   Search,
   Handshake,
-  Truck,
   Percent,
   Mail,
   Phone,
   HelpCircle,
   CheckCircle2,
   Star,
-  CalendarDays,
-  KeyRound,
   Snowflake,
   Footprints,
   Shirt,
@@ -30,7 +27,6 @@ import {
   Puzzle,
   Recycle,
   MapPin,
-  Clock,
   Heart,
 } from "lucide-react";
 import { HeroSearchForm } from "./components/HeroSearchForm";
@@ -45,7 +41,45 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   otros_accesorios: <Puzzle className="size-7" />,
 };
 
-export default function Home() {
+const CATEGORY_IMAGES: Record<string, string> = {
+  esquis: "/images/hero-skier.png",
+  botas: "/images/hero-market.png",
+  ropa_de_esqui: "/images/hero-chalet.png",
+  cascos: "/images/hero-mountain.jpg",
+  antiparras: "/images/hero-mountain-hd.jpg",
+  otros_accesorios: "/images/hero-market.png",
+};
+
+function getProductCountLabel(count: number) {
+  return `${count} ${count === 1 ? "producto" : "productos"}`;
+}
+
+export default async function Home() {
+  const supabase = await createSupabaseServerClient();
+  const { data: categoryRows } = await supabase
+    .from("products")
+    .select("category, owner_id")
+    .not("category", "is", null);
+
+  const categoryCounts = Object.keys(CATEGORY_LABELS).reduce((acc, key) => {
+    acc[key] = 0;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const sellerIds = new Set<string>();
+
+  for (const row of categoryRows ?? []) {
+    if (row.category && row.category in categoryCounts) {
+      categoryCounts[row.category] += 1;
+    }
+    if (row.owner_id) {
+      sellerIds.add(row.owner_id);
+    }
+  }
+
+  const totalProducts = (categoryRows ?? []).length;
+  const activeSellers = sellerIds.size;
+
   return (
     <>
       {/* ═══════════════════════════════════════════════════
@@ -89,6 +123,10 @@ export default function Home() {
             Economía circular para los amantes de la nieve chilena.
           </p>
 
+          <p className="mx-auto mb-8 max-w-2xl text-xs tracking-wide text-white/55 sm:text-sm animate-fade-in-up [animation-delay:360ms]">
+            {totalProducts} productos publicados · {activeSellers} vendedores activos · Región Metropolitana
+          </p>
+
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center px-4 animate-fade-in-up [animation-delay:450ms]">
             <Button
               size="lg"
@@ -101,8 +139,8 @@ export default function Home() {
             </Button>
             <Button
               size="lg"
-              variant="ghost"
-              className="border border-white/30 text-white hover:bg-white/10 hover:text-white h-13 px-7 text-base gap-2 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
+              variant="outline"
+              className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white h-13 px-7 text-base gap-2 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
               render={<Link href="/mis-productos/nuevo" />}
             >
               <Upload className="size-5" data-icon="inline-start" />
@@ -183,18 +221,33 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
               <Link
                 key={key}
                 href={`/productos?category=${key}`}
-                className="group relative flex flex-col items-center gap-4 rounded-2xl border border-border/60 bg-card p-6 sm:p-8 text-center transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
+                className="group overflow-hidden rounded-2xl border border-border/60 bg-card text-left transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
               >
-                <div className="flex size-16 items-center justify-center rounded-2xl bg-secondary text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:scale-110">
-                  {CATEGORY_ICONS[key]}
+                <div className="relative aspect-[16/9] w-full overflow-hidden">
+                  <Image
+                    src={CATEGORY_IMAGES[key] ?? "/images/hero-mountain-hd.jpg"}
+                    alt={label}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+                  <div className="absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl bg-white/85 text-primary shadow-md backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                    {CATEGORY_ICONS[key]}
+                  </div>
                 </div>
-                <span className="font-heading text-sm sm:text-base font-semibold">{label}</span>
-                <ArrowRight className="absolute right-4 top-4 size-4 text-muted-foreground/0 transition-all duration-300 group-hover:text-primary group-hover:translate-x-0.5" style={{ opacity: 0 }} />
+                <div className="flex items-end justify-between gap-3 p-5">
+                  <div>
+                    <p className="font-heading text-base font-semibold leading-tight">{label}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{getProductCountLabel(categoryCounts[key] ?? 0)}</p>
+                  </div>
+                  <ArrowRight className="size-4 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-primary" />
+                </div>
               </Link>
             ))}
           </div>
@@ -242,13 +295,14 @@ export default function Home() {
               </h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
                 <p>
-                  Somos un <strong className="text-foreground">marketplace de economía circular</strong> que conecta
+                  Somos un marketplace de economía circular que conecta
                   a la comunidad de esquiadores de la Región Metropolitana. Compra, vende y arrienda equipos
                   que merecen una segunda vida en la montaña.
                 </p>
                 <p>
                   Imagina un mercado vibrante donde cada rack de esquís, cada par de botas y cada chaqueta
-                  encuentra un nuevo dueño que los llevará a las pistas. Eso es AndesMarket: <strong className="text-foreground">gente real, equipos reales, experiencias reales.</strong>
+                  encuentra un nuevo dueño que los llevará a las pistas. Eso es AndesMarket: gente real,
+                  equipos reales, experiencias reales.
                 </p>
               </div>
 
@@ -367,7 +421,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 6 — HOW IT WORKS
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-secondary/20 py-16 sm:py-24">
+      <section id="como-funciona" className="bg-secondary/20 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <Badge variant="secondary" className="mb-4 gap-1.5">
@@ -408,7 +462,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 7 — COMMISSIONS & TRANSPARENCY
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-background py-16 sm:py-24">
+      <section id="comisiones" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <Badge variant="secondary" className="mb-4 gap-1.5">
@@ -423,98 +477,37 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Departamentos */}
-            <Card className="overflow-hidden border-2 border-primary/10 transition-shadow duration-300 hover:shadow-lg">
-              <CardContent className="p-0">
-                <div className="bg-primary/5 px-6 py-5 sm:px-8">
-                  <div className="flex items-center gap-3">
-                    <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                      <Building2 className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-heading text-lg font-bold">Departamentos</h3>
-                      <p className="text-sm text-muted-foreground">Arriendos administrados</p>
-                    </div>
-                    <Badge className="ml-auto text-base font-bold px-3 py-1">7%</Badge>
-                  </div>
-                </div>
-                <div className="px-6 py-5 sm:px-8 space-y-3">
-                  <div className="flex items-start gap-2.5">
-                    <KeyRound className="mt-0.5 size-4 shrink-0 text-green-600" />
-                    <span className="text-sm">Publicación y gestión de tu propiedad</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-600" />
-                    <span className="text-sm">Comunicación directa con arrendatarios</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <CalendarDays className="mt-0.5 size-4 shrink-0 text-green-600" />
-                    <span className="text-sm">Verificación de disponibilidad y reserva</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-600" />
-                    <span className="text-sm">Soporte continuo del equipo AndesMarket</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="overflow-hidden rounded-2xl border border-border/70 bg-card">
+            <div className="grid grid-cols-12 border-b border-border/70 bg-secondary/40 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:px-6">
+              <p className="col-span-5 sm:col-span-4">Servicio</p>
+              <p className="col-span-3 sm:col-span-2">Comisión</p>
+              <p className="col-span-4 sm:col-span-3">Incluye</p>
+              <p className="hidden sm:block sm:col-span-3">Ideal para</p>
+            </div>
 
-            {/* Artículos Verificados */}
-            <Card className="relative overflow-hidden border-2 border-amber-400/40 transition-shadow duration-300 hover:shadow-lg">
-              <Badge className="absolute right-4 top-4 z-10 bg-amber-500 text-white hover:bg-amber-500 gap-1 shadow-md">
-                <Star className="size-3" />
-                Premium
-              </Badge>
-              <div className="absolute -right-8 -top-8 size-24 rounded-full bg-amber-400/10 blur-2xl" />
-              <CardContent className="p-0">
-                <div className="bg-amber-50 px-6 py-5 sm:px-8 dark:bg-amber-400/5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex size-11 items-center justify-center rounded-xl bg-amber-500 text-white">
-                      <Star className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-heading text-lg font-bold">Artículos Verificados</h3>
-                      <p className="text-sm text-muted-foreground">Servicio Premium</p>
-                    </div>
-                    <Badge className="ml-auto bg-amber-500 hover:bg-amber-500 text-white text-base font-bold px-3 py-1">
-                      10%
-                    </Badge>
-                  </div>
-                </div>
-                <div className="px-6 py-5 sm:px-8 space-y-3">
-                  <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-500" />
-                    <span className="text-sm">Verificación profesional del artículo</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-500" />
-                    <span className="text-sm font-medium">
-                      Logística completa incluida: retiro en domicilio del vendedor
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-500" />
-                    <span className="text-sm font-medium">
-                      Entrega directa al comprador en su domicilio
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-500" />
-                    <span className="text-sm">
-                      <ShieldCheck className="mr-1 inline size-3.5 text-amber-500" />
-                      Sello de confianza AndesMarket visible en el listing
-                    </span>
-                  </div>
-                  <Separator className="my-1" />
-                  <div className="rounded-lg bg-amber-50 p-4 text-sm text-amber-800 leading-relaxed dark:bg-amber-400/5 dark:text-amber-200">
-                    <Truck className="mb-1 inline-block size-4 mr-1.5" />
-                    <strong>Servicio puerta a puerta:</strong> Nosotros vamos a buscar el artículo a la casa
-                    del vendedor, lo verificamos y lo entregamos directamente al comprador.
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-12 items-start gap-y-2 border-b border-border/60 px-4 py-4 sm:px-6">
+              <div className="col-span-5 sm:col-span-4">
+                <p className="font-heading text-sm font-semibold">Departamentos</p>
+                <p className="text-xs text-muted-foreground">Arriendos administrados</p>
+              </div>
+              <p className="col-span-3 sm:col-span-2 text-sm font-semibold text-primary">7%</p>
+              <p className="col-span-4 sm:col-span-3 text-sm text-muted-foreground">
+                Publicación, calendario y soporte de reservas.
+              </p>
+              <p className="col-span-12 sm:col-span-3 text-sm text-muted-foreground">Propietarios que quieren gestionar su propiedad con visibilidad local.</p>
+            </div>
+
+            <div className="grid grid-cols-12 items-start gap-y-2 px-4 py-4 sm:px-6">
+              <div className="col-span-5 sm:col-span-4">
+                <p className="font-heading text-sm font-semibold">Artículos verificados</p>
+                <p className="text-xs text-muted-foreground">Servicio premium</p>
+              </div>
+              <p className="col-span-3 sm:col-span-2 text-sm font-semibold text-amber-600">10%</p>
+              <p className="col-span-4 sm:col-span-3 text-sm text-muted-foreground">
+                Verificación del artículo y logística puerta a puerta.
+              </p>
+              <p className="col-span-12 sm:col-span-3 text-sm text-muted-foreground">Vendedores que buscan mayor confianza y entrega asistida.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -720,6 +713,23 @@ export default function Home() {
                   <a href="mailto:soporte@andesmarket.cl" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
                     <Mail className="size-3.5" />
                     soporte@andesmarket.cl
+                  </a>
+                </li>
+                <li>
+                  <Link href="/#como-funciona" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
+                    <HelpCircle className="size-3.5" />
+                    Cómo publicar
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href={`https://wa.me/${ADMIN_WHATSAPP.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hola, tengo dudas frecuentes sobre publicar en AndesMarket")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <MessageCircle className="size-3.5" />
+                    Preguntas frecuentes
                   </a>
                 </li>
               </ul>
