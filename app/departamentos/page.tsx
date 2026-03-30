@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 import {
   buildWhatsAppUrlWithText,
-  LIST_PROPERTY_WHATSAPP_MESSAGE,
+  WHATSAPP_PUBLISH_DEPARTMENT,
 } from "@/lib/whatsapp";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ export default async function DepartamentosPage() {
     .gte("end_date", new Date().toISOString().split("T")[0]);
   const listPropertyWhatsAppHref = buildWhatsAppUrlWithText(
     ADMIN_WHATSAPP,
-    LIST_PROPERTY_WHATSAPP_MESSAGE
+    WHATSAPP_PUBLISH_DEPARTMENT
   );
 
   return (

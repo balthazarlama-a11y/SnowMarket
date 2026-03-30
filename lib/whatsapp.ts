@@ -29,24 +29,13 @@ export function sanitizePhone(phone: string): string {
   return digits;
 }
 
-function buildMessage(
-  itemName: string,
-  price: number,
-  entityType: EntityType
-): string {
-  const formattedPrice = new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    minimumFractionDigits: 0,
-  }).format(price);
-
+function buildMessage(itemName: string, _price: number, entityType: EntityType): string {
   switch (entityType) {
     case "product_user":
-      return `¡Hola! Vi tu producto "${itemName}" por ${formattedPrice} en AndesMarket y me interesa.`;
     case "product_verified":
-      return `¡Hola AndesMarket! Me interesa el producto verificado "${itemName}" por ${formattedPrice}.`;
+      return `Hola, vengo de AndesMarket y me interesa el producto: ${itemName}.`;
     case "property":
-      return `¡Hola AndesMarket! Me interesa el departamento "${itemName}" por ${formattedPrice}. ¿Podemos coordinar una visita?`;
+      return `Hola, vengo de AndesMarket y me interesa el departamento: ${itemName}.`;
   }
 }
 
@@ -84,48 +73,14 @@ export function buildWhatsAppUrlWithText(phone: string, text: string): string {
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
 }
 
-export const LIST_PROPERTY_WHATSAPP_MESSAGE = `¡Perfecto! Para poder publicar tu propiedad en la plataforma, necesito validar algunos datos 👇
+/** Mensaje para el botón de publicar artículo estándar (catálogo de productos). */
+export const WHATSAPP_PUBLISH_STANDARD = "Hola, quiero publicar un artículo.";
 
-🏔️ *Ubicación exacta:*
-🏠 *Tipo de propiedad:* (depto, casa, cabaña)
-👥 *Capacidad (personas):*
-🛏️ *Dormitorios:*
-🛁 *Baños:*
+/** Mensaje para publicar con verificación (catálogo de productos). */
+export const WHATSAPP_PUBLISH_VERIFIED = "Hola, quiero publicar un artículo verificado.";
 
-📅 *Disponibilidad:* (fechas o meses)
-💰 *Precio por noche (CLP):*
+/** Mensaje para el botón de publicar departamento (sección Departamentos). */
+export const WHATSAPP_PUBLISH_DEPARTMENT = "Hola, quiero publicar un departamento.";
 
-📸 *Fotos reales del departamento:* (mínimo 5)
-
-📝 *Extras:* (ej: ski-in/ski-out, estacionamiento, jacuzzi, etc.)
-
----
-
-🔐 *Validación:*
-
-👤 Nombre completo:
-🆔 RUT:
-📱 Teléfono:
-
-📍 Dirección exacta del departamento
-
-📄 Algún respaldo de que eres dueño o administrador (puede ser contribuciones, contrato o similar)
-
----
-
-🤝 *Gestión de reservas:*
-
-* Nosotros te enviaremos cada solicitud de arriendo
-* Tú podrás **aceptar o rechazar al cliente antes de confirmar la reserva**
-
----
-
-💼 *Condiciones de la plataforma:*
-
-* Trabajamos con una comisión del 7% por reserva confirmada
-* Nosotros gestionamos los pagos para mayor seguridad
-* No se comparte contacto directo con clientes antes de la reserva
-
----
-
-Con eso puedo revisar y dejar tu propiedad lista para publicar 🙌`;
+/** @deprecated Usar WHATSAPP_PUBLISH_DEPARTMENT */
+export const LIST_PROPERTY_WHATSAPP_MESSAGE = WHATSAPP_PUBLISH_DEPARTMENT;

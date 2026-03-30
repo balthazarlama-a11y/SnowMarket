@@ -12,7 +12,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SearchBar } from "@/app/components/SearchBar";
-import { CATEGORY_LABELS } from "@/lib/constants";
+import { ADMIN_WHATSAPP, CATEGORY_LABELS } from "@/lib/constants";
+import {
+  buildWhatsAppUrlWithText,
+  WHATSAPP_PUBLISH_STANDARD,
+  WHATSAPP_PUBLISH_VERIFIED,
+} from "@/lib/whatsapp";
 import {
   PRODUCT_CATEGORIES,
   PRODUCT_CONDITIONS,
@@ -26,6 +31,7 @@ import {
   Tag,
   X,
   SlidersHorizontal,
+  Check,
 } from "lucide-react";
 import { FavoriteButton } from "@/app/components/FavoriteButton";
 
@@ -47,6 +53,15 @@ interface ProductCatalogProps {
   products: Product[];
   initialFavoriteIds?: string[];
 }
+
+const PRODUCT_PUBLISH_STANDARD_HREF = buildWhatsAppUrlWithText(
+  ADMIN_WHATSAPP,
+  WHATSAPP_PUBLISH_STANDARD
+);
+const PRODUCT_PUBLISH_VERIFIED_HREF = buildWhatsAppUrlWithText(
+  ADMIN_WHATSAPP,
+  WHATSAPP_PUBLISH_VERIFIED
+);
 
 export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCatalogProps) {
   const searchParams = useSearchParams();
@@ -316,10 +331,35 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
               </Sheet>
             </div>
             <SearchBar />
-            <Button size="sm" render={<Link href="/mis-productos/nuevo" />}>
-              <ShoppingBag className="size-4" data-icon="inline-start" />
-              Publicar
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                size="sm"
+                render={
+                  <a
+                    href={PRODUCT_PUBLISH_STANDARD_HREF}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+              >
+                <ShoppingBag className="size-4" data-icon="inline-start" />
+                Publicar
+              </Button>
+              <Button
+                size="sm"
+                className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700"
+                render={
+                  <a
+                    href={PRODUCT_PUBLISH_VERIFIED_HREF}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+              >
+                <Check className="size-4" data-icon="inline-start" strokeWidth={2.5} />
+                Publicar Verificado
+              </Button>
+            </div>
           </div>
         </div>
 

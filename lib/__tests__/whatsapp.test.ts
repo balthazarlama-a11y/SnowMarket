@@ -74,6 +74,8 @@ describe("generateWhatsAppLink", () => {
     expect(link).toContain("https://wa.me/56912345678?text=");
     expect(link).toContain("Esqu%C3%ADs%20Rossignol");
     expect(link).toContain("AndesMarket");
+    const decoded = decodeURIComponent(link.split("text=")[1] ?? "");
+    expect(decoded).toContain("me interesa el producto:");
   });
 
   it("usa numero admin para producto verificado", () => {
@@ -83,7 +85,7 @@ describe("generateWhatsAppLink", () => {
       adminPhone: "+56987654321",
     });
     expect(link).toContain("https://wa.me/56987654321?text=");
-    expect(link).toContain("verificado");
+    expect(decodeURIComponent(link)).toContain("me interesa el producto:");
   });
 
   it("usa numero admin para propiedad", () => {
@@ -95,7 +97,7 @@ describe("generateWhatsAppLink", () => {
       adminPhone: "+56987654321",
     });
     expect(link).toContain("https://wa.me/56987654321?text=");
-    expect(link).toContain("departamento");
+    expect(decodeURIComponent(link)).toContain("me interesa el departamento:");
   });
 
   it("lanza error con telefono invalido", () => {
@@ -104,9 +106,9 @@ describe("generateWhatsAppLink", () => {
     ).toThrow("Numero de telefono invalido");
   });
 
-  it("formatea precio en CLP", () => {
+  it("incluye el nombre del producto en el mensaje", () => {
     const link = generateWhatsAppLink(baseParams);
-    const decoded = decodeURIComponent(link);
-    expect(decoded).toContain("150.000");
+    const decoded = decodeURIComponent(link.split("text=")[1] ?? "");
+    expect(decoded).toContain("Esquís Rossignol");
   });
 });
