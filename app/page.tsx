@@ -156,18 +156,6 @@ export default async function Home() {
 
       </section>
 
-      <div className="bg-background">
-        <Image
-          src="/images/hero-esquis-hd.png"
-          alt="Vista panorámica de nieve con esquís y snowboard"
-          width={1920}
-          height={1080}
-          className="h-auto w-full object-cover"
-          quality={100}
-          unoptimized={true}
-        />
-      </div>
-
       {/* ═══════════════════════════════════════════════════
           SECTION 2 — VALUE PROPOSITIONS
       ═══════════════════════════════════════════════════ */}
