@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, PlusCircle, Heart } from "lucide-react";
+import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, PlusCircle, Heart, UserPlus } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
 import { MobileNav } from "./MobileNav";
 
@@ -72,9 +72,10 @@ export async function Navbar() {
               <Button
                 size="sm"
                 className="gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
-                render={<Link href="/mis-productos/nuevo" />}
+                render={<Link href="/auth/sign-up" />}
               >
-                Publicar →
+                <UserPlus className="size-4" data-icon="inline-start" />
+                Registrarse
               </Button>
             </div>
           )}

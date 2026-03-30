@@ -20,6 +20,7 @@ import {
   LogIn,
   LogOut,
   PlusCircle,
+  UserPlus,
 } from "lucide-react";
 import { signOut } from "@/actions/auth";
 import type { User } from "@supabase/supabase-js";
@@ -55,11 +56,15 @@ export function MobileNav({ user, isAdmin }: MobileNavProps) {
           <div className="flex flex-col gap-1 px-4">
             <Button
               className="justify-start gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
-              render={<Link href={user ? "/mis-productos/nuevo" : "/auth/sign-in"} />}
+              render={<Link href={user ? "/mis-productos/nuevo" : "/auth/sign-up"} />}
               onClick={() => setOpen(false)}
             >
-              <PlusCircle className="size-4" data-icon="inline-start" />
-              Publicar Equipo
+              {user ? (
+                <PlusCircle className="size-4" data-icon="inline-start" />
+              ) : (
+                <UserPlus className="size-4" data-icon="inline-start" />
+              )}
+              {user ? "Publicar Equipo" : "Registrarse"}
             </Button>
             <Separator className="my-2" />
             <Button variant="ghost" className="justify-start" render={<Link href="/productos" />} onClick={() => setOpen(false)}>

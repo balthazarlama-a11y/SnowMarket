@@ -30,9 +30,11 @@ import {
   Heart,
   Ticket,
   Truck,
+  UserPlus,
 } from "lucide-react";
 import { HeroSearchForm } from "./components/HeroSearchForm";
 import { ADMIN_WHATSAPP, CATEGORY_LABELS } from "@/lib/constants";
+import { getCurrentUser } from "@/actions/auth";
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   esquis: <Snowflake className="size-7" />,
@@ -57,6 +59,7 @@ function getProductCountLabel(count: number) {
 }
 
 export default async function Home() {
+  const user = await getCurrentUser();
   const supabase = await createSupabaseServerClient();
   const { data: categoryRows } = await supabase
     .from("products")
@@ -143,11 +146,21 @@ export default async function Home() {
               size="lg"
               variant="outline"
               className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white h-13 px-7 text-base gap-2 transition-all duration-300 hover:-translate-y-0.5"
-              render={<Link href="/mis-productos/nuevo" />}
+              render={<Link href={user ? "/mis-productos/nuevo" : "/auth/sign-up"} />}
             >
-              <Upload className="size-5" data-icon="inline-start" />
-              Subir mi Equipo
-              <ArrowRight className="size-4" data-icon="inline-end" />
+              {user ? (
+                <>
+                  <Upload className="size-5" data-icon="inline-start" />
+                  Subir mi Equipo
+                  <ArrowRight className="size-4" data-icon="inline-end" />
+                </>
+              ) : (
+                <>
+                  <UserPlus className="size-5" data-icon="inline-start" />
+                  Registrarse
+                  <ArrowRight className="size-4" data-icon="inline-end" />
+                </>
+              )}
             </Button>
           </div>
 
@@ -614,41 +627,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 9 — CTA  (Sell your gear)
-      ═══════════════════════════════════════════════════ */}
-      <section className="relative py-20 sm:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#1a3a55] to-primary" />
-        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl text-white mb-4">
-            ¿Tienes equipo para vender?
-          </h2>
-          <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">
-            Publica tus equipos de esquí en minutos y conecta con compradores reales en la Región Metropolitana.
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button
-              size="lg"
-              className="h-13 px-7 text-base gap-2 bg-[#e8622c] hover:bg-[#d4561f] text-white shadow-lg"
-              render={<Link href="/mis-productos/nuevo" />}
-            >
-              Publicar mi Producto
-              <ArrowRight className="size-4" data-icon="inline-end" />
-            </Button>
-            <Button
-              size="lg"
-              variant="ghost"
-              className="h-13 px-7 text-base gap-2 border border-white/30 text-white hover:bg-white/10 hover:text-white"
-              render={<Link href="/departamentos" />}
-            >
-              <Building2 className="size-4" />
-              Publicar Departamento
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          SECTION 10 — CONTACT / HELP
+          SECTION 9 — CONTACT / HELP
       ═══════════════════════════════════════════════════ */}
       <section className="bg-background py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -729,7 +708,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 11 — PREMIUM FOOTER
+          SECTION 10 — PREMIUM FOOTER
       ═══════════════════════════════════════════════════ */}
       <footer className="border-t bg-primary text-primary-foreground">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -770,8 +749,11 @@ export default async function Home() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/mis-productos/nuevo" className="hover:text-primary-foreground transition-colors">
-                    Publicar Equipo
+                  <Link
+                    href={user ? "/mis-productos/nuevo" : "/auth/sign-up"}
+                    className="hover:text-primary-foreground transition-colors"
+                  >
+                    {user ? "Publicar Equipo" : "Registrarse"}
                   </Link>
                 </li>
               </ul>
