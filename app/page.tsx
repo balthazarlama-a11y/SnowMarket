@@ -96,8 +96,8 @@ export default async function Home() {
           quality={100}
           unoptimized={true}
         />
-        {/* Softer overlay to keep text readable without heavy blur */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628]/45 via-[#0a1628]/30 to-[#0a1628]/55" />
+        {/* Minimal overlay for readability without heavy blur */}
+        <div className="absolute inset-0 bg-black/20" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6">
@@ -154,27 +154,21 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1.5 — HERO IMAGE FEATURE (Full HD)
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-background pb-10 sm:pb-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl border border-border/50 shadow-xl shadow-black/5">
-            <Image
-              src="/images/hero-esquis-hd.png"
-              alt="Vista panorámica de nieve con esquís y snowboard"
-              width={1920}
-              height={1080}
-              className="h-auto w-full object-cover"
-              quality={100}
-              unoptimized={true}
-            />
-          </div>
-        </div>
+      <section className="bg-background">
+        <Image
+          src="/images/hero-esquis-hd.png"
+          alt="Vista panorámica de nieve con esquís y snowboard"
+          width={1920}
+          height={1080}
+          className="h-auto w-full object-cover"
+          quality={100}
+          unoptimized={true}
+        />
       </section>
 
       {/* ═══════════════════════════════════════════════════
