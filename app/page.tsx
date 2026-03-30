@@ -269,7 +269,7 @@ export default async function Home() {
             {/* Image */}
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
               <Image
-                src="/images/hero-mountain-hd.jpg"
+                src="/images/hero-esquis-hd.png"
                 alt="AndesMarket — Mercado de equipos de esquí"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
