@@ -350,7 +350,76 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 5 — DEPARTAMENTOS / ARRIENDO SIN COMPLICACIONES
+          SECTION 5 — PRODUCTOS VERIFICADOS
+      ═══════════════════════════════════════════════════ */}
+      <section className="bg-background py-16 sm:py-24 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            {/* Text */}
+            <div className="order-2 lg:order-1 lg:pr-4">
+              <Badge variant="secondary" className="mb-4 gap-1.5">
+                <ShieldCheck className="size-3" />
+                Productos Verificados
+              </Badge>
+              <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl mb-6">
+                Compra con confianza en la nieve
+              </h2>
+              <div className="space-y-5 text-muted-foreground leading-relaxed">
+                <p>
+                  Encuentra equipos revisados por nuestro equipo para asegurar
+                  autenticidad, buen estado y una experiencia de compra más segura.
+                </p>
+                <p>
+                  Desde esquís y botas hasta cascos y antiparras: seleccionamos
+                  publicaciones con estándares de calidad para que compres con tranquilidad.
+                </p>
+              </div>
+
+              <div className="mt-8 space-y-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
+                  <span className="text-sm">Equipos inspeccionados y validados</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
+                  <span className="text-sm">Más transparencia antes de concretar la compra</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
+                  <span className="text-sm">Publicaciones destacadas para decisión rápida</span>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <Button size="lg" className="gap-2 h-12 bg-[#e8622c] hover:bg-[#d4561f]" render={<Link href="/productos" />}>
+                  <ShieldCheck className="size-4" />
+                  Ver productos verificados
+                  <ArrowRight className="size-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Image */}
+            <div className="relative order-1 lg:order-2 aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
+              <Image
+                src="/images/productosverificados.png"
+                alt="Productos verificados de esquí en AndesMarket"
+                fill
+                className="object-cover transition-transform duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              <Badge className="absolute bottom-4 left-4 bg-white/90 text-primary hover:bg-white shadow-md gap-1.5">
+                <Star className="size-3" />
+                Calidad verificada
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          SECTION 6 — DEPARTAMENTOS / ARRIENDO SIN COMPLICACIONES
           (Chalet image + text about departamento rentals)
       ═══════════════════════════════════════════════════ */}
       <section className="bg-background py-16 sm:py-24 overflow-hidden">
@@ -417,7 +486,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 6 — HOW IT WORKS
+          SECTION 7 — HOW IT WORKS
       ═══════════════════════════════════════════════════ */}
       <section id="como-funciona" className="bg-secondary/20 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -458,7 +527,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 7 — COMMISSIONS & TRANSPARENCY
+          SECTION 8 — COMMISSIONS & TRANSPARENCY
       ═══════════════════════════════════════════════════ */}
       <section id="comisiones" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -511,7 +580,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 8 — CTA  (Sell your gear)
+          SECTION 9 — CTA  (Sell your gear)
       ═══════════════════════════════════════════════════ */}
       <section className="relative py-20 sm:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#1a3a55] to-primary" />
@@ -545,7 +614,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 9 — CONTACT / HELP
+          SECTION 10 — CONTACT / HELP
       ═══════════════════════════════════════════════════ */}
       <section className="bg-background py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -626,7 +695,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 10 — PREMIUM FOOTER
+          SECTION 11 — PREMIUM FOOTER
       ═══════════════════════════════════════════════════ */}
       <footer className="border-t bg-primary text-primary-foreground">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
