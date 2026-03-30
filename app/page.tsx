@@ -28,6 +28,8 @@ import {
   Recycle,
   MapPin,
   Heart,
+  Ticket,
+  Truck,
 } from "lucide-react";
 import { HeroSearchForm } from "./components/HeroSearchForm";
 import { ADMIN_WHATSAPP, CATEGORY_LABELS } from "@/lib/constants";
@@ -376,18 +378,50 @@ export default async function Home() {
               </div>
 
               <div className="mt-8 space-y-4">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
-                  <span className="text-sm">Equipos inspeccionados y validados</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
-                  <span className="text-sm">Más transparencia antes de concretar la compra</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
-                  <span className="text-sm">Publicaciones destacadas para decisión rápida</span>
-                </div>
+                {[
+                  {
+                    Icon: Search,
+                    title: "Filtro Experto",
+                    body:
+                      "Buscamos y verificamos cada equipo personalmente. Solo lo que supera nuestro estándar de calidad llega a la plataforma.",
+                  },
+                  {
+                    Icon: MessageCircle,
+                    title: "Logística 1-a-1",
+                    body:
+                      "Olvídate de bots. Gestionamos tu envío de forma personalizada vía WhatsApp para que sepas exactamente dónde está tu equipo.",
+                  },
+                  {
+                    Icon: Truck,
+                    title: "De Nuestra Mano a Tu Puerta",
+                    body:
+                      "Nos encargamos de todo el proceso: lo buscamos, lo certificamos y lo entregamos directamente en tu casa.",
+                  },
+                ].map(({ Icon, title, body }) => (
+                  <div
+                    key={title}
+                    className="group relative overflow-hidden rounded-2xl border border-dashed border-primary/25 bg-gradient-to-br from-card to-muted/30 p-4 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-md"
+                  >
+                    <Ticket
+                      className="pointer-events-none absolute -right-1 -top-1 size-14 rotate-12 text-primary/[0.08] transition-transform duration-300 group-hover:scale-110 group-hover:text-primary/[0.12]"
+                      aria-hidden
+                    />
+                    <div className="relative flex gap-4">
+                      <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-green-600 text-white shadow-md ring-4 ring-green-600/15">
+                        <CheckCircle2 className="size-5" strokeWidth={2.5} />
+                      </div>
+                      <div className="min-w-0 flex-1 pt-0.5">
+                        <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5">
+                          <Icon className="size-3.5 text-primary" />
+                          <span className="font-heading text-xs font-semibold uppercase tracking-wide text-primary">
+                            {title}
+                          </span>
+                        </div>
+                        <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <div className="mt-8">
