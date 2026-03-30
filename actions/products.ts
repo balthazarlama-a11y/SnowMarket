@@ -115,7 +115,7 @@ export async function getProducts(filters?: {
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("products")
-    .select("*, owner:users(id, email)")
+    .select("*, owner:users!products_owner_id_fkey(id, email)")
     .order("created_at", { ascending: false });
 
   if (filters?.category) {
@@ -133,7 +133,7 @@ export async function getProductById(id: string) {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("products")
-    .select("*, owner:users(id, email)")
+    .select("*, owner:users!products_owner_id_fkey(id, email)")
     .eq("id", id)
     .single();
   return { data, error };
