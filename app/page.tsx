@@ -42,12 +42,12 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 };
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  esquis: "/images/hero-skier.png",
-  botas: "/images/hero-market.png",
-  ropa_de_esqui: "/images/hero-chalet.png",
-  cascos: "/images/hero-mountain.jpg",
-  antiparras: "/images/hero-mountain-hd.jpg",
-  otros_accesorios: "/images/hero-market.png",
+  esquis: "/images/ChatGPT Image 30 mar 2026, 01_44_31 p.m..png",
+  botas: "/images/download (3).jpg",
+  ropa_de_esqui: "/images/ChatGPT Image 30 mar 2026, 01_48_44 p.m..png",
+  cascos: "/images/ChatGPT Image 30 mar 2026, 01_49_31 p.m..png",
+  antiparras: "/images/ChatGPT Image 30 mar 2026, 01_52_50 p.m..png",
+  otros_accesorios: "/images/EXTREME.jpg",
 };
 
 function getProductCountLabel(count: number) {
@@ -88,7 +88,7 @@ export default async function Home() {
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
         {/* Background image */}
         <Image
-          src="/images/hero-mountain-hd.jpg"
+          src="/images/EXTREME.jpg"
           alt="Majestuosas montañas nevadas de los Andes"
           fill
           className="object-cover object-center"
@@ -161,7 +161,7 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 2 — VALUE PROPOSITIONS
       ═══════════════════════════════════════════════════ */}
-      <section className="relative -mt-16 z-20 pb-16 sm:pb-20">
+      <section className="relative z-20 pt-8 pb-16 sm:pt-10 sm:pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-4 sm:gap-6 sm:grid-cols-3">
             <Card className="group border-0 bg-card/80 backdrop-blur-md shadow-xl shadow-black/5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
@@ -271,7 +271,7 @@ export default async function Home() {
             {/* Image */}
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
               <Image
-                src="/images/hero-market.png"
+                src="/images/ChatGPT Image 30 mar 2026, 01_52_50 p.m..png"
                 alt="AndesMarket — Mercado de equipos de esquí"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
