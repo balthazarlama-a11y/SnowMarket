@@ -156,10 +156,7 @@ export default async function Home() {
 
       </section>
 
-      {/* ═══════════════════════════════════════════════════
-          SECTION 1.5 — HERO IMAGE FEATURE (Full HD)
-      ═══════════════════════════════════════════════════ */}
-      <section className="bg-background">
+      <div className="bg-background">
         <Image
           src="/images/hero-esquis-hd.png"
           alt="Vista panorámica de nieve con esquís y snowboard"
@@ -169,7 +166,7 @@ export default async function Home() {
           quality={100}
           unoptimized={true}
         />
-      </section>
+      </div>
 
       {/* ═══════════════════════════════════════════════════
           SECTION 2 — VALUE PROPOSITIONS
