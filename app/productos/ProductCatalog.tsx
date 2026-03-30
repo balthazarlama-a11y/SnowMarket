@@ -27,6 +27,7 @@ import {
   X,
   SlidersHorizontal,
 } from "lucide-react";
+import { FavoriteButton } from "@/app/components/FavoriteButton";
 
 interface Product {
   id: string;
@@ -44,9 +45,10 @@ interface Product {
 
 interface ProductCatalogProps {
   products: Product[];
+  initialFavoriteIds?: string[];
 }
 
-export function ProductCatalog({ products }: ProductCatalogProps) {
+export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCatalogProps) {
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
 
@@ -329,7 +331,11 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                isFavorite={initialFavoriteIds.includes(product.id)}
+              />
             ))}
           </div>
         )}
@@ -338,9 +344,9 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
   );
 }
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product, isFavorite }: { product: Product; isFavorite: boolean }) {
   return (
-    <Link href={`/productos/${product.id}`} className="group">
+    <Link href={`/productos/${product.id}`} className="group relative block">
       <Card className="overflow-hidden transition-shadow hover:shadow-md">
         <div className="relative aspect-[4/3] overflow-hidden bg-secondary/50">
           {product.images?.[0] ? (
@@ -356,8 +362,11 @@ function ProductCard({ product }: { product: Product }) {
               <ShoppingBag className="size-10 text-muted-foreground/30" />
             </div>
           )}
+          
+          <FavoriteButton productId={product.id} initialIsFavorite={isFavorite} />
+
           {product.is_verified && (
-            <Badge className="absolute top-3 left-3 gap-1 bg-accent text-accent-foreground shadow-sm">
+            <Badge className="absolute top-3 left-3 gap-1 bg-accent text-accent-foreground shadow-sm z-10">
               <ShieldCheck className="size-3" />
               Verificado
             </Badge>

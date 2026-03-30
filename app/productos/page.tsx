@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getProducts } from "@/actions/products";
+import { getUserFavoriteIds } from "@/actions/favorites";
 import { ProductCatalog } from "./ProductCatalog";
 
 export const metadata = {
@@ -8,7 +9,10 @@ export const metadata = {
 };
 
 export default async function ProductosPage() {
-  const { data: products, error } = await getProducts();
+  const [{ data: products, error }, favoriteIds] = await Promise.all([
+    getProducts(),
+    getUserFavoriteIds(),
+  ]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -28,7 +32,7 @@ export default async function ProductosPage() {
       )}
 
       <Suspense fallback={null}>
-        <ProductCatalog products={products ?? []} />
+        <ProductCatalog products={products ?? []} initialFavoriteIds={favoriteIds} />
       </Suspense>
     </div>
   );
