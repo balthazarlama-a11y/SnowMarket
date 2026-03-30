@@ -42,12 +42,12 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 };
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  esquis: "/images/ChatGPT Image 30 mar 2026, 01_44_31 p.m..png",
-  botas: "/images/download (3).jpg",
-  ropa_de_esqui: "/images/ChatGPT Image 30 mar 2026, 01_48_44 p.m..png",
-  cascos: "/images/ChatGPT Image 30 mar 2026, 01_49_31 p.m..png",
-  antiparras: "/images/ChatGPT Image 30 mar 2026, 01_52_50 p.m..png",
-  otros_accesorios: "/images/EXTREME.jpg",
+  esquis: "/images/esquis.png",
+  botas: "/images/botas.png",
+  ropa_de_esqui: "/images/ropa.jpg",
+  cascos: "/images/casco.png",
+  antiparras: "/images/antiparras.jpg",
+  otros_accesorios: "/images/hero-skier.png",
 };
 
 function getProductCountLabel(count: number) {
@@ -88,7 +88,7 @@ export default async function Home() {
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
         {/* Background image */}
         <Image
-          src="/images/EXTREME.jpg"
+          src="/images/hero-mountain-hd.jpg"
           alt="Majestuosas montañas nevadas de los Andes"
           fill
           className="object-cover object-center"
@@ -96,12 +96,12 @@ export default async function Home() {
           quality={100}
           unoptimized={true}
         />
-        {/* Dark overlay with blue tint */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628]/70 via-[#0a1628]/50 to-[#0a1628]/80" />
+        {/* Softer overlay to keep text readable without heavy blur */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628]/45 via-[#0a1628]/30 to-[#0a1628]/55" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-sm mb-8 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-1.5 mb-8 animate-fade-in-up">
             <Snowflake className="size-3.5 text-cyan-300" />
             <span className="text-sm font-medium text-white/80 tracking-wide">
               Marketplace Premium de Nieve — Región Metropolitana
@@ -140,7 +140,7 @@ export default async function Home() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white h-13 px-7 text-base gap-2 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
+              className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white h-13 px-7 text-base gap-2 transition-all duration-300 hover:-translate-y-0.5"
               render={<Link href="/mis-productos/nuevo" />}
             >
               <Upload className="size-5" data-icon="inline-start" />
@@ -156,6 +156,25 @@ export default async function Home() {
 
         {/* Bottom fade */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          SECTION 1.5 — HERO IMAGE FEATURE (Full HD)
+      ═══════════════════════════════════════════════════ */}
+      <section className="bg-background pb-10 sm:pb-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl border border-border/50 shadow-xl shadow-black/5">
+            <Image
+              src="/images/hero-esquis-hd.png"
+              alt="Vista panorámica de nieve con esquís y snowboard"
+              width={1920}
+              height={1080}
+              className="h-auto w-full object-cover"
+              quality={100}
+              unoptimized={true}
+            />
+          </div>
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════
@@ -271,7 +290,7 @@ export default async function Home() {
             {/* Image */}
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
               <Image
-                src="/images/ChatGPT Image 30 mar 2026, 01_52_50 p.m..png"
+                src="/images/hero-mountain-hd.jpg"
                 alt="AndesMarket — Mercado de equipos de esquí"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
@@ -406,7 +425,7 @@ export default async function Home() {
             {/* Image (right on desktop) */}
             <div className="relative order-1 lg:order-2 aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
               <Image
-                src="/images/hero-chalet.png"
+                src="/images/departamento.png"
                 alt="Interior de departamento de lujo con vista a la montaña"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
