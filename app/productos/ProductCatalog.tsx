@@ -344,7 +344,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
   );
 }
 
-function ProductCard({ product, isFavorite }: { product: Product; isFavorite: boolean }) {
+export function ProductCard({ product, isFavorite }: { product: Product; isFavorite: boolean }) {
   return (
     <Link href={`/productos/${product.id}`} className="group relative block">
       <Card className="overflow-hidden transition-shadow hover:shadow-md">
@@ -363,7 +363,7 @@ function ProductCard({ product, isFavorite }: { product: Product; isFavorite: bo
             </div>
           )}
           
-          <FavoriteButton productId={product.id} initialIsFavorite={isFavorite} />
+          <FavoriteButton itemId={product.id} initialIsFavorite={isFavorite} itemType="product" />
 
           {product.is_verified && (
             <Badge className="absolute top-3 left-3 gap-1 bg-accent text-accent-foreground shadow-sm z-10">

@@ -12,15 +12,18 @@ import { SearchBar } from "@/app/components/SearchBar";
 import { Building2, MessageCircle } from "lucide-react";
 import { DepartamentosCatalog } from "./DepartamentosCatalog";
 
+import { getUserFavoriteIds } from "@/actions/favorites";
+
 export const metadata = {
   title: "Departamentos en Arriendo",
   description: "Arrienda departamentos en los mejores centros de esquí de Chile",
 };
 
 export default async function DepartamentosPage() {
-  const [{ data: properties, error }, supabase] = await Promise.all([
+  const [{ data: properties, error }, supabase, favoriteIds] = await Promise.all([
     getProperties(),
     createSupabaseServerClient(),
+    getUserFavoriteIds("property"),
   ]);
   const { data: reservations } = await supabase
     .from("reservations")
@@ -79,6 +82,7 @@ export default async function DepartamentosPage() {
         <DepartamentosCatalog
           properties={(properties as any[]) ?? []}
           reservations={(reservations as any[]) ?? []}
+          initialFavoriteIds={favoriteIds}
         />
       </Suspense>
     </div>

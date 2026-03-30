@@ -22,6 +22,7 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
+import { FavoriteButton } from "@/app/components/FavoriteButton";
 
 const LOCATION_FILTERS = [
   { value: "La Parva", label: "La Parva" },
@@ -53,6 +54,64 @@ interface Reservation {
 interface DepartamentosCatalogProps {
   properties: Property[];
   reservations?: Reservation[];
+  initialFavoriteIds?: string[];
+}
+
+export function PropertyCard({ property, isFavorite }: { property: Property; isFavorite: boolean }) {
+  return (
+    <Link href={`/departamentos/${property.id}`} className="group relative block">
+      <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+        <div className="relative aspect-[16/10] overflow-hidden bg-secondary/50">
+          {property.images?.[0] ? (
+            <Image
+              src={property.images[0]}
+              alt={property.title}
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <Building2 className="size-12 text-muted-foreground/20" />
+            </div>
+          )}
+          
+          <FavoriteButton itemId={property.id} initialIsFavorite={isFavorite} itemType="property" />
+        </div>
+        <CardContent className="p-5">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="font-heading line-clamp-1 text-lg font-semibold">
+                {property.title}
+              </h3>
+              <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                <MapPin className="size-3.5 shrink-0" />
+                <span className="truncate">{property.location}</span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            {(property.max_guests ?? 0) > 0 && (
+              <span className="flex items-center gap-1">
+                <Users className="size-3" />{property.max_guests}
+              </span>
+            )}
+            {(property.bedrooms ?? 0) > 0 && (
+              <span className="flex items-center gap-1">
+                <BedDouble className="size-3" />{property.bedrooms}
+              </span>
+            )}
+          </div>
+          <div className="mt-3 flex items-baseline gap-1">
+            <span className="text-xl font-bold text-primary">
+              ${Number(property.price).toLocaleString("es-CL")}
+            </span>
+            <span className="text-sm text-muted-foreground">/noche</span>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -100,7 +159,7 @@ function Stepper({
   );
 }
 
-export function DepartamentosCatalog({ properties, reservations = [] }: DepartamentosCatalogProps) {
+export function DepartamentosCatalog({ properties, reservations = [], initialFavoriteIds = [] }: DepartamentosCatalogProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
@@ -333,56 +392,11 @@ export function DepartamentosCatalog({ properties, reservations = [] }: Departam
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((property) => (
-              <Link key={property.id} href={`/departamentos/${property.id}`} className="group">
-                <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-secondary/50">
-                    {property.images?.[0] ? (
-                      <Image
-                        src={property.images[0]}
-                        alt={property.title}
-                        fill
-                        className="object-cover transition-transform group-hover:scale-105"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center">
-                        <Building2 className="size-12 text-muted-foreground/20" />
-                      </div>
-                    )}
-                  </div>
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <h3 className="font-heading line-clamp-1 text-lg font-semibold">
-                          {property.title}
-                        </h3>
-                        <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-                          <MapPin className="size-3.5 shrink-0" />
-                          <span className="truncate">{property.location}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      {(property.max_guests ?? 0) > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Users className="size-3" />{property.max_guests}
-                        </span>
-                      )}
-                      {(property.bedrooms ?? 0) > 0 && (
-                        <span className="flex items-center gap-1">
-                          <BedDouble className="size-3" />{property.bedrooms}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-3 flex items-baseline gap-1">
-                      <span className="text-xl font-bold text-primary">
-                        ${Number(property.price).toLocaleString("es-CL")}
-                      </span>
-                      <span className="text-sm text-muted-foreground">/noche</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+              <PropertyCard 
+                key={property.id} 
+                property={property} 
+                isFavorite={initialFavoriteIds.includes(property.id)} 
+              />
             ))}
           </div>
         )}

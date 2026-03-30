@@ -7,12 +7,13 @@ import { toggleFavorite } from "@/actions/favorites";
 import { cn } from "@/lib/utils";
 
 interface FavoriteButtonProps {
-  productId: string;
+  itemId: string;
   initialIsFavorite: boolean;
+  itemType?: "product" | "property";
   className?: string; // Optional custom styling
 }
 
-export function FavoriteButton({ productId, initialIsFavorite, className }: FavoriteButtonProps) {
+export function FavoriteButton({ itemId, initialIsFavorite, itemType = "product", className }: FavoriteButtonProps) {
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +28,7 @@ export function FavoriteButton({ productId, initialIsFavorite, className }: Favo
     const previousState = isFavorite;
     setIsFavorite(!previousState);
 
-    const result = await toggleFavorite(productId);
+    const result = await toggleFavorite(itemId, itemType);
 
     if (!result.success) {
       // Revert if error
