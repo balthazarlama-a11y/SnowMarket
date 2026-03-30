@@ -47,11 +47,13 @@ export default async function DepartamentosPage() {
             centros de esquí de Chile. Contacto directo con nuestro equipo.
           </p>
         </div>
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:min-w-[420px] sm:flex-row sm:items-center sm:justify-end">
-          <SearchBar />
+        <div className="flex w-full items-center gap-3 sm:w-auto sm:justify-end">
+          <div className="flex-1 sm:flex-none">
+            <SearchBar />
+          </div>
           <Button
             size="default"
-            className="w-full shrink-0 gap-2 bg-[#25D366] text-white hover:bg-[#1da851] sm:w-auto"
+            className="shrink-0 gap-2 bg-[#25D366] text-white hover:bg-[#1da851]"
             render={
               <a
                 href={listPropertyWhatsAppHref}
@@ -61,7 +63,8 @@ export default async function DepartamentosPage() {
             }
           >
             <MessageCircle className="size-4" data-icon="inline-start" />
-            ¡Sube tu departamento por aquí!
+            <span className="hidden sm:inline">¡Sube tu departamento por aquí!</span>
+            <span className="sm:hidden">Publicar</span>
           </Button>
         </div>
       </div>

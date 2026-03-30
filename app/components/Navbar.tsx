@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, LogIn, PlusCircle } from "lucide-react";
+import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, LogIn, PlusCircle, Heart } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
 import { MobileNav } from "./MobileNav";
 
@@ -32,6 +32,9 @@ export async function Navbar() {
         </div>
 
         <div className="hidden ml-auto shrink-0 items-center gap-2 md:flex">
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors" render={<Link href="/favoritos" />}>
+            <Heart className="size-5" />
+          </Button>
           <Button
             size="sm"
             className="gap-1.5 bg-orange-500 text-white hover:bg-orange-600"
@@ -59,10 +62,15 @@ export async function Navbar() {
               <SignOutButton />
             </>
           ) : (
-            <Button size="sm" render={<Link href="/auth/sign-in" />}>
-              <LogIn className="size-4" data-icon="inline-start" />
-              Iniciar Sesión
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" render={<Link href="/auth/sign-up" />}>
+                Registrarse
+              </Button>
+              <Button size="sm" render={<Link href="/auth/sign-in" />}>
+                <LogIn className="size-4" data-icon="inline-start" />
+                Iniciar Sesión
+              </Button>
+            </>
           )}
         </div>
 
