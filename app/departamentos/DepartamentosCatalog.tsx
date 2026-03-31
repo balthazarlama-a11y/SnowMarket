@@ -16,6 +16,7 @@ import {
   Tag,
   X,
   SlidersHorizontal,
+  MessageCircle,
   Users,
   BedDouble,
   CalendarDays,
@@ -23,6 +24,7 @@ import {
   Plus,
 } from "lucide-react";
 import { FavoriteButton } from "@/app/components/FavoriteButton";
+import { SearchBar } from "@/app/components/SearchBar";
 
 const LOCATION_FILTERS = [
   { value: "La Parva", label: "La Parva" },
@@ -55,6 +57,7 @@ interface DepartamentosCatalogProps {
   properties: Property[];
   reservations?: Reservation[];
   initialFavoriteIds?: string[];
+  listPropertyWhatsAppHref: string;
 }
 
 export function PropertyCard({ property, isFavorite }: { property: Property; isFavorite: boolean }) {
@@ -159,7 +162,12 @@ function Stepper({
   );
 }
 
-export function DepartamentosCatalog({ properties, reservations = [], initialFavoriteIds = [] }: DepartamentosCatalogProps) {
+export function DepartamentosCatalog({
+  properties,
+  reservations = [],
+  initialFavoriteIds = [],
+  listPropertyWhatsAppHref,
+}: DepartamentosCatalogProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
@@ -355,32 +363,52 @@ export function DepartamentosCatalog({ properties, reservations = [], initialFav
       </aside>
 
       <div className="flex-1">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "departamento" : "departamentos"}
           </p>
-          <div className="lg:hidden">
-            <Sheet>
-              <SheetTrigger
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <div className="lg:hidden">
+              <Sheet>
+                <SheetTrigger
+                  render={
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      <SlidersHorizontal className="size-3.5" />
+                      Filtros
+                      {hasFilters && (
+                        <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                          !
+                        </span>
+                      )}
+                    </Button>
+                  }
+                />
+                <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-8">
+                  <div className="p-4">
+                    <h3 className="mb-4 font-heading text-lg font-semibold">Filtros</h3>
+                    {filterContent}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+            <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-1 sm:flex-row sm:items-center sm:gap-2">
+              <SearchBar />
+              <Button
+                size="sm"
+                className="shrink-0 gap-2 whitespace-nowrap bg-[#25D366] text-white hover:bg-[#1da851]"
                 render={
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    <SlidersHorizontal className="size-3.5" />
-                    Filtros
-                    {hasFilters && (
-                      <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-                        !
-                      </span>
-                    )}
-                  </Button>
+                  <a
+                    href={listPropertyWhatsAppHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
                 }
-              />
-              <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-8">
-                <div className="p-4">
-                  <h3 className="mb-4 font-heading text-lg font-semibold">Filtros</h3>
-                  {filterContent}
-                </div>
-              </SheetContent>
-            </Sheet>
+              >
+                <MessageCircle className="size-4" data-icon="inline-start" />
+                <span className="hidden sm:inline">¡Sube tu departamento por aquí!</span>
+                <span className="sm:hidden">Publicar</span>
+              </Button>
+            </div>
           </div>
         </div>
 
