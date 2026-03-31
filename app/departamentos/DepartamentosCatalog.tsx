@@ -93,6 +93,11 @@ export function PropertyCard({ property, isFavorite }: { property: Property; isF
               </div>
             </div>
           </div>
+          {property.description && (
+            <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+              {property.description}
+            </p>
+          )}
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {(property.max_guests ?? 0) > 0 && (
               <span className="flex items-center gap-1">

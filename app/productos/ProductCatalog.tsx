@@ -420,6 +420,11 @@ export function ProductCard({ product, isFavorite }: { product: Product; isFavor
           <p className="mt-1 text-lg font-bold text-primary">
             ${Number(product.price).toLocaleString("es-CL")}
           </p>
+          {product.description && (
+            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+              {product.description}
+            </p>
+          )}
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <Badge variant="outline">
               {CATEGORY_LABELS[product.category] ?? product.category}
