@@ -306,7 +306,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
           <p className="text-sm text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "producto" : "productos"}
           </p>
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
             <div className="lg:hidden">
               <Sheet>
                 <SheetTrigger
@@ -330,35 +330,38 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
                 </SheetContent>
               </Sheet>
             </div>
-            <SearchBar />
-            <div className="flex flex-wrap items-center gap-2">
-              <Button
-                size="sm"
-                render={
-                  <a
-                    href={PRODUCT_PUBLISH_STANDARD_HREF}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                }
-              >
-                <ShoppingBag className="size-4" data-icon="inline-start" />
-                Publicar
-              </Button>
-              <Button
-                size="sm"
-                className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700"
-                render={
-                  <a
-                    href={PRODUCT_PUBLISH_VERIFIED_HREF}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                }
-              >
-                <Check className="size-4" data-icon="inline-start" strokeWidth={2.5} />
-                Publicar Verificado
-              </Button>
+            <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-1 sm:flex-row sm:items-center sm:gap-2">
+              <SearchBar />
+              <div className="flex shrink-0 flex-row flex-nowrap items-center gap-2">
+                <Button
+                  size="sm"
+                  className="shrink-0 whitespace-nowrap"
+                  render={
+                    <a
+                      href={PRODUCT_PUBLISH_STANDARD_HREF}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  }
+                >
+                  <ShoppingBag className="size-4" data-icon="inline-start" />
+                  Publicar
+                </Button>
+                <Button
+                  size="sm"
+                  className="shrink-0 gap-1.5 whitespace-nowrap bg-emerald-600 text-white hover:bg-emerald-700"
+                  render={
+                    <a
+                      href={PRODUCT_PUBLISH_VERIFIED_HREF}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  }
+                >
+                  <Check className="size-4" data-icon="inline-start" strokeWidth={2.5} />
+                  Publicar Verificado
+                </Button>
+              </div>
             </div>
           </div>
         </div>
