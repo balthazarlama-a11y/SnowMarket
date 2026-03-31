@@ -43,6 +43,7 @@ interface Product {
   is_verified: boolean;
   images: string[];
   description?: string;
+  detailed_description?: string | null;
   brand?: string | null;
   condition?: string | null;
   size_label?: string | null;
@@ -114,7 +115,14 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
     return products.filter((p) => {
       if (selectedCategory && p.category !== selectedCategory) return false;
       if (verifiedOnly && !p.is_verified) return false;
-      if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.description?.toLowerCase().includes(queryParam)) return false;
+      if (
+        queryParam &&
+        !p.title.toLowerCase().includes(queryParam) &&
+        !p.description?.toLowerCase().includes(queryParam) &&
+        !p.detailed_description?.toLowerCase().includes(queryParam)
+      ) {
+        return false;
+      }
       const pMin = priceMin ? Number(priceMin) : 0;
       const pMax = priceMax ? Number(priceMax) : Infinity;
       if (p.price < pMin || p.price > pMax) return false;
@@ -388,6 +396,8 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
 }
 
 export function ProductCard({ product, isFavorite }: { product: Product; isFavorite: boolean }) {
+  const listingDescription = product.detailed_description || product.description;
+
   return (
     <Link href={`/productos/${product.id}`} className="group relative block">
       <Card className="overflow-hidden transition-shadow hover:shadow-md">
@@ -420,9 +430,9 @@ export function ProductCard({ product, isFavorite }: { product: Product; isFavor
           <p className="mt-1 text-lg font-bold text-primary">
             ${Number(product.price).toLocaleString("es-CL")}
           </p>
-          {product.description && (
+          {listingDescription && (
             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-              {product.description}
+              {listingDescription}
             </p>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-1.5">

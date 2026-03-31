@@ -78,6 +78,7 @@ export default function NuevoProductoPage() {
     const result = await createProduct({
       title: form.get("title") as string,
       description: form.get("description") as string,
+      detailed_description: (form.get("detailed_description") as string) || null,
       price: Number(form.get("price")),
       category: form.get("category") as ProductCategory,
       whatsapp_number: form.get("whatsapp_number") as string,
@@ -136,6 +137,19 @@ export default function NuevoProductoPage() {
                 rows={4}
                 placeholder="Describe el estado, talla, temporadas de uso..."
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="detailed_description">Descripción detallada (opcional)</Label>
+              <Textarea
+                id="detailed_description"
+                name="detailed_description"
+                rows={6}
+                placeholder="Incluye estado real, marca, modelo, fijaciones, historial de uso, mantenciones y cualquier detalle técnico relevante."
+              />
+              <p className="text-xs text-muted-foreground">
+                Esta descripción aparecerá en la publicación para dar contexto completo al comprador.
+              </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

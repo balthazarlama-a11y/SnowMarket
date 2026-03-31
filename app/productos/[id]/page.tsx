@@ -21,6 +21,7 @@ export default async function ProductDetailPage({
   if (error || !product) return notFound();
 
   const entityType = product.is_verified ? "product_verified" : "product_user";
+  const hasDetailedDescription = Boolean(product.detailed_description?.trim());
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -104,6 +105,20 @@ export default async function ProductDetailPage({
                 </h2>
                 <p className="leading-relaxed">{product.description}</p>
               </div>
+
+              {hasDetailedDescription && (
+                <>
+                  <Separator />
+                  <div>
+                    <h2 className="mb-2 text-sm font-medium text-muted-foreground">
+                      Descripción detallada
+                    </h2>
+                    <p className="whitespace-pre-line leading-relaxed">
+                      {product.detailed_description}
+                    </p>
+                  </div>
+                </>
+              )}
 
               <Separator />
 

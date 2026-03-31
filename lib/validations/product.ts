@@ -48,6 +48,7 @@ export const createProductSchema = z.object({
     .min(3, "El titulo debe tener al menos 3 caracteres")
     .max(200),
   description: z.string().min(1, "La descripcion es obligatoria"),
+  detailed_description: z.string().max(4000).nullish(),
   price: z
     .number()
     .nonnegative("El precio no puede ser negativo")

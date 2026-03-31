@@ -74,8 +74,10 @@ export default function AdminPropertiesPage() {
     const result = await createProperty({
       title: form.get("title") as string,
       description: form.get("description") as string,
+      full_description: (form.get("full_description") as string) || null,
       price: Number(form.get("price")),
       location: form.get("location") as string,
+      google_maps_url: (form.get("google_maps_url") as string) || null,
       whatsapp_contact: form.get("whatsapp_contact") as string,
       images: imageUrls,
       latitude: latRaw ? Number(latRaw) : null,
@@ -132,6 +134,16 @@ export default function AdminPropertiesPage() {
               <Textarea id="description" name="description" required rows={4} placeholder="Describe el departamento, amenidades, capacidad..." />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="full_description">Descripción completa del inmueble (opcional)</Label>
+              <Textarea
+                id="full_description"
+                name="full_description"
+                rows={7}
+                placeholder="Incluye comodidades, capacidad, distribución de ambientes, cercanía a pistas y cualquier detalle relevante para el huésped."
+              />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="price">Precio por noche (CLP)</Label>
@@ -175,6 +187,19 @@ export default function AdminPropertiesPage() {
                 <Label htmlFor="longitude">Longitud (opcional)</Label>
                 <Input id="longitude" name="longitude" type="number" step="any" placeholder="-70.2563" />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="google_maps_url">URL de Google Maps (opcional)</Label>
+              <Input
+                id="google_maps_url"
+                name="google_maps_url"
+                type="url"
+                placeholder="https://maps.google.com/..."
+              />
+              <p className="text-xs text-muted-foreground">
+                Pega el enlace exacto para que el botón de ubicación lleve a la dirección correcta.
+              </p>
             </div>
 
             <div className="space-y-2">

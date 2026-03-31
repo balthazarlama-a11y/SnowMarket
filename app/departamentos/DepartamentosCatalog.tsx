@@ -42,6 +42,7 @@ interface Property {
   location: string;
   images: string[];
   description?: string;
+  full_description?: string | null;
   max_guests?: number;
   bedrooms?: number;
   amenities?: string[];
@@ -61,6 +62,8 @@ interface DepartamentosCatalogProps {
 }
 
 export function PropertyCard({ property, isFavorite }: { property: Property; isFavorite: boolean }) {
+  const listingDescription = property.full_description || property.description;
+
   return (
     <Link href={`/departamentos/${property.id}`} className="group relative block">
       <Card className="overflow-hidden transition-shadow hover:shadow-lg">
@@ -93,9 +96,9 @@ export function PropertyCard({ property, isFavorite }: { property: Property; isF
               </div>
             </div>
           </div>
-          {property.description && (
+          {listingDescription && (
             <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-              {property.description}
+              {listingDescription}
             </p>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -228,7 +231,15 @@ export function DepartamentosCatalog({
   const filtered = useMemo(() => {
     return properties.filter((p) => {
       if (selectedLocation && !p.location?.toLowerCase().includes(selectedLocation.toLowerCase())) return false;
-      if (queryParam && !p.title.toLowerCase().includes(queryParam) && !p.location?.toLowerCase().includes(queryParam)) return false;
+      if (
+        queryParam &&
+        !p.title.toLowerCase().includes(queryParam) &&
+        !p.location?.toLowerCase().includes(queryParam) &&
+        !p.description?.toLowerCase().includes(queryParam) &&
+        !p.full_description?.toLowerCase().includes(queryParam)
+      ) {
+        return false;
+      }
       const pMin = priceMin ? Number(priceMin) : 0;
       const pMax = priceMax ? Number(priceMax) : Infinity;
       if (p.price < pMin || p.price > pMax) return false;

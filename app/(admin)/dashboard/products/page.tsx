@@ -70,6 +70,7 @@ export default function AdminProductsPage() {
     const result = await createVerifiedProduct({
       title: form.get("title") as string,
       description: form.get("description") as string,
+      detailed_description: (form.get("detailed_description") as string) || null,
       price: Number(form.get("price")),
       category: form.get("category") as ProductCategory,
       whatsapp_number: form.get("whatsapp_number") as string,
@@ -121,6 +122,16 @@ export default function AdminProductsPage() {
             <div className="space-y-2">
               <Label htmlFor="description">Descripción</Label>
               <Textarea id="description" name="description" required rows={4} placeholder="Descripción detallada del producto..." />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="detailed_description">Descripción técnica completa (opcional)</Label>
+              <Textarea
+                id="detailed_description"
+                name="detailed_description"
+                rows={6}
+                placeholder="Estado, marca, modelo, fijaciones, mantenciones, uso y observaciones técnicas."
+              />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

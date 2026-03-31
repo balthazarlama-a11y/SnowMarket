@@ -11,6 +11,7 @@ export async function createVerifiedProduct(
   input: {
     title: string;
     description: string;
+    detailed_description?: string | null;
     price: number;
     category: string;
     whatsapp_number: string;

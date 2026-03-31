@@ -22,11 +22,13 @@ export const createPropertySchema = z.object({
     .min(3, "El titulo debe tener al menos 3 caracteres")
     .max(200),
   description: z.string().min(1, "La descripcion es obligatoria"),
+  full_description: z.string().max(6000).nullish(),
   price: z
     .number()
     .nonnegative("El precio no puede ser negativo")
     .max(99999999.99),
   location: z.string().min(1, "La ubicacion es obligatoria"),
+  google_maps_url: z.string().url("URL de Google Maps no valida").nullish(),
   whatsapp_contact: z
     .string()
     .regex(chileanPhoneRegex, "Numero de WhatsApp chileno no valido"),

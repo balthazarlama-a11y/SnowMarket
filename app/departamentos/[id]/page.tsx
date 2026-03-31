@@ -26,9 +26,15 @@ export default async function PropertyDetailPage({
   if (error || !property) return notFound();
 
   const hasCoords = property.latitude != null && property.longitude != null;
-  const mapsUrl = hasCoords
+  const mapsUrlFromCoords = hasCoords
     ? `https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}`
     : null;
+  const mapsUrlFromLocation = property.location
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location)}`
+    : null;
+  const mapsUrl = property.google_maps_url?.trim() || mapsUrlFromCoords || mapsUrlFromLocation;
+  const isActivePublication = !property.status || property.status === "activo";
+  const completeDescription = property.full_description?.trim() || property.description;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -96,7 +102,7 @@ export default async function PropertyDetailPage({
                 {property.location}
               </div>
 
-              {mapsUrl && (
+              {isActivePublication && mapsUrl && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -106,8 +112,14 @@ export default async function PropertyDetailPage({
                   }
                 >
                   <MapPin className="size-3.5" data-icon="inline-start" />
-                  Ver ruta en Google Maps
+                  Ver ubicación exacta en Google Maps
                 </Button>
+              )}
+
+              {!isActivePublication && (
+                <p className="text-xs text-muted-foreground">
+                  La ubicación exacta estará disponible cuando la publicación esté activa.
+                </p>
               )}
 
               <div className="flex items-baseline gap-1">
@@ -121,9 +133,9 @@ export default async function PropertyDetailPage({
 
               <div>
                 <h2 className="mb-2 text-sm font-medium text-muted-foreground">
-                  Descripción
+                  Descripción completa
                 </h2>
-                <p className="leading-relaxed">{property.description}</p>
+                <p className="whitespace-pre-line leading-relaxed">{completeDescription}</p>
               </div>
 
               <Separator />

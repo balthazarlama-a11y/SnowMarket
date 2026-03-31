@@ -88,6 +88,7 @@ export function EditProductForm({ product }: { product: any }) {
       id: product.id,
       title: form.get("title") as string,
       description: form.get("description") as string,
+      detailed_description: (form.get("detailed_description") as string) || null,
       price: Number(form.get("price")),
       category: form.get("category") as ProductCategory,
       whatsapp_number: form.get("whatsapp_number") as string,
@@ -146,6 +147,20 @@ export function EditProductForm({ product }: { product: any }) {
               defaultValue={product.description}
               placeholder="Describe el estado, talla, temporadas de uso..."
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="detailed_description">Descripción detallada (opcional)</Label>
+            <Textarea
+              id="detailed_description"
+              name="detailed_description"
+              rows={6}
+              defaultValue={product.detailed_description || ""}
+              placeholder="Incluye estado real, marca, modelo, fijaciones, historial de uso, mantenciones y detalles técnicos relevantes."
+            />
+            <p className="text-xs text-muted-foreground">
+              Esta descripción aparece en la publicación para que el comprador vea toda la información técnica.
+            </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
