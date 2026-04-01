@@ -58,11 +58,6 @@ export function HeroSearchForm() {
           aria-label="Check-in"
           className="h-10 w-full rounded-lg bg-white/10 pl-9 pr-3 text-sm text-white outline-none [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90 sm:rounded-full"
         />
-        {!dateFrom && (
-          <span className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 text-sm text-white/65">
-            Check-in
-          </span>
-        )}
       </div>
 
       <div className="relative flex-1">
@@ -75,11 +70,6 @@ export function HeroSearchForm() {
           min={dateFrom || undefined}
           className="h-10 w-full rounded-lg bg-white/10 pl-9 pr-3 text-sm text-white outline-none [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90 sm:rounded-full"
         />
-        {!dateTo && (
-          <span className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 text-sm text-white/65">
-            Check-out
-          </span>
-        )}
       </div>
 
       <Button
