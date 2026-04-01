@@ -5,6 +5,7 @@ import { getPropertyById } from "@/actions/properties";
 import { getReservationsByProperty } from "@/actions/reservations";
 import { WhatsAppButton } from "@/app/components/WhatsAppButton";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
+import { AMENITY_LABELS } from "@/lib/validations/property";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,7 +35,16 @@ export default async function PropertyDetailPage({
     : null;
   const mapsUrl = property.google_maps_url?.trim() || mapsUrlFromCoords || mapsUrlFromLocation;
   const isActivePublication = !property.status || property.status === "activo";
-  const completeDescription = property.full_description?.trim() || property.description;
+  const shortDescription = property.description?.trim() || "Sin descripción corta.";
+  const completeDescription = property.full_description?.trim() || shortDescription;
+  const amenitiesList = Array.isArray(property.amenities)
+    ? property.amenities.map((amenity: string) => AMENITY_LABELS[amenity] ?? amenity)
+    : [];
+  const hasParking = property.parking_included ?? amenitiesList.includes("Estacionamiento");
+  const distanceLabel = property.distance_to_slopes_meters != null
+    ? `${Number(property.distance_to_slopes_meters).toLocaleString("es-CL")} m`
+    : "No informada";
+  const petPolicy = property.pet_policy?.trim() || "No especificada";
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -132,11 +142,70 @@ export default async function PropertyDetailPage({
               <Separator />
 
               <div>
-                <h2 className="mb-2 text-sm font-medium text-muted-foreground">
-                  Descripción completa
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Informacion general
                 </h2>
-                <p className="whitespace-pre-line leading-relaxed">{completeDescription}</p>
+                <div className="grid gap-2 text-sm">
+                  <p>
+                    <span className="font-medium">Capacidad total:</span>{" "}
+                    {property.max_guests ?? "No informada"} personas
+                  </p>
+                  <p>
+                    <span className="font-medium">Habitaciones:</span>{" "}
+                    {property.bedrooms ?? "No informada"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Baños:</span>{" "}
+                    {property.bathrooms ?? "No informada"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Descripción corta:</span>{" "}
+                    {shortDescription}
+                  </p>
+                </div>
               </div>
+
+              <Separator />
+
+              <details className="rounded-lg border bg-secondary/30 p-3">
+                <summary className="cursor-pointer text-sm font-semibold">
+                  Detalle completo del inmueble
+                </summary>
+                <div className="mt-3 space-y-4">
+                  <div>
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      Comodidades
+                    </h3>
+                    {amenitiesList.length > 0 ? (
+                      <p className="text-sm leading-relaxed">{amenitiesList.join(", ")}</p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Sin comodidades cargadas.</p>
+                    )}
+                  </div>
+
+                  <div className="grid gap-2 text-sm">
+                    <p>
+                      <span className="font-medium">Distancia / cercanía a pistas:</span>{" "}
+                      {distanceLabel}
+                    </p>
+                    <p>
+                      <span className="font-medium">Estacionamiento:</span>{" "}
+                      {hasParking ? "Incluido" : "No incluido"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Política de mascotas:</span>{" "}
+                      {petPolicy}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      Descripción completa
+                    </h3>
+                    <p className="whitespace-pre-line leading-relaxed text-sm">{completeDescription}</p>
+                  </div>
+                </div>
+              </details>
 
               <Separator />
 

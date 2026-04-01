@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft, Building2, MapPin, CalendarDays } from "lucide-react";
+import { ArrowLeft, Building2, MapPin, CalendarDays, Pencil } from "lucide-react";
 
 export const metadata = {
   title: "Gestionar Propiedades",
@@ -62,6 +62,14 @@ export default async function ManagePropertiesPage() {
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    render={<Link href={`/dashboard/properties/${p.id}/editar`} />}
+                  >
+                    <Pencil className="size-3.5" data-icon="inline-start" />
+                    Editar
+                  </Button>
                   <Button
                     variant="ghost"
                     size="sm"

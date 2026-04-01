@@ -52,6 +52,10 @@ export async function createProperty(
     return { success: false, error: error.message };
   }
 
+  revalidatePath("/dashboard/properties");
+  revalidatePath("/dashboard/properties/manage");
+  revalidatePath("/departamentos");
+
   return { success: true, data: { id: data.id } };
 }
 
@@ -86,6 +90,11 @@ export async function updateProperty(
     return { success: false, error: error.message };
   }
 
+  revalidatePath("/dashboard/properties");
+  revalidatePath("/dashboard/properties/manage");
+  revalidatePath("/departamentos");
+  revalidatePath(`/departamentos/${id}`);
+
   return { success: true, data: null };
 }
 
@@ -106,6 +115,9 @@ export async function deleteProperty(
   if (error) {
     return { success: false, error: error.message };
   }
+
+  revalidatePath("/dashboard/properties/manage");
+  revalidatePath("/departamentos");
 
   return { success: true, data: null };
 }

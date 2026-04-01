@@ -84,6 +84,7 @@ export function EditProductForm({ product }: { product: any }) {
     }
 
     const sizeVal = form.get("size_value") as string;
+    const yearVal = form.get("manufacture_year") as string;
     const result = await updateProduct({
       id: product.id,
       title: form.get("title") as string,
@@ -94,9 +95,14 @@ export function EditProductForm({ product }: { product: any }) {
       whatsapp_number: form.get("whatsapp_number") as string,
       images: finalImages,
       brand: (form.get("brand") as string) || null,
+      model: (form.get("model") as string) || null,
       condition: (form.get("condition") as any) || null,
       size_label: (form.get("size_label") as string) || null,
       size_value: sizeVal ? Number(sizeVal) : null,
+      binding_type: (form.get("binding_type") as string) || null,
+      manufacture_year: yearVal ? Number(yearVal) : null,
+      included_accessories: (form.get("included_accessories") as string) || null,
+      technical_observations: (form.get("technical_observations") as string) || null,
     });
 
     setLoading(false);
@@ -122,6 +128,12 @@ export function EditProductForm({ product }: { product: any }) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="rounded-lg border bg-muted/20 p-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Informacion general
+            </h2>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="title">Título</Label>
             <Input
@@ -138,14 +150,15 @@ export function EditProductForm({ product }: { product: any }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción</Label>
+            <Label htmlFor="description">Descripción corta</Label>
             <Textarea
               id="description"
               name="description"
               required
               rows={4}
+              maxLength={800}
               defaultValue={product.description}
-              placeholder="Describe el estado, talla, temporadas de uso..."
+              placeholder="Resumen breve del artículo para el catálogo."
             />
           </div>
 
@@ -155,6 +168,7 @@ export function EditProductForm({ product }: { product: any }) {
               id="detailed_description"
               name="detailed_description"
               rows={6}
+              maxLength={6000}
               defaultValue={product.detailed_description || ""}
               placeholder="Incluye estado real, marca, modelo, fijaciones, historial de uso, mantenciones y detalles técnicos relevantes."
             />
@@ -216,12 +230,31 @@ export function EditProductForm({ product }: { product: any }) {
                 ))}
               </select>
             </div>
+              <div className="space-y-2">
+                <Label htmlFor="model">Modelo (opcional)</Label>
+                <Input
+                  id="model"
+                  name="model"
+                  maxLength={120}
+                  defaultValue={product.model || ""}
+                  placeholder="Ej: Hero Elite ST TI"
+                />
+              </div>
+            </div>
+
+          <div className="rounded-lg border bg-muted/20 p-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Especificaciones tecnicas
+            </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="condition">Estado (opcional)</Label>
               <select
                 id="condition"
                 name="condition"
-                defaultValue={product.condition || ""}
+                defaultValue={product.condition || "usado_buen_estado"}
                 className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <option value="">Sin especificar</option>
@@ -230,17 +263,72 @@ export function EditProductForm({ product }: { product: any }) {
                 ))}
               </select>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="binding_type">Tipo de fijaciones (opcional)</Label>
+              <Input
+                id="binding_type"
+                name="binding_type"
+                maxLength={120}
+                defaultValue={product.binding_type || ""}
+                placeholder="Ej: Alpine, GripWalk, Touring"
+              />
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="size_label">Talla (opcional)</Label>
-              <Input id="size_label" name="size_label" defaultValue={product.size_label || ""} placeholder="Ej: L, 27.5, 170cm" />
+              <Label htmlFor="size_label">Longitud / Talle (opcional)</Label>
+              <Input id="size_label" name="size_label" maxLength={40} defaultValue={product.size_label || ""} placeholder="Ej: 170 cm, 27.5 MP, Talle L" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="size_value">Medida en cm (opcional)</Label>
-              <Input id="size_value" name="size_value" type="number" step="0.1" defaultValue={product.size_value || ""} placeholder="170" />
+              <Label htmlFor="size_value">Medida numérica en cm (opcional)</Label>
+              <Input id="size_value" name="size_value" type="number" step="0.1" min={0} max={400} defaultValue={product.size_value || ""} placeholder="170" />
             </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="manufacture_year">Año (opcional)</Label>
+              <Input
+                id="manufacture_year"
+                name="manufacture_year"
+                type="number"
+                min={1970}
+                max={new Date().getFullYear() + 1}
+                defaultValue={product.manufacture_year || ""}
+                placeholder="2022"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-lg border bg-muted/20 p-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Incluye
+            </h2>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="included_accessories">Accesorios incluidos (opcional)</Label>
+            <Textarea
+              id="included_accessories"
+              name="included_accessories"
+              rows={3}
+              maxLength={2000}
+              defaultValue={product.included_accessories || ""}
+              placeholder="Ej: funda, bastones, kit de mantenimiento, tornillos extra."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="technical_observations">Observaciones técnicas (opcional)</Label>
+            <Textarea
+              id="technical_observations"
+              name="technical_observations"
+              rows={4}
+              maxLength={2000}
+              defaultValue={product.technical_observations || ""}
+              placeholder="Ej: últimos servicios, cantos, base, reparaciones realizadas, compatibilidades."
+            />
           </div>
 
           <div className="space-y-2">

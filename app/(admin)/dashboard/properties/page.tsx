@@ -66,10 +66,16 @@ export default function AdminPropertiesPage() {
 
     const latRaw = form.get("latitude") as string;
     const lngRaw = form.get("longitude") as string;
+    const bathroomsRaw = form.get("bathrooms") as string;
+    const distanceRaw = form.get("distance_to_slopes_meters") as string;
+    const parkingIncluded = form.get("parking_included") === "on";
 
     const selectedAmenities = AMENITY_OPTIONS.filter(
       (a) => form.get(`amenity_${a}`) === "on"
     );
+    const amenitiesWithParking = parkingIncluded && !selectedAmenities.includes("estacionamiento")
+      ? [...selectedAmenities, "estacionamiento"]
+      : selectedAmenities;
 
     const result = await createProperty({
       title: form.get("title") as string,
@@ -84,7 +90,11 @@ export default function AdminPropertiesPage() {
       longitude: lngRaw ? Number(lngRaw) : null,
       max_guests: Number(form.get("max_guests")) || 2,
       bedrooms: Number(form.get("bedrooms")) || 1,
-      amenities: selectedAmenities as string[],
+      bathrooms: bathroomsRaw ? Number(bathroomsRaw) : 1,
+      distance_to_slopes_meters: distanceRaw ? Number(distanceRaw) : null,
+      parking_included: parkingIncluded,
+      pet_policy: (form.get("pet_policy") as string) || null,
+      amenities: amenitiesWithParking as (typeof AMENITY_OPTIONS)[number][],
     });
 
     setLoading(false);
@@ -121,6 +131,12 @@ export default function AdminPropertiesPage() {
         </CardHeader>
         <CardContent>
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
+            <div className="rounded-lg border bg-muted/20 p-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Informacion general
+              </h2>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="title">Título</Label>
               <Input id="title" name="title" required minLength={3} placeholder="Ej: Depto 2D/1B Valle Nevado" />
@@ -130,8 +146,8 @@ export default function AdminPropertiesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descripción</Label>
-              <Textarea id="description" name="description" required rows={4} placeholder="Describe el departamento, amenidades, capacidad..." />
+              <Label htmlFor="description">Descripción corta</Label>
+              <Textarea id="description" name="description" required rows={4} maxLength={800} placeholder="Resumen breve del inmueble para el catálogo." />
             </div>
 
             <div className="space-y-2">
@@ -140,6 +156,7 @@ export default function AdminPropertiesPage() {
                 id="full_description"
                 name="full_description"
                 rows={7}
+                maxLength={6000}
                 placeholder="Incluye comodidades, capacidad, distribución de ambientes, cercanía a pistas y cualquier detalle relevante para el huésped."
               />
             </div>
@@ -155,14 +172,45 @@ export default function AdminPropertiesPage() {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-lg border bg-muted/20 p-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Detalle completo del inmueble
+              </h2>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-2">
                 <Label htmlFor="max_guests">Huéspedes máx.</Label>
-                <Input id="max_guests" name="max_guests" type="number" min={1} defaultValue={2} />
+                <Input id="max_guests" name="max_guests" type="number" min={1} max={30} defaultValue={2} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="bedrooms">Habitaciones</Label>
-                <Input id="bedrooms" name="bedrooms" type="number" min={0} defaultValue={1} />
+                <Input id="bedrooms" name="bedrooms" type="number" min={0} max={12} defaultValue={1} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bathrooms">Baños</Label>
+                <Input id="bathrooms" name="bathrooms" type="number" min={1} max={12} defaultValue={1} />
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="distance_to_slopes_meters">Distancia a pistas (metros, opcional)</Label>
+                <Input
+                  id="distance_to_slopes_meters"
+                  name="distance_to_slopes_meters"
+                  type="number"
+                  min={0}
+                  max={50000}
+                  placeholder="Ej: 350"
+                />
+              </div>
+              <div className="space-y-2 rounded-lg border p-3">
+                <Label htmlFor="parking_included" className="text-sm font-medium">Estacionamiento</Label>
+                <label className="mt-2 flex items-center gap-2 text-sm">
+                  <input id="parking_included" name="parking_included" type="checkbox" className="rounded border-input" />
+                  Incluye estacionamiento
+                </label>
               </div>
             </div>
 
@@ -176,6 +224,17 @@ export default function AdminPropertiesPage() {
                   </label>
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="pet_policy">Política de mascotas (opcional)</Label>
+              <Textarea
+                id="pet_policy"
+                name="pet_policy"
+                rows={2}
+                maxLength={300}
+                placeholder="Ej: Se aceptan mascotas pequeñas con aviso previo y cargo adicional."
+              />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { cn } from "@/lib/utils";
 import { Navbar } from "./components/Navbar";
 import { WhatsAppFAB } from "./components/WhatsAppFAB";
@@ -40,6 +41,7 @@ export default function RootLayout({
         {children}
         <WhatsAppFAB />
         <Toaster position="bottom-right" richColors />
+        <Analytics />
       </body>
     </html>
   );

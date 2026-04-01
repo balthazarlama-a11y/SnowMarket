@@ -22,7 +22,7 @@ export type ProductCondition = (typeof PRODUCT_CONDITIONS)[number];
 export const CONDITION_LABELS: Record<string, string> = {
   nuevo: "Nuevo",
   usado_como_nuevo: "Usado - Como nuevo",
-  usado_buen_estado: "Usado - Buen estado",
+  usado_buen_estado: "Usado - Aceptable",
 };
 
 export const POPULAR_BRANDS = [
@@ -41,14 +41,21 @@ export const POPULAR_BRANDS = [
 export const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 
 const chileanPhoneRegex = /^(\+?56)?\s?0?9\s?\d{8}$/;
+const nextYear = new Date().getFullYear() + 1;
 
 export const createProductSchema = z.object({
   title: z
     .string()
     .min(3, "El titulo debe tener al menos 3 caracteres")
     .max(200),
-  description: z.string().min(1, "La descripcion es obligatoria"),
-  detailed_description: z.string().max(4000).nullish(),
+  description: z
+    .string()
+    .min(1, "La descripcion es obligatoria")
+    .max(800, "La descripcion corta no puede superar 800 caracteres"),
+  detailed_description: z
+    .string()
+    .max(6000, "La descripcion detallada no puede superar 6000 caracteres")
+    .nullish(),
   price: z
     .number()
     .nonnegative("El precio no puede ser negativo")
@@ -60,10 +67,36 @@ export const createProductSchema = z.object({
     .string()
     .regex(chileanPhoneRegex, "Numero de WhatsApp chileno no valido"),
   images: z.array(z.string().url()).default([]),
-  brand: z.string().nullish(),
+  brand: z.string().max(80, "La marca no puede superar 80 caracteres").nullish(),
+  model: z.string().max(120, "El modelo no puede superar 120 caracteres").nullish(),
   condition: z.enum(PRODUCT_CONDITIONS).nullish(),
-  size_label: z.string().nullish(),
-  size_value: z.number().nullish(),
+  size_label: z
+    .string()
+    .max(40, "La referencia de longitud/talle no puede superar 40 caracteres")
+    .nullish(),
+  size_value: z
+    .number()
+    .min(0, "La medida no puede ser negativa")
+    .max(400, "La medida no puede superar 400 cm")
+    .nullish(),
+  binding_type: z
+    .string()
+    .max(120, "El tipo de fijaciones no puede superar 120 caracteres")
+    .nullish(),
+  manufacture_year: z
+    .number()
+    .int("El ano debe ser un numero entero")
+    .min(1970, "El ano debe ser 1970 o posterior")
+    .max(nextYear, `El ano no puede ser mayor a ${nextYear}`)
+    .nullish(),
+  included_accessories: z
+    .string()
+    .max(2000, "La seccion de accesorios no puede superar 2000 caracteres")
+    .nullish(),
+  technical_observations: z
+    .string()
+    .max(2000, "Las observaciones tecnicas no pueden superar 2000 caracteres")
+    .nullish(),
 });
 
 export const updateProductSchema = createProductSchema.partial().extend({

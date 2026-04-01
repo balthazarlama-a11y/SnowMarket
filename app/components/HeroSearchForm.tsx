@@ -55,9 +55,14 @@ export function HeroSearchForm() {
           type="date"
           value={dateFrom}
           onChange={(e) => setDateFrom(e.target.value)}
-          placeholder="Check-in"
-          className="h-10 w-full rounded-lg bg-white/10 pl-9 pr-3 text-sm text-white outline-none [color-scheme:dark] sm:rounded-full"
+          aria-label="Check-in"
+          className="h-10 w-full rounded-lg bg-white/10 pl-9 pr-3 text-sm text-white outline-none [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90 sm:rounded-full"
         />
+        {!dateFrom && (
+          <span className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 text-sm text-white/65">
+            Check-in
+          </span>
+        )}
       </div>
 
       <div className="relative flex-1">
@@ -66,10 +71,15 @@ export function HeroSearchForm() {
           type="date"
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
-          placeholder="Check-out"
+          aria-label="Check-out"
           min={dateFrom || undefined}
-          className="h-10 w-full rounded-lg bg-white/10 pl-9 pr-3 text-sm text-white outline-none [color-scheme:dark] sm:rounded-full"
+          className="h-10 w-full rounded-lg bg-white/10 pl-9 pr-3 text-sm text-white outline-none [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90 sm:rounded-full"
         />
+        {!dateTo && (
+          <span className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 text-sm text-white/65">
+            Check-out
+          </span>
+        )}
       </div>
 
       <Button

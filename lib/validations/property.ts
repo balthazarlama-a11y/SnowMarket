@@ -21,8 +21,14 @@ export const createPropertySchema = z.object({
     .string()
     .min(3, "El titulo debe tener al menos 3 caracteres")
     .max(200),
-  description: z.string().min(1, "La descripcion es obligatoria"),
-  full_description: z.string().max(6000).nullish(),
+  description: z
+    .string()
+    .min(1, "La descripcion es obligatoria")
+    .max(800, "La descripcion corta no puede superar 800 caracteres"),
+  full_description: z
+    .string()
+    .max(6000, "La descripcion completa no puede superar 6000 caracteres")
+    .nullish(),
   price: z
     .number()
     .nonnegative("El precio no puede ser negativo")
@@ -35,9 +41,13 @@ export const createPropertySchema = z.object({
   images: z.array(z.string().url()).default([]),
   latitude: z.number().min(-90).max(90).nullish(),
   longitude: z.number().min(-180).max(180).nullish(),
-  max_guests: z.number().int().min(1).default(2),
-  bedrooms: z.number().int().min(0).default(1),
-  amenities: z.array(z.string()).default([]),
+  max_guests: z.number().int().min(1).max(30).default(2),
+  bedrooms: z.number().int().min(0).max(12).default(1),
+  bathrooms: z.number().int().min(1).max(12).default(1),
+  amenities: z.array(z.enum(AMENITY_OPTIONS)).default([]),
+  distance_to_slopes_meters: z.number().int().min(0).max(50000).nullish(),
+  parking_included: z.boolean().default(false),
+  pet_policy: z.string().max(300, "La politica de mascotas no puede superar 300 caracteres").nullish(),
 });
 
 export const updatePropertySchema = createPropertySchema.partial().extend({

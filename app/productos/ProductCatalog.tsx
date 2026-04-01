@@ -32,6 +32,7 @@ import {
   X,
   SlidersHorizontal,
   Check,
+  ArrowRight,
 } from "lucide-react";
 import { FavoriteButton } from "@/app/components/FavoriteButton";
 
@@ -45,9 +46,14 @@ interface Product {
   description?: string;
   detailed_description?: string | null;
   brand?: string | null;
+  model?: string | null;
   condition?: string | null;
   size_label?: string | null;
   size_value?: number | null;
+  binding_type?: string | null;
+  manufacture_year?: number | null;
+  included_accessories?: string | null;
+  technical_observations?: string | null;
 }
 
 interface ProductCatalogProps {
@@ -396,7 +402,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
 }
 
 export function ProductCard({ product, isFavorite }: { product: Product; isFavorite: boolean }) {
-  const listingDescription = product.detailed_description || product.description;
+  const listingDescription = product.description || product.detailed_description;
 
   return (
     <Link href={`/productos/${product.id}`} className="group relative block">
@@ -442,11 +448,24 @@ export function ProductCard({ product, isFavorite }: { product: Product; isFavor
             {product.brand && (
               <Badge variant="secondary" className="text-xs">{product.brand}</Badge>
             )}
+            {product.model && (
+              <Badge variant="secondary" className="text-xs">{product.model}</Badge>
+            )}
             {product.condition && (
               <Badge variant="secondary" className="text-xs">
                 {CONDITION_LABELS[product.condition] ?? product.condition}
               </Badge>
             )}
+            {product.size_label && (
+              <Badge variant="secondary" className="text-xs">{product.size_label}</Badge>
+            )}
+            {product.size_value !== null && product.size_value !== undefined && (
+              <Badge variant="secondary" className="text-xs">{product.size_value} cm</Badge>
+            )}
+          </div>
+          <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+            Ver detalles
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
           </div>
         </CardContent>
       </Card>

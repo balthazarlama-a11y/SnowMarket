@@ -22,6 +22,7 @@ import {
   CalendarDays,
   Minus,
   Plus,
+  ArrowRight,
 } from "lucide-react";
 import { FavoriteButton } from "@/app/components/FavoriteButton";
 import { SearchBar } from "@/app/components/SearchBar";
@@ -45,7 +46,11 @@ interface Property {
   full_description?: string | null;
   max_guests?: number;
   bedrooms?: number;
+  bathrooms?: number;
   amenities?: string[];
+  distance_to_slopes_meters?: number | null;
+  parking_included?: boolean | null;
+  pet_policy?: string | null;
 }
 
 interface Reservation {
@@ -62,7 +67,7 @@ interface DepartamentosCatalogProps {
 }
 
 export function PropertyCard({ property, isFavorite }: { property: Property; isFavorite: boolean }) {
-  const listingDescription = property.full_description || property.description;
+  const listingDescription = property.description || property.full_description;
 
   return (
     <Link href={`/departamentos/${property.id}`} className="group relative block">
@@ -112,12 +117,19 @@ export function PropertyCard({ property, isFavorite }: { property: Property; isF
                 <BedDouble className="size-3" />{property.bedrooms}
               </span>
             )}
+            {(property.bathrooms ?? 0) > 0 && (
+              <span>Baños: {property.bathrooms}</span>
+            )}
           </div>
           <div className="mt-3 flex items-baseline gap-1">
             <span className="text-xl font-bold text-primary">
               ${Number(property.price).toLocaleString("es-CL")}
             </span>
             <span className="text-sm text-muted-foreground">/noche</span>
+          </div>
+          <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+            Ver detalles
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
           </div>
         </CardContent>
       </Card>
@@ -302,13 +314,36 @@ export function DepartamentosCatalog({
           Fechas de Estancia
         </p>
         <div className="space-y-2">
-          <div>
+          <div className="relative">
             <Label className="text-xs text-muted-foreground">Check-in</Label>
-            <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="h-8 text-xs" />
+            <Input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              aria-label="Check-in"
+              className="h-8 pr-8 text-xs [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90"
+            />
+            {!dateFrom && (
+              <span className="pointer-events-none absolute right-8 top-[29px] -translate-y-1/2 text-xs text-muted-foreground">
+                Selecciona fecha
+              </span>
+            )}
           </div>
-          <div>
+          <div className="relative">
             <Label className="text-xs text-muted-foreground">Check-out</Label>
-            <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} min={dateFrom || undefined} className="h-8 text-xs" />
+            <Input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              min={dateFrom || undefined}
+              aria-label="Check-out"
+              className="h-8 pr-8 text-xs [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90"
+            />
+            {!dateTo && (
+              <span className="pointer-events-none absolute right-8 top-[29px] -translate-y-1/2 text-xs text-muted-foreground">
+                Selecciona fecha
+              </span>
+            )}
           </div>
         </div>
       </div>
