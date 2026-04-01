@@ -76,6 +76,7 @@ describe("generateWhatsAppLink", () => {
     expect(link).toContain("AndesMarket");
     const decoded = decodeURIComponent(link.split("text=")[1] ?? "");
     expect(decoded).toContain("me interesa el producto:");
+    expect(decoded).toContain("Precio: $150.000 CLP.");
   });
 
   it("usa numero admin para producto verificado", () => {
@@ -86,6 +87,7 @@ describe("generateWhatsAppLink", () => {
     });
     expect(link).toContain("https://wa.me/56987654321?text=");
     expect(decodeURIComponent(link)).toContain("me interesa el producto:");
+    expect(decodeURIComponent(link)).toContain("Precio: $150.000 CLP.");
   });
 
   it("usa numero admin para propiedad", () => {

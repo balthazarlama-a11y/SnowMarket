@@ -29,11 +29,13 @@ export function sanitizePhone(phone: string): string {
   return digits;
 }
 
-function buildMessage(itemName: string, _price: number, entityType: EntityType): string {
+function buildMessage(itemName: string, price: number, entityType: EntityType): string {
+  const formattedPrice = Number(price).toLocaleString("es-CL");
+
   switch (entityType) {
     case "product_user":
     case "product_verified":
-      return `Hola, vengo de AndesMarket y me interesa el producto: ${itemName}.`;
+      return `Hola, vengo de AndesMarket y me interesa el producto: ${itemName}.\nPrecio: $${formattedPrice} CLP.`;
     case "property":
       return `Hola, vengo de AndesMarket y me interesa el departamento: ${itemName}.`;
   }

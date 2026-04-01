@@ -314,22 +314,17 @@ export function DepartamentosCatalog({
           Fechas de Estancia
         </p>
         <div className="space-y-2">
-          <div className="relative">
+          <div>
             <Label className="text-xs text-muted-foreground">Check-in</Label>
             <Input
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
               aria-label="Check-in"
-              className="h-8 pr-8 text-xs [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90"
+              className="h-8 pr-3 text-xs [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90"
             />
-            {!dateFrom && (
-              <span className="pointer-events-none absolute right-8 top-[29px] -translate-y-1/2 text-xs text-muted-foreground">
-                Selecciona fecha
-              </span>
-            )}
           </div>
-          <div className="relative">
+          <div>
             <Label className="text-xs text-muted-foreground">Check-out</Label>
             <Input
               type="date"
@@ -337,13 +332,8 @@ export function DepartamentosCatalog({
               onChange={(e) => setDateTo(e.target.value)}
               min={dateFrom || undefined}
               aria-label="Check-out"
-              className="h-8 pr-8 text-xs [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90"
+              className="h-8 pr-3 text-xs [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90"
             />
-            {!dateTo && (
-              <span className="pointer-events-none absolute right-8 top-[29px] -translate-y-1/2 text-xs text-muted-foreground">
-                Selecciona fecha
-              </span>
-            )}
           </div>
         </div>
       </div>
