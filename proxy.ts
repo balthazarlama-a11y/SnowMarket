@@ -1,7 +1,7 @@
 import { updateSession } from "@/lib/supabase/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { user, supabaseResponse } = await updateSession(request);
 
   // Protect /dashboard routes — admin only
