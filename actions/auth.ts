@@ -268,6 +268,14 @@ export async function signUp(
   });
 
   if (error) {
+    const msg = error.message.toLowerCase();
+    if (msg.includes("rate") || msg.includes("limit") || msg.includes("many")) {
+      return {
+        success: false,
+        error:
+          "Demasiados correos enviados desde este proyecto. Espera unos minutos e intenta de nuevo.",
+      };
+    }
     return { success: false, error: error.message };
   }
 
