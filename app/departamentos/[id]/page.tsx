@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPropertyById } from "@/actions/properties";
 import { getReservationsByProperty } from "@/actions/reservations";
+import { getAvailabilityByProperty } from "@/actions/availability";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 import { AMENITY_LABELS } from "@/lib/validations/property";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Building2, MapPin, MessageCircle } from "lucide-react";
 import { PropertyContactSection } from "./PropertyContactSection";
+import { AvailabilityBadges } from "./AvailabilityBadges";
 import { buildWhatsAppUrlWithText, sanitizePhone } from "@/lib/whatsapp";
 
 export default async function PropertyDetailPage({
@@ -19,10 +21,12 @@ export default async function PropertyDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [{ data: property, error }, { data: reservations }] = await Promise.all([
-    getPropertyById(id),
-    getReservationsByProperty(id),
-  ]);
+  const [{ data: property, error }, { data: reservations }, { data: availability }] =
+    await Promise.all([
+      getPropertyById(id),
+      getReservationsByProperty(id),
+      getAvailabilityByProperty(id),
+    ]);
 
   if (error || !property) return notFound();
 
@@ -224,6 +228,13 @@ export default async function PropertyDetailPage({
                   </div>
                 </div>
               </details>
+
+              {(availability?.length ?? 0) > 0 && (
+                <>
+                  <Separator />
+                  <AvailabilityBadges ranges={availability as any[]} />
+                </>
+              )}
 
             </CardContent>
           </Card>

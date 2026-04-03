@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getProperties } from "@/actions/properties";
+import { getAllAvailability } from "@/actions/availability";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 import {
@@ -18,11 +19,13 @@ export const metadata = {
 };
 
 export default async function DepartamentosPage() {
-  const [{ data: properties, error }, supabase, favoriteIds] = await Promise.all([
-    getProperties(),
-    createSupabaseServerClient(),
-    getUserFavoriteIds("property"),
-  ]);
+  const [{ data: properties, error }, supabase, favoriteIds, { data: availability }] =
+    await Promise.all([
+      getProperties(),
+      createSupabaseServerClient(),
+      getUserFavoriteIds("property"),
+      getAllAvailability(),
+    ]);
   const { data: reservations } = await supabase
     .from("reservations")
     .select("property_id, start_date, end_date")
@@ -58,6 +61,7 @@ export default async function DepartamentosPage() {
         <DepartamentosCatalog
           properties={(properties as any[]) ?? []}
           reservations={(reservations as any[]) ?? []}
+          availability={(availability as any[]) ?? []}
           initialFavoriteIds={favoriteIds}
           listPropertyWhatsAppHref={listPropertyWhatsAppHref}
         />

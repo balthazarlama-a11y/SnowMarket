@@ -61,9 +61,16 @@ interface Reservation {
   end_date: string;
 }
 
+interface AvailabilityRange {
+  property_id: string;
+  available_from: string;
+  available_to: string;
+}
+
 interface DepartamentosCatalogProps {
   properties: Property[];
   reservations?: Reservation[];
+  availability?: AvailabilityRange[];
   initialFavoriteIds?: string[];
   listPropertyWhatsAppHref: string;
 }
@@ -193,6 +200,7 @@ function Stepper({
 export function DepartamentosCatalog({
   properties,
   reservations = [],
+  availability = [],
   initialFavoriteIds = [],
   listPropertyWhatsAppHref,
 }: DepartamentosCatalogProps) {
@@ -248,6 +256,17 @@ export function DepartamentosCatalog({
     return ids;
   }, [reservations, dateFrom, dateTo]);
 
+  const availablePropertyIds = useMemo(() => {
+    if (!dateFrom || !dateTo || availability.length === 0) return null;
+    const ids = new Set<string>();
+    for (const a of availability) {
+      if (a.available_from <= dateFrom && a.available_to >= dateTo) {
+        ids.add(a.property_id);
+      }
+    }
+    return ids;
+  }, [availability, dateFrom, dateTo]);
+
   const filtered = useMemo(() => {
     return properties.filter((p) => {
       if (selectedLocation === "__otros__") {
@@ -269,6 +288,7 @@ export function DepartamentosCatalog({
       // null-price properties always pass the price filter
       if (p.price != null && (p.price < pMin || p.price > pMax)) return false;
       if (dateFrom && dateTo && bookedPropertyIds.has(p.id)) return false;
+      if (availablePropertyIds && !availablePropertyIds.has(p.id)) return false;
       if (guests > 0 && (p.max_guests ?? 2) < guests) return false;
       if (bedrooms > 0 && (p.bedrooms ?? 1) < bedrooms) return false;
       if (selectedAmenities.length > 0) {
@@ -277,7 +297,7 @@ export function DepartamentosCatalog({
       }
       return true;
     });
-  }, [properties, selectedLocation, queryParam, priceMin, priceMax, dateFrom, dateTo, bookedPropertyIds, guests, bedrooms, selectedAmenities]);
+  }, [properties, selectedLocation, queryParam, priceMin, priceMax, dateFrom, dateTo, bookedPropertyIds, availablePropertyIds, guests, bedrooms, selectedAmenities]);
 
   const filterContent = (
     <div className="space-y-6">

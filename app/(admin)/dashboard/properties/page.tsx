@@ -2,7 +2,7 @@
 
 import { useState, useRef, type FormEvent } from "react";
 import { createProperty } from "@/actions/properties";
-import { uploadImages } from "@/actions/upload";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { AMENITY_OPTIONS, AMENITY_LABELS } from "@/lib/validations/property";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,12 +12,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Loader2, Building2, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { KNOWN_LOCATIONS } from "@/lib/constants";
-import { compressImage } from "@/lib/compress-image";
+import {
+  uploadImagesWithProgress,
+  type ImageUploadProgress,
+  type ImageUploadStatus,
+} from "@/lib/upload-images";
+
+const STATUS_LABEL: Record<ImageUploadStatus, string> = {
+  pending: "En cola",
+  compressing: "Comprimiendo...",
+  uploading: "Subiendo...",
+  done: "Lista",
+  error: "Error",
+};
 
 export default function AdminPropertiesPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [imageProgress, setImageProgress] = useState<ImageUploadProgress>({});
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [locationPreset, setLocationPreset] = useState("");
@@ -59,27 +72,23 @@ export default function AdminPropertiesPage() {
 
     let imageUrls: string[] = [];
     if (files.length > 0) {
-      // Phase 1: compress
-      const compressed: File[] = [];
-      for (let i = 0; i < files.length; i++) {
-        setUploadStatus(`Comprimiendo imagen ${i + 1}/${files.length}...`);
-        compressed.push(await compressImage(files[i]));
-      }
-      // Phase 2: upload
-      setUploadStatus(`Subiendo imágenes...`);
-      const uploadData = new FormData();
-      compressed.forEach((f) => uploadData.append("files", f));
-      const uploadResult = await uploadImages(uploadData, "properties");
-      if (uploadResult.success) {
-        imageUrls = uploadResult.data.urls;
-      } else {
-        toast.error(`Error subiendo imágenes: ${uploadResult.error}`);
-        setUploadStatus("");
+      setUploading(true);
+      const { urls, errors } = await uploadImagesWithProgress(
+        files,
+        "properties",
+        setImageProgress
+      );
+      setUploading(false);
+      if (errors.length > 0 && urls.length === 0) {
+        toast.error(`Error subiendo imagenes: ${errors.join("; ")}`);
         setLoading(false);
         return;
       }
+      if (errors.length > 0) {
+        toast.warning(`Algunas imagenes fallaron: ${errors.join("; ")}`);
+      }
+      imageUrls = urls;
     }
-    setUploadStatus("");
 
     const latRaw = form.get("latitude") as string;
     const lngRaw = form.get("longitude") as string;
@@ -123,6 +132,7 @@ export default function AdminPropertiesPage() {
       setFiles([]);
       previews.forEach((url) => URL.revokeObjectURL(url));
       setPreviews([]);
+      setImageProgress({});
       setLocationPreset("");
       setCustomLocation("");
       setPriceMode("fijo");
@@ -360,26 +370,57 @@ export default function AdminPropertiesPage() {
               </div>
               {previews.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-2">
-                  {previews.map((src, i) => (
-                    <div key={i} className="group relative size-20 overflow-hidden rounded-lg">
-                      <img src={src} alt={`Preview ${i + 1}`} className="size-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => removeFile(i)}
-                        className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                      >
-                        <X className="size-3" />
-                      </button>
+                  {previews.map((src, i) => {
+                    const status = imageProgress[files[i]?.name];
+                    return (
+                      <div key={i} className="group relative size-20 overflow-hidden rounded-lg">
+                        <img src={src} alt={`Preview ${i + 1}`} className="size-full object-cover" />
+                        {!uploading && (
+                          <button
+                            type="button"
+                            onClick={() => removeFile(i)}
+                            className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                          >
+                            <X className="size-3" />
+                          </button>
+                        )}
+                        {status && status !== "done" && status !== "pending" && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                            {status === "error" ? (
+                              <AlertCircle className="size-5 text-red-400" />
+                            ) : (
+                              <Loader2 className="size-5 animate-spin text-white" />
+                            )}
+                          </div>
+                        )}
+                        {status === "done" && (
+                          <div className="absolute top-1 left-1 flex size-5 items-center justify-center rounded-full bg-green-500 text-white">
+                            <CheckCircle2 className="size-3" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {uploading && Object.keys(imageProgress).length > 0 && (
+                <div className="space-y-1 pt-1">
+                  {Object.entries(imageProgress).map(([name, status]) => (
+                    <div key={name} className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span className="truncate max-w-[200px]">{name}</span>
+                      <span className={status === "error" ? "text-destructive" : status === "done" ? "text-green-600" : ""}>
+                        {STATUS_LABEL[status]}
+                      </span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+            <Button type="submit" className="w-full" size="lg" disabled={loading || uploading}>
               <Loader2 className={`size-4 ${loading ? "animate-spin" : "hidden"}`} />
               {!loading && <Building2 className="size-4" data-icon="inline-start" />}
-              {loading ? (uploadStatus || "Guardando...") : "Crear Propiedad"}
+              {loading ? (uploading ? "Subiendo imagenes..." : "Guardando...") : "Crear Propiedad"}
             </Button>
           </form>
         </CardContent>

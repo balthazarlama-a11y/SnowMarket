@@ -3,7 +3,7 @@
 import { useState, useRef, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { updateProperty } from "@/actions/properties";
-import { uploadImages } from "@/actions/upload";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { AMENITY_OPTIONS, AMENITY_LABELS } from "@/lib/validations/property";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +13,26 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Loader2, Save, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { KNOWN_LOCATIONS, isKnownLocation } from "@/lib/constants";
-import { compressImage } from "@/lib/compress-image";
+import {
+  uploadImagesWithProgress,
+  type ImageUploadProgress,
+  type ImageUploadStatus,
+} from "@/lib/upload-images";
+
+const STATUS_LABEL: Record<ImageUploadStatus, string> = {
+  pending: "En cola",
+  compressing: "Comprimiendo...",
+  uploading: "Subiendo...",
+  done: "Lista",
+  error: "Error",
+};
 
 export function EditPropertyForm({ property }: { property: any }) {
   const router = useRouter();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [imageProgress, setImageProgress] = useState<ImageUploadProgress>({});
   const [priceMode, setPriceMode] = useState<"fijo" | "consultar">(
     property.price != null ? "fijo" : "consultar"
   );
@@ -79,25 +92,23 @@ export function EditPropertyForm({ property }: { property: any }) {
 
     let finalImages = [...existingImages];
     if (newFiles.length > 0) {
-      const compressed: File[] = [];
-      for (let i = 0; i < newFiles.length; i++) {
-        setUploadStatus(`Comprimiendo imagen ${i + 1}/${newFiles.length}...`);
-        compressed.push(await compressImage(newFiles[i]));
-      }
-      setUploadStatus("Subiendo imágenes...");
-      const uploadData = new FormData();
-      compressed.forEach((f) => uploadData.append("files", f));
-      const uploadResult = await uploadImages(uploadData, "properties");
-      if (uploadResult.success) {
-        finalImages = [...finalImages, ...uploadResult.data.urls];
-      } else {
-        toast.error(`Error subiendo imagenes nuevas: ${uploadResult.error}`);
-        setUploadStatus("");
+      setUploading(true);
+      const { urls, errors } = await uploadImagesWithProgress(
+        newFiles,
+        "properties",
+        setImageProgress
+      );
+      setUploading(false);
+      if (errors.length > 0 && urls.length === 0) {
+        toast.error(`Error subiendo imagenes: ${errors.join("; ")}`);
         setLoading(false);
         return;
       }
+      if (errors.length > 0) {
+        toast.warning(`Algunas imagenes fallaron: ${errors.join("; ")}`);
+      }
+      finalImages = [...finalImages, ...urls];
     }
-    setUploadStatus("");
 
     const latRaw = form.get("latitude") as string;
     const lngRaw = form.get("longitude") as string;
@@ -431,18 +442,37 @@ export function EditPropertyForm({ property }: { property: any }) {
                   </button>
                 </div>
               ))}
-              {newPreviews.map((src, i) => (
-                <div key={`new-${i}`} className="group relative size-20 overflow-hidden rounded-lg">
-                  <img src={src} alt="Nueva" className="size-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => removeNewFile(i)}
-                    className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white"
-                  >
-                    <X className="size-3" />
-                  </button>
-                </div>
-              ))}
+              {newPreviews.map((src, i) => {
+                const status = imageProgress[newFiles[i]?.name];
+                return (
+                  <div key={`new-${i}`} className="group relative size-20 overflow-hidden rounded-lg">
+                    <img src={src} alt="Nueva" className="size-full object-cover" />
+                    {!uploading && (
+                      <button
+                        type="button"
+                        onClick={() => removeNewFile(i)}
+                        className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white"
+                      >
+                        <X className="size-3" />
+                      </button>
+                    )}
+                    {status && status !== "done" && status !== "pending" && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                        {status === "error" ? (
+                          <AlertCircle className="size-5 text-red-400" />
+                        ) : (
+                          <Loader2 className="size-5 animate-spin text-white" />
+                        )}
+                      </div>
+                    )}
+                    {status === "done" && (
+                      <div className="absolute top-1 left-1 flex size-5 items-center justify-center rounded-full bg-green-500 text-white">
+                        <CheckCircle2 className="size-3" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <div
@@ -460,12 +490,24 @@ export function EditPropertyForm({ property }: { property: any }) {
                 onChange={handleFileChange}
               />
             </div>
+            {uploading && Object.keys(imageProgress).length > 0 && (
+              <div className="space-y-1 pt-1">
+                {Object.entries(imageProgress).map(([name, status]) => (
+                  <div key={name} className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span className="truncate max-w-[200px]">{name}</span>
+                    <span className={status === "error" ? "text-destructive" : status === "done" ? "text-green-600" : ""}>
+                      {STATUS_LABEL[status]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={loading}>
+          <Button type="submit" className="w-full" size="lg" disabled={loading || uploading}>
             <Loader2 className={`size-4 ${loading ? "animate-spin" : "hidden"}`} />
             {!loading && <Save className="size-4" data-icon="inline-start" />}
-            {loading ? (uploadStatus || "Guardando...") : "Guardar Cambios"}
+            {loading ? (uploading ? "Subiendo imagenes..." : "Guardando...") : "Guardar Cambios"}
           </Button>
         </form>
       </CardContent>
