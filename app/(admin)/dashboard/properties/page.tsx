@@ -11,12 +11,16 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Building2, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
+import { KNOWN_LOCATIONS } from "@/lib/constants";
 
 export default function AdminPropertiesPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [locationPreset, setLocationPreset] = useState("");
+  const [customLocation, setCustomLocation] = useState("");
+  const finalLocation = locationPreset === "otro" ? customLocation : locationPreset;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -105,6 +109,8 @@ export default function AdminPropertiesPage() {
       setFiles([]);
       previews.forEach((url) => URL.revokeObjectURL(url));
       setPreviews([]);
+      setLocationPreset("");
+      setCustomLocation("");
     } else {
       toast.error(result.error);
       if (result.fieldErrors) setFieldErrors(result.fieldErrors);
@@ -167,8 +173,33 @@ export default function AdminPropertiesPage() {
                 <Input id="price" name="price" type="number" min={0} step="1" required placeholder="120000" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Ubicación</Label>
-                <Input id="location" name="location" required placeholder="Valle Nevado, Chile" />
+                <Label htmlFor="location_preset">Ubicación</Label>
+                <select
+                  id="location_preset"
+                  value={locationPreset}
+                  onChange={(e) => setLocationPreset(e.target.value)}
+                  required={locationPreset !== "otro"}
+                  className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  <option value="">Seleccionar destino...</option>
+                  {KNOWN_LOCATIONS.map((loc) => (
+                    <option key={loc} value={loc}>{loc}</option>
+                  ))}
+                  <option value="otro">Otro destino</option>
+                </select>
+                {locationPreset === "otro" && (
+                  <Input
+                    value={customLocation}
+                    onChange={(e) => setCustomLocation(e.target.value)}
+                    placeholder="Ej: Chillán, Pucón, Corralco, Portillo..."
+                    maxLength={50}
+                    required
+                  />
+                )}
+                <input type="hidden" name="location" value={finalLocation} />
+                {fieldErrors.location && (
+                  <p className="text-sm text-destructive">{fieldErrors.location[0]}</p>
+                )}
               </div>
             </div>
 

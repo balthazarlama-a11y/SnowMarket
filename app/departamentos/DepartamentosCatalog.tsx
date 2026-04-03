@@ -26,12 +26,14 @@ import {
 } from "lucide-react";
 import { FavoriteButton } from "@/app/components/FavoriteButton";
 import { SearchBar } from "@/app/components/SearchBar";
+import { KNOWN_LOCATIONS } from "@/lib/constants";
 
 const LOCATION_FILTERS = [
   { value: "La Parva", label: "La Parva" },
   { value: "El Colorado", label: "El Colorado" },
   { value: "Farellones", label: "Farellones" },
   { value: "Valle Nevado", label: "Valle Nevado" },
+  { value: "__otros__", label: "Otros destinos" },
 ] as const;
 
 const ALL_AMENITIES = Object.keys(AMENITY_LABELS);
@@ -242,7 +244,11 @@ export function DepartamentosCatalog({
 
   const filtered = useMemo(() => {
     return properties.filter((p) => {
-      if (selectedLocation && !p.location?.toLowerCase().includes(selectedLocation.toLowerCase())) return false;
+      if (selectedLocation === "__otros__") {
+        if (KNOWN_LOCATIONS.some((k) => k.toLowerCase() === p.location?.toLowerCase())) return false;
+      } else if (selectedLocation) {
+        if (!p.location?.toLowerCase().includes(selectedLocation.toLowerCase())) return false;
+      }
       if (
         queryParam &&
         !p.title.toLowerCase().includes(queryParam) &&
@@ -301,7 +307,10 @@ export function DepartamentosCatalog({
               className="justify-start"
               onClick={() => setSelectedLocation(loc.value)}
             >
-              <MapPin className="size-3.5" data-icon="inline-start" />
+              {loc.value === "__otros__"
+                ? <Tag className="size-3.5" data-icon="inline-start" />
+                : <MapPin className="size-3.5" data-icon="inline-start" />
+              }
               {loc.label}
             </Button>
           ))}

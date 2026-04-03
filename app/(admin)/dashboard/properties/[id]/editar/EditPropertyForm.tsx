@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Save, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
+import { KNOWN_LOCATIONS, isKnownLocation } from "@/lib/constants";
 
 export function EditPropertyForm({ property }: { property: any }) {
   const router = useRouter();
@@ -25,6 +26,14 @@ export function EditPropertyForm({ property }: { property: any }) {
   const initialAmenities: string[] = Array.isArray(property.amenities) ? property.amenities : [];
   const initialParking =
     property.parking_included ?? initialAmenities.includes("estacionamiento");
+
+  const [locationPreset, setLocationPreset] = useState<string>(
+    isKnownLocation(property.location) ? property.location : "otro"
+  );
+  const [customLocation, setCustomLocation] = useState<string>(
+    isKnownLocation(property.location) ? "" : (property.location || "")
+  );
+  const finalLocation = locationPreset === "otro" ? customLocation : locationPreset;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -194,14 +203,29 @@ export function EditPropertyForm({ property }: { property: any }) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location">Ubicacion</Label>
-              <Input
-                id="location"
-                name="location"
-                required
-                defaultValue={property.location}
-                placeholder="Valle Nevado, Chile"
-              />
+              <Label htmlFor="location_preset">Ubicacion</Label>
+              <select
+                id="location_preset"
+                value={locationPreset}
+                onChange={(e) => setLocationPreset(e.target.value)}
+                className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                <option value="">Seleccionar destino...</option>
+                {KNOWN_LOCATIONS.map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+                <option value="otro">Otro destino</option>
+              </select>
+              {locationPreset === "otro" && (
+                <Input
+                  value={customLocation}
+                  onChange={(e) => setCustomLocation(e.target.value)}
+                  placeholder="Ej: Chillán, Pucón, Corralco, Portillo..."
+                  maxLength={50}
+                  required
+                />
+              )}
+              <input type="hidden" name="location" value={finalLocation} />
             </div>
           </div>
 
