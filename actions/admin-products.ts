@@ -104,6 +104,51 @@ export async function adminDeleteProduct(
   return { success: true, data: null };
 }
 
+export async function adminUpdateProduct(
+  input: {
+    id: string;
+    title: string;
+    description: string;
+    detailed_description?: string | null;
+    price: number;
+    category: string;
+    whatsapp_number: string;
+    images: string[];
+    brand?: string | null;
+    model?: string | null;
+    condition?: string | null;
+    size_label?: string | null;
+    size_value?: number | null;
+    binding_type?: string | null;
+    manufacture_year?: number | null;
+    included_accessories?: string | null;
+    technical_observations?: string | null;
+  }
+): Promise<ActionResult<null>> {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || user.app_metadata?.role !== "admin") {
+    return { success: false, error: "Solo administradores" };
+  }
+
+  const { id, ...updates } = input;
+
+  const { error } = await supabase
+    .from("products")
+    .update(updates)
+    .eq("id", id);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/moderation");
+  revalidatePath("/productos");
+  revalidatePath(`/productos/${id}`);
+  return { success: true, data: null };
+}
+
 export async function toggleProductVerified(
   id: string
 ): Promise<ActionResult<{ is_verified: boolean }>> {

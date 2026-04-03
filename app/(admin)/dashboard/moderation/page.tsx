@@ -2,6 +2,7 @@ import { getProducts } from "@/actions/products";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { AdminDeleteButton } from "./AdminDeleteButton";
 import { VerifyToggle } from "./VerifyToggle";
+import { AdminEditModal } from "./AdminEditModal";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -111,6 +112,7 @@ export default async function ModerationPage() {
                     <Eye className="size-3.5" data-icon="inline-start" />
                     Ver
                   </Button>
+                  <AdminEditModal product={p} />
                   <AdminDeleteButton
                     productId={p.id}
                     productTitle={p.title}

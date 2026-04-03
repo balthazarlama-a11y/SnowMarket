@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { getProductById } from "@/actions/products";
 import { WhatsAppButton } from "@/app/components/WhatsAppButton";
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, ShieldCheck, Tag, User } from "lucide-react";
+import { ImageGallery } from "./ImageGallery";
 
 export default async function ProductDetailPage({
   params,
@@ -65,36 +65,7 @@ export default async function ProductDetailPage({
         {/* Images */}
         <div className="lg:col-span-3">
           {product.images?.length > 0 ? (
-            <div className="space-y-3">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-secondary/50">
-                <Image
-                  src={product.images[0]}
-                  alt={product.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  priority
-                />
-              </div>
-              {product.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {product.images.slice(1).map((img: string, i: number) => (
-                    <div
-                      key={i}
-                      className="relative size-20 shrink-0 overflow-hidden rounded-lg sm:size-24"
-                    >
-                      <Image
-                        src={img}
-                        alt={`${product.title} ${i + 2}`}
-                        fill
-                        className="object-cover"
-                        sizes="96px"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ImageGallery images={product.images} title={product.title} />
           ) : (
             <div className="flex aspect-[4/3] items-center justify-center rounded-xl bg-secondary/50">
               <Tag className="size-16 text-muted-foreground/20" />
