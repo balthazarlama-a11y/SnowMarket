@@ -677,10 +677,10 @@ export default async function Home() {
                   variant="outline"
                   size="sm"
                   className="mt-1"
-                  render={<a href="mailto:soporte@andesmarket.cl" />}
+                  render={<a href="mailto:contacto@andes-market.cl" />}
                 >
                   <Mail className="size-3.5" data-icon="inline-start" />
-                  soporte@andesmarket.cl
+                  contacto@andes-market.cl
                 </Button>
               </CardContent>
             </Card>
@@ -717,13 +717,13 @@ export default async function Home() {
             {/* Logo & tagline */}
             <div className="sm:col-span-2 lg:col-span-1">
               <Link href="/" className="inline-block">
-                <div className="inline-flex items-center justify-center rounded-xl bg-white/95 px-4 py-2 shadow-sm">
+                <div className="inline-flex items-center justify-center rounded-xl bg-white/95 px-3 py-2 shadow-sm">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/Logo.png"
                     alt="AndesMarket"
-                    width={150}
-                    height={38}
-                    className="h-10 w-auto"
+                    width={180}
+                    height={48}
+                    className="h-10 w-auto max-w-[200px] object-contain"
                   />
                 </div>
               </Link>
@@ -793,9 +793,9 @@ export default async function Home() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:soporte@andesmarket.cl" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
+                  <a href="mailto:contacto@andes-market.cl" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
                     <Mail className="size-3.5" />
-                    soporte@andesmarket.cl
+                    contacto@andes-market.cl
                   </a>
                 </li>
                 <li>
