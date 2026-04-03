@@ -1,17 +1,48 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { signIn } from "@/actions/auth";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Mountain, LogIn, Loader2 } from "lucide-react";
+import { Mountain, LogIn, Loader2, CheckCircle2, TriangleAlert } from "lucide-react";
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const status = useMemo(() => {
+    const reset = searchParams.get("reset");
+    const authError = searchParams.get("error");
+    const authErrorCode = searchParams.get("error_code");
+
+    if (reset === "success") {
+      return {
+        type: "success" as const,
+        message: "Contrasena actualizada correctamente. Inicia sesion con tu nueva contrasena.",
+      };
+    }
+
+    if (authErrorCode === "otp_expired" || authError === "invalid_or_expired_reset_link") {
+      return {
+        type: "error" as const,
+        message: "El enlace de recuperacion vencio o ya fue utilizado. Solicita uno nuevo.",
+      };
+    }
+
+    if (authError) {
+      return {
+        type: "error" as const,
+        message: "No se pudo completar la autenticacion. Intenta nuevamente.",
+      };
+    }
+
+    return null;
+  }, [searchParams]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -38,6 +69,24 @@ export default function SignInPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {status?.type === "success" && (
+            <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800" role="status">
+              <p className="flex items-center gap-2">
+                <CheckCircle2 className="size-4" />
+                {status.message}
+              </p>
+            </div>
+          )}
+
+          {status?.type === "error" && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900" role="alert">
+              <p className="flex items-center gap-2">
+                <TriangleAlert className="size-4" />
+                {status.message}
+              </p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { cn } from "@/lib/utils";
+import { AuthRecoveryRedirectBridge } from "./components/AuthRecoveryRedirectBridge";
 import { Navbar } from "./components/Navbar";
 import { WhatsAppFAB } from "./components/WhatsAppFAB";
 import { Toaster } from "@/components/ui/sonner";
@@ -37,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={cn(inter.variable, dmSans.variable)} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans antialiased">
+        <AuthRecoveryRedirectBridge />
         <Navbar />
         {children}
         <WhatsAppFAB />

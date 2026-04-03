@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { requestPasswordReset } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +14,25 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Mountain, Mail, Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Mountain, Mail, Loader2, ArrowLeft, CheckCircle2, TriangleAlert } from "lucide-react";
 
 export default function ForgotPasswordPage() {
+  const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const recoveryAlert = useMemo(() => {
+    const authError = searchParams.get("error");
+    const authErrorCode = searchParams.get("error_code");
+
+    if (authErrorCode === "otp_expired" || authError === "invalid_or_expired_reset_link") {
+      return "Tu enlace de recuperacion vencio o ya fue usado. Solicita uno nuevo para continuar.";
+    }
+
+    return "";
+  }, [searchParams]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,6 +65,15 @@ export default function ForgotPasswordPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {recoveryAlert && !sent && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900" role="alert">
+              <p className="flex items-center gap-2">
+                <TriangleAlert className="size-4" />
+                {recoveryAlert}
+              </p>
+            </div>
+          )}
+
           {sent ? (
             <div className="flex flex-col items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-6 text-center">
               <div className="flex size-12 items-center justify-center rounded-full bg-green-100">

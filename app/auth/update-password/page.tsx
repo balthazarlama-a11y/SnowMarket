@@ -1,5 +1,8 @@
-import Link from "next/link";
 import { getCurrentUser } from "@/actions/auth";
+import {
+  RECOVERY_ACCESS_TOKEN_COOKIE,
+  RECOVERY_REFRESH_TOKEN_COOKIE,
+} from "@/lib/auth/password-recovery";
 import {
   Card,
   CardContent,
@@ -7,12 +10,40 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Mountain } from "lucide-react";
-import { UpdatePasswordForm } from "./UpdatePasswordForm";
+import { RecoveryFlow } from "./RecoveryFlow";
+import { cookies } from "next/headers";
 
-export default async function UpdatePasswordPage() {
+type UpdatePasswordPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function UpdatePasswordPage({
+  searchParams,
+}: UpdatePasswordPageProps) {
   const user = await getCurrentUser();
+  const cookieStore = await cookies();
+  const hasRecoverySession = Boolean(
+    cookieStore.get(RECOVERY_ACCESS_TOKEN_COOKIE)?.value &&
+      cookieStore.get(RECOVERY_REFRESH_TOKEN_COOKIE)?.value
+  );
+  const canUpdatePassword = Boolean(user || hasRecoverySession);
+
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+
+  function readParam(key: string): string | undefined {
+    const value = resolvedSearchParams?.[key];
+    if (typeof value === "string") return value;
+    if (Array.isArray(value) && typeof value[0] === "string") return value[0];
+    return undefined;
+  }
+
+  const initialErrorCode = readParam("error_code");
+  const initialError = readParam("error");
+  const initialErrorDescription = readParam("error_description");
+  const initialCode = readParam("code");
+  const initialTokenHash = readParam("token_hash");
+  const initialType = readParam("type");
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
@@ -25,32 +56,21 @@ export default async function UpdatePasswordPage() {
             Nueva contraseña
           </CardTitle>
           <CardDescription>
-            {user
+            {canUpdatePassword
               ? "Elige una contraseña segura para tu cuenta."
               : "Necesitas abrir el enlace que enviamos a tu correo."}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {user ? (
-            <UpdatePasswordForm />
-          ) : (
-            <div className="space-y-4 text-center text-sm text-muted-foreground">
-              <p>
-                Este enlace puede haber expirado o ya fue usado. Solicita uno
-                nuevo desde la pantalla de inicio de sesión.
-              </p>
-              <Button className="w-full" render={<Link href="/auth/forgot-password" />}>
-                Solicitar nuevo enlace
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full"
-                render={<Link href="/auth/sign-in" />}
-              >
-                Ir a iniciar sesión
-              </Button>
-            </div>
-          )}
+          <RecoveryFlow
+            hasServerSession={canUpdatePassword}
+            initialErrorCode={initialErrorCode}
+            initialError={initialError}
+            initialErrorDescription={initialErrorDescription}
+            initialCode={initialCode}
+            initialTokenHash={initialTokenHash}
+            initialType={initialType}
+          />
         </CardContent>
       </Card>
     </div>
