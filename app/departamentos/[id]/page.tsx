@@ -3,15 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPropertyById } from "@/actions/properties";
 import { getReservationsByProperty } from "@/actions/reservations";
-import { WhatsAppButton } from "@/app/components/WhatsAppButton";
 import { ADMIN_WHATSAPP } from "@/lib/constants";
 import { AMENITY_LABELS } from "@/lib/validations/property";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Building2, MapPin, CalendarDays } from "lucide-react";
-import { PropertyCalendar } from "./PropertyCalendar";
+import { ArrowLeft, Building2, MapPin } from "lucide-react";
+import { PropertyContactSection } from "./PropertyContactSection";
 
 export default async function PropertyDetailPage({
   params,
@@ -207,32 +206,18 @@ export default async function PropertyDetailPage({
                 </div>
               </details>
 
-              <Separator />
-
-              <div className="rounded-lg bg-secondary/50 p-3 text-center text-xs text-muted-foreground">
-                Las consultas de arriendo son gestionadas directamente por el equipo de SnowMarket.
-              </div>
-
-              <WhatsAppButton
-                phone={property.whatsapp_contact}
-                itemName={property.title}
-                price={Number(property.price)}
-                entityType="property"
-                adminPhone={ADMIN_WHATSAPP}
-              />
             </CardContent>
           </Card>
 
-          {/* Calendar */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="mb-4 flex items-center gap-2">
-                <CalendarDays className="size-4 text-primary" />
-                <h2 className="text-sm font-medium">Disponibilidad</h2>
-              </div>
-              <PropertyCalendar reservations={(reservations as any[]) ?? []} />
-            </CardContent>
-          </Card>
+          {/* Calendar + Contact */}
+          <PropertyContactSection
+            propertyTitle={property.title}
+            propertyLocation={property.location ?? ""}
+            pricePerNight={Number(property.price)}
+            whatsappContact={property.whatsapp_contact ?? ""}
+            adminPhone={ADMIN_WHATSAPP}
+            reservations={(reservations as any[]) ?? []}
+          />
         </div>
       </div>
     </div>

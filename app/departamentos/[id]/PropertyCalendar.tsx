@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import type { DateRange } from "react-day-picker";
 
 interface Reservation {
   start_date: string;
@@ -10,11 +11,15 @@ interface Reservation {
 
 interface PropertyCalendarProps {
   reservations?: Reservation[];
+  selected: DateRange | undefined;
+  onSelect: (range: DateRange | undefined) => void;
 }
 
-export function PropertyCalendar({ reservations = [] }: PropertyCalendarProps) {
-  const [date, setDate] = useState<Date | undefined>(undefined);
-
+export function PropertyCalendar({
+  reservations = [],
+  selected,
+  onSelect,
+}: PropertyCalendarProps) {
   const disabledDates = useMemo(() => {
     const dates: Date[] = [];
     for (const r of reservations) {
@@ -32,12 +37,13 @@ export function PropertyCalendar({ reservations = [] }: PropertyCalendarProps) {
   return (
     <div className="flex justify-center">
       <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
+        mode="range"
+        selected={selected}
+        onSelect={onSelect}
         disabled={[{ before: new Date() }, ...disabledDates]}
         modifiers={{ booked: disabledDates }}
         modifiersClassNames={{ booked: "bg-red-100 text-red-400 line-through" }}
+        numberOfMonths={1}
       />
     </div>
   );
