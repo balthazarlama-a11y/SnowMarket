@@ -124,10 +124,16 @@ export function PropertyCard({ property, isFavorite }: { property: Property; isF
             )}
           </div>
           <div className="mt-3 flex items-baseline gap-1">
-            <span className="text-xl font-bold text-primary">
-              ${Number(property.price).toLocaleString("es-CL")}
-            </span>
-            <span className="text-sm text-muted-foreground">/noche</span>
+            {property.price != null ? (
+              <>
+                <span className="text-xl font-bold text-primary">
+                  ${Number(property.price).toLocaleString("es-CL")}
+                </span>
+                <span className="text-sm text-muted-foreground">/noche</span>
+              </>
+            ) : (
+              <span className="text-base font-semibold text-primary">Consultar precio</span>
+            )}
           </div>
           <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
             Ver detalles
@@ -260,7 +266,8 @@ export function DepartamentosCatalog({
       }
       const pMin = priceMin ? Number(priceMin) : 0;
       const pMax = priceMax ? Number(priceMax) : Infinity;
-      if (p.price < pMin || p.price > pMax) return false;
+      // null-price properties always pass the price filter
+      if (p.price != null && (p.price < pMin || p.price > pMax)) return false;
       if (dateFrom && dateTo && bookedPropertyIds.has(p.id)) return false;
       if (guests > 0 && (p.max_guests ?? 2) < guests) return false;
       if (bedrooms > 0 && (p.bedrooms ?? 1) < bedrooms) return false;

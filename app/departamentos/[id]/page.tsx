@@ -9,8 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Building2, MapPin } from "lucide-react";
+import { ArrowLeft, Building2, MapPin, MessageCircle } from "lucide-react";
 import { PropertyContactSection } from "./PropertyContactSection";
+import { buildWhatsAppUrlWithText, sanitizePhone } from "@/lib/whatsapp";
 
 export default async function PropertyDetailPage({
   params,
@@ -131,12 +132,30 @@ export default async function PropertyDetailPage({
                 </p>
               )}
 
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-primary">
-                  ${Number(property.price).toLocaleString("es-CL")}
-                </span>
-                <span className="text-muted-foreground">/noche</span>
-              </div>
+              {property.price != null ? (
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-primary">
+                    ${Number(property.price).toLocaleString("es-CL")}
+                  </span>
+                  <span className="text-muted-foreground">/noche</span>
+                </div>
+              ) : (() => {
+                const phone = ADMIN_WHATSAPP || property.whatsapp_contact;
+                const msg = `Hola, vengo de AndesMarket 👋 Me interesa el ${property.title} en ${property.location}. ¿Cuál es el precio por noche?`;
+                let href = "#";
+                try { href = buildWhatsAppUrlWithText(phone, msg); } catch { href = `https://wa.me/${sanitizePhone(phone)}?text=${encodeURIComponent(msg)}`; }
+                return (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-lg font-semibold text-primary transition-colors hover:bg-primary/20"
+                  >
+                    <MessageCircle className="size-5" />
+                    Consultar precio
+                  </a>
+                );
+              })()}
 
               <Separator />
 
@@ -213,7 +232,7 @@ export default async function PropertyDetailPage({
           <PropertyContactSection
             propertyTitle={property.title}
             propertyLocation={property.location ?? ""}
-            pricePerNight={Number(property.price)}
+            pricePerNight={property.price != null ? Number(property.price) : null}
             whatsappContact={property.whatsapp_contact ?? ""}
             adminPhone={ADMIN_WHATSAPP}
             reservations={(reservations as any[]) ?? []}

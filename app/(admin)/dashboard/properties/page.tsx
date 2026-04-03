@@ -12,14 +12,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Loader2, Building2, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { KNOWN_LOCATIONS } from "@/lib/constants";
+import { compressImage } from "@/lib/compress-image";
 
 export default function AdminPropertiesPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [locationPreset, setLocationPreset] = useState("");
   const [customLocation, setCustomLocation] = useState("");
+  const [priceMode, setPriceMode] = useState<"fijo" | "consultar">("fijo");
   const finalLocation = locationPreset === "otro" ? customLocation : locationPreset;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -56,17 +59,27 @@ export default function AdminPropertiesPage() {
 
     let imageUrls: string[] = [];
     if (files.length > 0) {
+      // Phase 1: compress
+      const compressed: File[] = [];
+      for (let i = 0; i < files.length; i++) {
+        setUploadStatus(`Comprimiendo imagen ${i + 1}/${files.length}...`);
+        compressed.push(await compressImage(files[i]));
+      }
+      // Phase 2: upload
+      setUploadStatus(`Subiendo imágenes...`);
       const uploadData = new FormData();
-      files.forEach((f) => uploadData.append("files", f));
+      compressed.forEach((f) => uploadData.append("files", f));
       const uploadResult = await uploadImages(uploadData, "properties");
       if (uploadResult.success) {
         imageUrls = uploadResult.data.urls;
       } else {
         toast.error(`Error subiendo imágenes: ${uploadResult.error}`);
+        setUploadStatus("");
         setLoading(false);
         return;
       }
     }
+    setUploadStatus("");
 
     const latRaw = form.get("latitude") as string;
     const lngRaw = form.get("longitude") as string;
@@ -81,11 +94,12 @@ export default function AdminPropertiesPage() {
       ? [...selectedAmenities, "estacionamiento"]
       : selectedAmenities;
 
+    const priceRaw = form.get("price") as string;
     const result = await createProperty({
       title: form.get("title") as string,
       description: form.get("description") as string,
       full_description: (form.get("full_description") as string) || null,
-      price: Number(form.get("price")),
+      price: priceMode === "fijo" && priceRaw ? Number(priceRaw) : null,
       location: form.get("location") as string,
       google_maps_url: (form.get("google_maps_url") as string) || null,
       whatsapp_contact: form.get("whatsapp_contact") as string,
@@ -111,6 +125,7 @@ export default function AdminPropertiesPage() {
       setPreviews([]);
       setLocationPreset("");
       setCustomLocation("");
+      setPriceMode("fijo");
     } else {
       toast.error(result.error);
       if (result.fieldErrors) setFieldErrors(result.fieldErrors);
@@ -169,8 +184,32 @@ export default function AdminPropertiesPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="price">Precio por noche (CLP)</Label>
-                <Input id="price" name="price" type="number" min={0} step="1" required placeholder="120000" />
+                <Label>Precio por noche</Label>
+                <div className="flex gap-4 pt-0.5">
+                  <label className="flex cursor-pointer items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="price_mode_ui"
+                      checked={priceMode === "fijo"}
+                      onChange={() => setPriceMode("fijo")}
+                      className="accent-primary"
+                    />
+                    Precio fijo
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="price_mode_ui"
+                      checked={priceMode === "consultar"}
+                      onChange={() => setPriceMode("consultar")}
+                      className="accent-primary"
+                    />
+                    Consultar precio
+                  </label>
+                </div>
+                {priceMode === "fijo" && (
+                  <Input id="price" name="price" type="number" min={0} step="1" required placeholder="120000" />
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="location_preset">Ubicación</Label>
@@ -338,8 +377,9 @@ export default function AdminPropertiesPage() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? <Loader2 className="size-4 animate-spin" /> : <Building2 className="size-4" data-icon="inline-start" />}
-              {loading ? "Creando..." : "Crear Propiedad"}
+              <Loader2 className={`size-4 ${loading ? "animate-spin" : "hidden"}`} />
+              {!loading && <Building2 className="size-4" data-icon="inline-start" />}
+              {loading ? (uploadStatus || "Guardando...") : "Crear Propiedad"}
             </Button>
           </form>
         </CardContent>

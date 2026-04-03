@@ -17,7 +17,7 @@ interface Reservation {
 interface Props {
   propertyTitle: string;
   propertyLocation: string;
-  pricePerNight: number;
+  pricePerNight: number | null;
   whatsappContact: string;
   adminPhone: string;
   reservations: Reservation[];
@@ -36,6 +36,14 @@ function nightsBetween(from: Date, to: Date): number {
   return Math.round(ms / (1000 * 60 * 60 * 24));
 }
 
+function buildUrl(phone: string, message: string): string {
+  try {
+    return buildWhatsAppUrlWithText(phone, message);
+  } catch {
+    return `https://wa.me/${sanitizePhone(phone)}?text=${encodeURIComponent(message)}`;
+  }
+}
+
 export function PropertyContactSection({
   propertyTitle,
   propertyLocation,
@@ -51,24 +59,26 @@ export function PropertyContactSection({
   const hasRange = !!from && !!to && from < to;
 
   const nights = hasRange ? nightsBetween(from, to) : 0;
-  const totalPrice = nights * pricePerNight;
+  const totalPrice = pricePerNight != null ? nights * pricePerNight : null;
 
-  function buildWhatsAppUrl(): string {
+  const phone = adminPhone || whatsappContact;
+
+  function buildAvailabilityUrl(): string {
     if (!hasRange) return "#";
+    const priceNote = pricePerNight == null ? " ¿Cuál es el precio por noche?" : "";
     const message =
       `Hola, vengo de AndesMarket 👋 Me interesa el ${propertyTitle} ` +
       `ubicado en ${propertyLocation}. ` +
       `Quisiera arrendar desde el ${formatDateEs(from)} ` +
-      `hasta el ${formatDateEs(to)}. ¿Está disponible?`;
+      `hasta el ${formatDateEs(to)}. ¿Está disponible?${priceNote}`;
+    return buildUrl(phone, message);
+  }
 
-    const phone = adminPhone || whatsappContact;
-    try {
-      return buildWhatsAppUrlWithText(phone, message);
-    } catch {
-      // fallback: try sanitizing directly
-      const clean = sanitizePhone(phone);
-      return `https://wa.me/${clean}?text=${encodeURIComponent(message)}`;
-    }
+  function buildPriceInquiryUrl(): string {
+    const message =
+      `Hola, vengo de AndesMarket 👋 Me interesa el ${propertyTitle} ` +
+      `en ${propertyLocation}. ¿Cuál es el precio por noche?`;
+    return buildUrl(phone, message);
   }
 
   return (
@@ -112,13 +122,19 @@ export function PropertyContactSection({
                       <Moon className="size-3.5" />
                       {nights} {nights === 1 ? "noche" : "noches"}
                     </span>
-                    <span className="font-bold text-primary text-base">
-                      ${totalPrice.toLocaleString("es-CL")}
-                    </span>
+                    {totalPrice != null ? (
+                      <span className="font-bold text-primary text-base">
+                        ${totalPrice.toLocaleString("es-CL")}
+                      </span>
+                    ) : (
+                      <span className="text-sm font-semibold text-primary">Consultar precio</span>
+                    )}
                   </div>
-                  <p className="text-xs text-muted-foreground text-right">
-                    {nights} × ${pricePerNight.toLocaleString("es-CL")}/noche
-                  </p>
+                  {totalPrice != null && pricePerNight != null && (
+                    <p className="text-xs text-muted-foreground text-right">
+                      {nights} × ${pricePerNight.toLocaleString("es-CL")}/noche
+                    </p>
+                  )}
                 </>
               )}
             </div>
@@ -130,13 +146,13 @@ export function PropertyContactSection({
           Las consultas de arriendo son gestionadas directamente por el equipo de SnowMarket.
         </div>
 
-        {/* WhatsApp button */}
+        {/* WhatsApp buttons */}
         {hasRange ? (
           <Button
             size="lg"
             className="w-full gap-2 bg-[#25D366] text-white hover:bg-[#1da851]"
             render={
-              <a href={buildWhatsAppUrl()} target="_blank" rel="noopener noreferrer" />
+              <a href={buildAvailabilityUrl()} target="_blank" rel="noopener noreferrer" />
             }
           >
             <MessageCircle className="size-5" data-icon="inline-start" />
@@ -146,6 +162,21 @@ export function PropertyContactSection({
           <Button size="lg" className="w-full gap-2" disabled>
             <MessageCircle className="size-5" data-icon="inline-start" />
             {from ? "Selecciona la fecha de salida" : "Selecciona tus fechas para continuar"}
+          </Button>
+        )}
+
+        {/* Price inquiry shortcut (only when price is null) */}
+        {pricePerNight == null && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full gap-2"
+            render={
+              <a href={buildPriceInquiryUrl()} target="_blank" rel="noopener noreferrer" />
+            }
+          >
+            <MessageCircle className="size-4" data-icon="inline-start" />
+            Solo consultar precio
           </Button>
         )}
       </CardContent>

@@ -32,7 +32,9 @@ export const createPropertySchema = z.object({
   price: z
     .number()
     .nonnegative("El precio no puede ser negativo")
-    .max(99999999.99),
+    .max(99999999.99)
+    .nullable()
+    .default(null),
   location: z.string().min(1, "La ubicacion es obligatoria"),
   google_maps_url: z.string().url("URL de Google Maps no valida").nullish(),
   whatsapp_contact: z
