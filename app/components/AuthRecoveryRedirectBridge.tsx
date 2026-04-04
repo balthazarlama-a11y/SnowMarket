@@ -49,8 +49,22 @@ export function AuthRecoveryRedirectBridge() {
     const url = new URL(window.location.href);
     if (!isRecoverySignal(url, pathname)) return;
 
-    const target = `/auth/update-password${url.search}${url.hash}`;
-    router.replace(target);
+    const query = url.searchParams;
+    const hash = new URLSearchParams(url.hash.startsWith("#") ? url.hash.slice(1) : "");
+    const code = (query.get("code") ?? hash.get("code"))?.trim();
+
+    if (code) {
+      // PKCE code is single-use — delegate to the callback Route Handler
+      // so it is exchanged exactly once, server-side.
+      window.location.replace(
+        `/auth/callback?code=${encodeURIComponent(code)}&next=${encodeURIComponent("/auth/update-password")}`
+      );
+    } else {
+      // Hash tokens (#access_token=…) or token_hash — send to update-password
+      // which reads them client-side.
+      const target = `/auth/update-password${url.search}${url.hash}`;
+      router.replace(target);
+    }
   }, [pathname, router]);
 
   return null;

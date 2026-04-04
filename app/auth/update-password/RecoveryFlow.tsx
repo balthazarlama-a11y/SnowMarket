@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -63,6 +63,11 @@ export function RecoveryFlow({
       initialType,
     ]
   );
+
+  // Guard: ensure the exchange logic runs at most once (React Strict Mode
+  // mounts effects twice in dev — a second exchangeCodeForSession with the
+  // same single-use code would always fail).
+  const bootstrapRan = useRef(false);
 
   useEffect(() => {
     let disposed = false;
@@ -132,6 +137,19 @@ export function RecoveryFlow({
         return;
       }
 
+      // ── PKCE code: delegate to /auth/callback (single exchange point) ──
+      // The code is single-use; exchanging it here risks double-consumption
+      // (Strict Mode, bridge re-navigation, prefetch bots).  Hard-navigate
+      // to the callback Route Handler which exchanges server-side and sets
+      // recovery cookies before redirecting back here.
+      if (code) {
+        const callbackUrl =
+          `/auth/callback?code=${encodeURIComponent(code)}` +
+          `&next=${encodeURIComponent("/auth/update-password")}`;
+        window.location.replace(callbackUrl);
+        return; // navigation in progress — stop processing
+      }
+
       if (accessToken && refreshToken) {
         const result = await setPasswordRecoverySessionFromTokens({
           accessToken,
@@ -161,9 +179,8 @@ export function RecoveryFlow({
         return;
       }
 
-      if (code || tokenHash) {
+      if (tokenHash) {
         const result = await preparePasswordRecoveryFromLink({
-          code,
           tokenHash,
           type,
         });
@@ -198,6 +215,11 @@ export function RecoveryFlow({
         );
       }
     }
+
+    // Prevent double execution in React Strict Mode for paths that do
+    // irreversible work (token exchange, cookie writes).
+    if (bootstrapRan.current) return;
+    bootstrapRan.current = true;
 
     setStatus(hasServerSession ? "ready" : "loading");
     setMessage("");

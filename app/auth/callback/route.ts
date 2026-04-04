@@ -55,6 +55,7 @@ export async function GET(request: Request) {
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
+      console.error("[auth/callback] Missing Supabase env vars");
       return NextResponse.redirect(
         `${origin}/auth/sign-in?error=recovery_not_available`
       );
@@ -68,9 +69,16 @@ export async function GET(request: Request) {
       },
     });
 
+    console.log("[auth/callback] exchangeCodeForSession — next=%s, isRecovery=%s",
+      next, isPasswordRecoveryPath(next));
+
     const { data, error } = await ephemeral.auth.exchangeCodeForSession(code);
     const accessToken = data.session?.access_token;
     const refreshToken = data.session?.refresh_token;
+
+    if (error) {
+      console.error("[auth/callback] exchangeCodeForSession FAILED:", error.message);
+    }
 
     if (!error && accessToken && refreshToken) {
       const treatAsRecovery =
