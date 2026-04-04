@@ -8,7 +8,8 @@ import {
   RECOVERY_REFRESH_TOKEN_MAX_AGE_SECONDS,
 } from "@/lib/auth/password-recovery";
 import { isPasswordRecoveryJwt } from "@/lib/auth/is-password-recovery-jwt";
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 /** Evita redirecciones abiertas: solo rutas relativas internas. */
@@ -61,18 +62,38 @@ export async function GET(request: Request) {
       );
     }
 
-    const ephemeral = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
+    // Use @supabase/ssr client so it can read the PKCE code_verifier cookie
+    // that was stored when resetPasswordForEmail / signUp was called.
+    // The SSR createServerClient defaults to flowType:'pkce' — matching the
+    // client that initiated the flow.  We suppress session writes so the
+    // exchange doesn't pollute regular auth cookies; tokens are handled
+    // manually below (recovery cookies or explicit setSession).
+    const cookieStore = await cookies();
+    const exchangeClient = createServerClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          // Allow the client to clear the code_verifier cookie after exchange,
+          // but don't let it persist the new session — we handle that below.
+          for (const { name, value, options } of cookiesToSet) {
+            if (name.endsWith("-code-verifier")) {
+              try { cookieStore.set(name, value, options); } catch { /* read-only ctx */ }
+            }
+          }
+        },
       },
     });
 
-    console.log("[auth/callback] exchangeCodeForSession — next=%s, isRecovery=%s",
-      next, isPasswordRecoveryPath(next));
+    console.log(
+      "[auth/callback] exchangeCodeForSession — next=%s, isRecovery=%s, hasError=%s",
+      next,
+      isPasswordRecoveryPath(next),
+      Boolean(authError)
+    );
 
-    const { data, error } = await ephemeral.auth.exchangeCodeForSession(code);
+    const { data, error } = await exchangeClient.auth.exchangeCodeForSession(code);
     const accessToken = data.session?.access_token;
     const refreshToken = data.session?.refresh_token;
 
