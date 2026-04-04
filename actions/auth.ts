@@ -344,7 +344,7 @@ export async function requestPasswordReset(
 
   const supabase = await createSupabaseServerClient();
   const site = getSiteUrl();
-  const redirectTo = new URL("/auth/update-password", `${site}/`).href;
+  const redirectTo = `${site}/auth/callback?next=${encodeURIComponent("/auth/update-password")}`;
 
   const { error } = await supabase.auth.resetPasswordForEmail(
     parsed.data.email,
