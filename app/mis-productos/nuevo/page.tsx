@@ -11,7 +11,9 @@ import {
   POPULAR_BRANDS,
   CLOTHING_SIZES,
   type ProductCategory,
+  type SkiMode,
 } from "@/lib/validations/product";
+import { SkiModesField } from "@/app/components/SkiModesField";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +29,8 @@ export default function NuevoProductoPage() {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [skiModes, setSkiModes] = useState<SkiMode[]>([]);
+  const [category, setCategory] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -59,6 +63,14 @@ export default function NuevoProductoPage() {
     setLoading(true);
 
     const form = new FormData(e.currentTarget);
+    const formCategory = form.get("category") as string;
+
+    // Validate ski_modes is required for esquis category
+    if (formCategory === "esquis" && skiModes.length === 0) {
+      setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad de ski."] });
+      setLoading(false);
+      return;
+    }
 
     let imageUrls: string[] = [];
     if (files.length > 0) {
@@ -93,6 +105,7 @@ export default function NuevoProductoPage() {
       manufacture_year: yearVal ? Number(yearVal) : null,
       included_accessories: (form.get("included_accessories") as string) || null,
       technical_observations: (form.get("technical_observations") as string) || null,
+      ski_modes: skiModes,
     });
 
     setLoading(false);
@@ -190,6 +203,8 @@ export default function NuevoProductoPage() {
                   id="category"
                   name="category"
                   required
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                   className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   <option value="">Seleccionar...</option>
@@ -201,6 +216,13 @@ export default function NuevoProductoPage() {
                 </select>
               </div>
             </div>
+
+            <SkiModesField
+              selected={skiModes}
+              onChange={setSkiModes}
+              required={category === "esquis"}
+              error={fieldErrors.ski_modes?.[0]}
+            />
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Building2, MapPin, CalendarDays, Pencil } from "lucide-react";
+import { DeletePropertyButton } from "./DeletePropertyButton";
 
 export const metadata = {
   title: "Gestionar Propiedades",
@@ -48,7 +49,7 @@ export default async function ManagePropertiesPage() {
         <div className="space-y-3">
           {all.map((p: any) => (
             <Card key={p.id}>
-              <CardContent className="flex items-center justify-between gap-4 p-4">
+              <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate font-heading font-semibold">{p.title}</h3>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
@@ -61,7 +62,7 @@ export default async function ManagePropertiesPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="flex shrink-0 flex-wrap items-center gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -78,6 +79,10 @@ export default async function ManagePropertiesPage() {
                     <CalendarDays className="size-3.5" data-icon="inline-start" />
                     Reservas
                   </Button>
+                  <DeletePropertyButton
+                    propertyId={p.id}
+                    propertyTitle={p.title}
+                  />
                   <PropertyStatusSelect
                     propertyId={p.id}
                     currentStatus={p.status ?? "activo"}

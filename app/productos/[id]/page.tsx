@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getProductById } from "@/actions/products";
 import { WhatsAppButton } from "@/app/components/WhatsAppButton";
 import { CATEGORY_LABELS, ADMIN_WHATSAPP } from "@/lib/constants";
-import { CONDITION_LABELS } from "@/lib/validations/product";
+import { CONDITION_LABELS, SKI_MODE_LABELS } from "@/lib/validations/product";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,6 +50,13 @@ export default async function ProductDetailPage({
     {
       label: "Año",
       value: product.manufacture_year || "Sin especificar",
+    },
+    {
+      label: "Modalidad de ski",
+      value:
+        product.ski_modes?.length > 0
+          ? product.ski_modes.map((m: string) => SKI_MODE_LABELS[m] ?? m).join(", ")
+          : "Sin especificar",
     },
   ];
 

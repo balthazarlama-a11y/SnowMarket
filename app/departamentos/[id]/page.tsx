@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { PropertyGallery } from "./PropertyGallery";
 import { getPropertyById } from "@/actions/properties";
 import { getReservationsByProperty } from "@/actions/reservations";
 import { getAvailabilityByProperty } from "@/actions/availability";
@@ -57,40 +58,11 @@ export default async function PropertyDetailPage({
         Volver a departamentos
       </Button>
 
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid items-start gap-8 lg:grid-cols-5">
         {/* Images */}
         <div className="lg:col-span-3">
           {property.images?.length > 0 ? (
-            <div className="space-y-3">
-              <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-secondary/50">
-                <Image
-                  src={property.images[0]}
-                  alt={property.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  priority
-                />
-              </div>
-              {property.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {property.images.slice(1).map((img: string, i: number) => (
-                    <div
-                      key={i}
-                      className="relative size-20 shrink-0 overflow-hidden rounded-lg sm:size-24"
-                    >
-                      <Image
-                        src={img}
-                        alt={`${property.title} ${i + 2}`}
-                        fill
-                        className="object-cover"
-                        sizes="96px"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <PropertyGallery images={property.images} title={property.title} />
           ) : (
             <div className="flex aspect-[16/10] items-center justify-center rounded-xl bg-secondary/50">
               <Building2 className="size-16 text-muted-foreground/20" />
@@ -99,7 +71,7 @@ export default async function PropertyDetailPage({
         </div>
 
         {/* Info panel */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4 lg:sticky lg:top-6">
           <Card>
             <CardContent className="space-y-4 p-6">
               <Badge variant="secondary" className="gap-1.5">
@@ -119,13 +91,12 @@ export default async function PropertyDetailPage({
               {isActivePublication && mapsUrl && (
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="gap-1.5"
+                  className="h-11 w-full gap-2 rounded-lg"
                   render={
                     <a href={mapsUrl} target="_blank" rel="noopener noreferrer" />
                   }
                 >
-                  <MapPin className="size-3.5" data-icon="inline-start" />
+                  <MapPin className="size-4" data-icon="inline-start" />
                   Ver ubicación exacta en Google Maps
                 </Button>
               )}
@@ -149,15 +120,16 @@ export default async function PropertyDetailPage({
                 let href = "#";
                 try { href = buildWhatsAppUrlWithText(phone, msg); } catch { href = `https://wa.me/${sanitizePhone(phone)}?text=${encodeURIComponent(msg)}`; }
                 return (
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-lg font-semibold text-primary transition-colors hover:bg-primary/20"
+                  <Button
+                    variant="outline"
+                    className="h-11 w-full gap-2 rounded-lg text-primary"
+                    render={
+                      <a href={href} target="_blank" rel="noopener noreferrer" />
+                    }
                   >
-                    <MessageCircle className="size-5" />
+                    <MessageCircle className="size-4" data-icon="inline-start" />
                     Consultar precio
-                  </a>
+                  </Button>
                 );
               })()}
 

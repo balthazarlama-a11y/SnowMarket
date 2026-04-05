@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,8 @@ import {
   CONDITION_LABELS,
   POPULAR_BRANDS,
   CLOTHING_SIZES,
+  SKI_MODES,
+  SKI_MODE_LABELS,
 } from "@/lib/validations/product";
 import {
   ShieldCheck,
@@ -54,6 +56,7 @@ interface Product {
   manufacture_year?: number | null;
   included_accessories?: string | null;
   technical_observations?: string | null;
+  ski_modes?: string[];
 }
 
 interface ProductCatalogProps {
@@ -72,7 +75,11 @@ const PRODUCT_PUBLISH_VERIFIED_HREF = buildWhatsAppUrlWithText(
 
 export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCatalogProps) {
   const searchParams = useSearchParams();
-  const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
+  const router = useRouter();
+
+  // Internalize query as local state so clearFilters can reset it
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
+  const queryParam = searchQuery.toLowerCase().trim();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
@@ -83,20 +90,24 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [sizeMin, setSizeMin] = useState("");
   const [sizeMax, setSizeMax] = useState("");
+  const [selectedSkiModes, setSelectedSkiModes] = useState<string[]>([]);
 
   const hasFilters =
     selectedCategory !== null ||
     verifiedOnly ||
+    searchQuery.trim() !== "" ||
     priceMin !== "" ||
     priceMax !== "" ||
     selectedConditions.length > 0 ||
     selectedBrands.length > 0 ||
     selectedSizes.length > 0 ||
     sizeMin !== "" ||
-    sizeMax !== "";
+    sizeMax !== "" ||
+    selectedSkiModes.length > 0;
 
   function clearFilters() {
     setSelectedCategory(null);
+    setSearchQuery("");
     setVerifiedOnly(false);
     setPriceMin("");
     setPriceMax("");
@@ -105,6 +116,9 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
     setSelectedSizes([]);
     setSizeMin("");
     setSizeMax("");
+    setSelectedSkiModes([]);
+    // Clear URL search params so they don't re-apply on navigation
+    router.replace("/productos", { scroll: false });
   }
 
   function toggleItem(list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>, item: string) {
@@ -137,9 +151,13 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
       if (selectedSizes.length > 0 && (!p.size_label || !selectedSizes.includes(p.size_label))) return false;
       if (sizeMin && p.size_value != null && p.size_value < Number(sizeMin)) return false;
       if (sizeMax && p.size_value != null && p.size_value > Number(sizeMax)) return false;
+      if (selectedSkiModes.length > 0) {
+        const modes = p.ski_modes ?? [];
+        if (!selectedSkiModes.some((m) => modes.includes(m))) return false;
+      }
       return true;
     });
-  }, [products, selectedCategory, verifiedOnly, queryParam, priceMin, priceMax, selectedConditions, selectedBrands, selectedSizes, sizeMin, sizeMax]);
+  }, [products, selectedCategory, verifiedOnly, queryParam, priceMin, priceMax, selectedConditions, selectedBrands, selectedSizes, sizeMin, sizeMax, selectedSkiModes]);
 
   const filterContent = (
     <div className="space-y-6">
@@ -252,6 +270,25 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
                 className="rounded border-input"
               />
               {b}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Modalidad de Ski
+        </p>
+        <div className="space-y-2">
+          {SKI_MODES.map((m) => (
+            <label key={m} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedSkiModes.includes(m)}
+                onChange={() => toggleItem(selectedSkiModes, setSelectedSkiModes, m)}
+                className="rounded border-input"
+              />
+              {SKI_MODE_LABELS[m]}
             </label>
           ))}
         </div>
@@ -462,6 +499,11 @@ export function ProductCard({ product, isFavorite }: { product: Product; isFavor
             {product.size_value !== null && product.size_value !== undefined && (
               <Badge variant="secondary" className="text-xs">{product.size_value} cm</Badge>
             )}
+            {product.ski_modes?.map((m) => (
+              <Badge key={m} variant="secondary" className="text-xs">
+                {SKI_MODE_LABELS[m] ?? m}
+              </Badge>
+            ))}
           </div>
           <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
             Ver detalles

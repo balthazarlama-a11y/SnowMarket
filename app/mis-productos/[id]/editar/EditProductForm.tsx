@@ -10,7 +10,9 @@ import {
   CONDITION_LABELS,
   POPULAR_BRANDS,
   type ProductCategory,
+  type SkiMode,
 } from "@/lib/validations/product";
+import { SkiModesField } from "@/app/components/SkiModesField";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +32,8 @@ export function EditProductForm({ product }: { product: any }) {
   
   // Existing images from DB
   const [existingImages, setExistingImages] = useState<string[]>(product.images || []);
+  const [skiModes, setSkiModes] = useState<SkiMode[]>(product.ski_modes || []);
+  const [category, setCategory] = useState(product.category || "");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -67,6 +71,13 @@ export function EditProductForm({ product }: { product: any }) {
     setLoading(true);
 
     const form = new FormData(e.currentTarget);
+    const formCategory = form.get("category") as string;
+
+    if (formCategory === "esquis" && skiModes.length === 0) {
+      setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad de ski."] });
+      setLoading(false);
+      return;
+    }
 
     let finalImages = [...existingImages];
     
@@ -103,6 +114,7 @@ export function EditProductForm({ product }: { product: any }) {
       manufacture_year: yearVal ? Number(yearVal) : null,
       included_accessories: (form.get("included_accessories") as string) || null,
       technical_observations: (form.get("technical_observations") as string) || null,
+      ski_modes: skiModes,
     });
 
     setLoading(false);
@@ -202,7 +214,8 @@ export function EditProductForm({ product }: { product: any }) {
                 id="category"
                 name="category"
                 required
-                defaultValue={product.category}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <option value="">Seleccionar...</option>
@@ -214,6 +227,13 @@ export function EditProductForm({ product }: { product: any }) {
               </select>
             </div>
           </div>
+
+          <SkiModesField
+            selected={skiModes}
+            onChange={setSkiModes}
+            required={category === "esquis"}
+            error={fieldErrors.ski_modes?.[0]}
+          />
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">

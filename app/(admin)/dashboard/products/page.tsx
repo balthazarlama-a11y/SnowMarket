@@ -5,6 +5,7 @@ import { createVerifiedProduct } from "@/actions/admin-products";
 import { uploadImages } from "@/actions/upload";
 import type { ProductCategory } from "@/lib/validations/product";
 import { PRODUCT_CATEGORIES } from "@/lib/validations/product";
+import { SkiModesField } from "@/app/components/SkiModesField";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,8 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [skiModes, setSkiModes] = useState<string[]>([]);
+  const [category, setCategory] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -67,14 +70,22 @@ export default function AdminProductsPage() {
       }
     }
 
+    const formCategory = form.get("category") as string;
+    if (formCategory === "esquis" && skiModes.length === 0) {
+      setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad de ski."] });
+      setLoading(false);
+      return;
+    }
+
     const result = await createVerifiedProduct({
       title: form.get("title") as string,
       description: form.get("description") as string,
       detailed_description: (form.get("detailed_description") as string) || null,
       price: Number(form.get("price")),
-      category: form.get("category") as ProductCategory,
+      category: formCategory as ProductCategory,
       whatsapp_number: form.get("whatsapp_number") as string,
       images: imageUrls,
+      ski_modes: skiModes,
     });
 
     setLoading(false);
@@ -85,6 +96,8 @@ export default function AdminProductsPage() {
       setFiles([]);
       previews.forEach((url) => URL.revokeObjectURL(url));
       setPreviews([]);
+      setSkiModes([]);
+      setCategory("");
     } else {
       toast.error(result.error);
       if (result.fieldErrors) setFieldErrors(result.fieldErrors);
@@ -145,6 +158,8 @@ export default function AdminProductsPage() {
                   id="category"
                   name="category"
                   required
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                   className="flex h-8 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   <option value="">Seleccionar...</option>
@@ -154,6 +169,13 @@ export default function AdminProductsPage() {
                 </select>
               </div>
             </div>
+
+            <SkiModesField
+              selected={skiModes}
+              onChange={setSkiModes}
+              required={category === "esquis"}
+              error={fieldErrors.ski_modes?.[0]}
+            />
 
             <div className="space-y-2">
               <Label htmlFor="whatsapp_number">WhatsApp (admin)</Label>

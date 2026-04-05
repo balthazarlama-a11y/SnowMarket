@@ -5,10 +5,14 @@ import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
 
+const AVAILABILITY_STATUSES = ["available", "blocked"] as const;
+export type AvailabilityStatus = (typeof AVAILABILITY_STATUSES)[number];
+
 const dateRangeSchema = z.object({
   property_id: z.string().uuid(),
   available_from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   available_to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  status: z.enum(AVAILABILITY_STATUSES).default("available"),
 });
 
 export type AvailabilityRange = {
@@ -16,6 +20,7 @@ export type AvailabilityRange = {
   property_id: string;
   available_from: string;
   available_to: string;
+  status: AvailabilityStatus;
 };
 
 export async function addAvailabilityRange(
@@ -32,6 +37,26 @@ export async function addAvailabilityRange(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user || user.app_metadata?.role !== "admin") {
     return { success: false, error: "Solo administradores" };
+  }
+
+  // Check for overlapping ranges on the same property
+  const { data: existing } = await supabase
+    .from("availability_calendar")
+    .select("id, available_from, available_to, status")
+    .eq("property_id", parsed.data.property_id);
+
+  if (existing) {
+    const newFrom = parsed.data.available_from;
+    const newTo = parsed.data.available_to;
+    const overlap = existing.find(
+      (r) => r.available_from < newTo && r.available_to > newFrom
+    );
+    if (overlap) {
+      return {
+        success: false,
+        error: "Este rango se superpone con otro existente. Elimina el rango conflictivo primero.",
+      };
+    }
   }
 
   const { data, error } = await supabase

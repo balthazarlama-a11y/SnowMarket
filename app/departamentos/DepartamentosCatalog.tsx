@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -65,6 +65,7 @@ interface AvailabilityRange {
   property_id: string;
   available_from: string;
   available_to: string;
+  status?: "available" | "blocked";
 }
 
 interface DepartamentosCatalogProps {
@@ -152,16 +153,6 @@ export function PropertyCard({ property, isFavorite }: { property: Property; isF
   );
 }
 
-function useDebounce<T>(value: T, delay: number): T {
-  const [debounced, setDebounced] = useState(value);
-  useState(() => {
-    const timer = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(timer);
-  });
-  if (debounced !== value) setDebounced(value);
-  return debounced;
-}
-
 function Stepper({
   value,
   onChange,
@@ -206,7 +197,10 @@ export function DepartamentosCatalog({
 }: DepartamentosCatalogProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryParam = searchParams.get("q")?.toLowerCase() ?? "";
+
+  // Internalize query as local state so clearFilters can reset it
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
+  const queryParam = searchQuery.toLowerCase().trim();
   const locationParam = searchParams.get("location");
 
   const [selectedLocation, setSelectedLocation] = useState<string | null>(locationParam ?? null);
@@ -220,6 +214,7 @@ export function DepartamentosCatalog({
 
   const hasFilters =
     selectedLocation !== null ||
+    searchQuery.trim() !== "" ||
     priceMin !== "" ||
     priceMax !== "" ||
     dateFrom !== "" ||
@@ -230,6 +225,7 @@ export function DepartamentosCatalog({
 
   function clearFilters() {
     setSelectedLocation(null);
+    setSearchQuery("");
     setPriceMin("");
     setPriceMax("");
     setDateFrom("");
@@ -237,6 +233,8 @@ export function DepartamentosCatalog({
     setGuests(0);
     setBedrooms(0);
     setSelectedAmenities([]);
+    // Clear URL search params so they don't re-apply on navigation
+    router.replace("/departamentos", { scroll: false });
   }
 
   function toggleAmenity(a: string) {
@@ -260,6 +258,7 @@ export function DepartamentosCatalog({
     if (!dateFrom || !dateTo || availability.length === 0) return null;
     const ids = new Set<string>();
     for (const a of availability) {
+      if ((a.status ?? "available") !== "available") continue;
       if (a.available_from <= dateFrom && a.available_to >= dateTo) {
         ids.add(a.property_id);
       }

@@ -1,11 +1,12 @@
 "use client";
 
-import { CalendarDays, CheckCircle2 } from "lucide-react";
+import { CalendarDays, CheckCircle2, Ban } from "lucide-react";
 
 interface AvailabilityRange {
   id: string;
   available_from: string;
   available_to: string;
+  status?: "available" | "blocked";
 }
 
 function formatDate(dateStr: string): string {
@@ -33,15 +34,27 @@ export function AvailabilityBadges({
         <h3 className="text-sm font-semibold">Disponibilidad</h3>
       </div>
       <div className="space-y-1.5">
-        {active.map((r) => (
-          <div
-            key={r.id}
-            className="flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800"
-          >
-            <CheckCircle2 className="size-3.5 shrink-0" />
-            {formatDate(r.available_from)} — {formatDate(r.available_to)}
-          </div>
-        ))}
+        {active.map((r) => {
+          const isBlocked = r.status === "blocked";
+          return (
+            <div
+              key={r.id}
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+                isBlocked ? "bg-red-50 text-red-800" : "bg-green-50 text-green-800"
+              }`}
+            >
+              {isBlocked ? (
+                <Ban className="size-3.5 shrink-0" />
+              ) : (
+                <CheckCircle2 className="size-3.5 shrink-0" />
+              )}
+              {formatDate(r.available_from)} — {formatDate(r.available_to)}
+              <span className="ml-auto text-xs font-medium">
+                {isBlocked ? "Bloqueado" : "Disponible"}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

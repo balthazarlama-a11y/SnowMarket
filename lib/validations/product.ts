@@ -40,6 +40,24 @@ export const POPULAR_BRANDS = [
 
 export const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 
+export const SKI_MODES = [
+  "pista",
+  "freestyle",
+  "carrera",
+  "freeride",
+  "backcountry",
+] as const;
+
+export type SkiMode = (typeof SKI_MODES)[number];
+
+export const SKI_MODE_LABELS: Record<string, string> = {
+  pista: "Pista (Carving / All-Mountain)",
+  freestyle: "Freestyle (Park & Pipe)",
+  carrera: "Carrera (Racing)",
+  freeride: "Freeride (Fuera de Pista)",
+  backcountry: "Backcountry (Randonnée)",
+};
+
 const chileanPhoneRegex = /^(\+?56)?\s?0?9\s?\d{8}$/;
 const nextYear = new Date().getFullYear() + 1;
 
@@ -97,6 +115,7 @@ export const createProductSchema = z.object({
     .string()
     .max(2000, "Las observaciones tecnicas no pueden superar 2000 caracteres")
     .nullish(),
+  ski_modes: z.array(z.enum(SKI_MODES)).default([]),
 });
 
 export const updateProductSchema = createProductSchema.partial().extend({

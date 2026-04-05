@@ -16,6 +16,7 @@ export async function createVerifiedProduct(
     category: string;
     whatsapp_number: string;
     images: string[];
+    ski_modes?: string[];
   }
 ): Promise<ActionResult<{ id: string }>> {
   const parsed = createProductSchema.safeParse(input);
