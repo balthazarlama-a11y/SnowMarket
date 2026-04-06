@@ -127,9 +127,9 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
     );
   }
 
-  const showClothingSizes = selectedCategory === "ropa_de_esqui";
-  const showCmRange = selectedCategory === "esquis" || selectedCategory === null;
-  const showBootSizes = selectedCategory === "botas";
+  const showClothingSizes = selectedCategory === "ropa_de_esqui" || selectedCategory === "ropa_snowboard";
+  const showCmRange = selectedCategory === "esquis" || selectedCategory === "tablas_snowboard" || selectedCategory === null;
+  const showBootSizes = selectedCategory === "botas" || selectedCategory === "botas_snowboard";
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -277,7 +277,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
 
       <div>
         <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Modalidad de Ski
+          Modalidad
         </p>
         <div className="space-y-2">
           {SKI_MODES.map((m) => (
@@ -318,7 +318,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [] }: ProductCat
       {(showCmRange || showBootSizes) && (
         <div>
           <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {showBootSizes ? "Talla (Mondopoint cm)" : "Longitud (cm)"}
+            {showBootSizes ? "Talla (Mondopoint cm)" : "Longitud / Ancho (cm)"}
           </p>
           <div className="flex items-center gap-2">
             <Input

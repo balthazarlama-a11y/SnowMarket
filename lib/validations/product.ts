@@ -7,6 +7,10 @@ export const PRODUCT_CATEGORIES = [
   "cascos",
   "antiparras",
   "otros_accesorios",
+  "tablas_snowboard",
+  "botas_snowboard",
+  "fijaciones_snowboard",
+  "ropa_snowboard",
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
@@ -35,6 +39,10 @@ export const POPULAR_BRANDS = [
   "Nordica",
   "Fischer",
   "Dynastar",
+  "Lib Tech",
+  "Capita",
+  "Gnu",
+  "Never Summer",
   "Otra",
 ] as const;
 

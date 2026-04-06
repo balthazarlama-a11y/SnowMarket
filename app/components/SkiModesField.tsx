@@ -7,6 +7,7 @@ interface SkiModesFieldProps {
   onChange: (modes: SkiMode[]) => void;
   required?: boolean;
   error?: string;
+  label?: string;
 }
 
 export function SkiModesField({
@@ -14,6 +15,7 @@ export function SkiModesField({
   onChange,
   required = false,
   error,
+  label = "Modalidad de ski",
 }: SkiModesFieldProps) {
   function toggle(mode: SkiMode) {
     onChange(
@@ -27,7 +29,7 @@ export function SkiModesField({
     <div className="space-y-2">
       <div className="flex items-baseline gap-1.5">
         <span className="text-sm font-medium">
-          Modalidad de ski
+          {label}
           {required && <span className="text-destructive"> *</span>}
         </span>
         {!required && (

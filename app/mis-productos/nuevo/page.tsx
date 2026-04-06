@@ -65,9 +65,9 @@ export default function NuevoProductoPage() {
     const form = new FormData(e.currentTarget);
     const formCategory = form.get("category") as string;
 
-    // Validate ski_modes is required for esquis category
-    if (formCategory === "esquis" && skiModes.length === 0) {
-      setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad de ski."] });
+    // Validate ski_modes is required for esquis and tablas_snowboard
+    if ((formCategory === "esquis" || formCategory === "tablas_snowboard") && skiModes.length === 0) {
+      setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad."] });
       setLoading(false);
       return;
     }
@@ -217,12 +217,15 @@ export default function NuevoProductoPage() {
               </div>
             </div>
 
-            <SkiModesField
-              selected={skiModes}
-              onChange={setSkiModes}
-              required={category === "esquis"}
-              error={fieldErrors.ski_modes?.[0]}
-            />
+            {(category === "esquis" || category === "tablas_snowboard" || category === "") && (
+              <SkiModesField
+                selected={skiModes}
+                onChange={setSkiModes}
+                required={category === "esquis" || category === "tablas_snowboard"}
+                error={fieldErrors.ski_modes?.[0]}
+                label={category === "tablas_snowboard" ? "Modalidad de snowboard" : "Modalidad de ski"}
+              />
+            )}
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">

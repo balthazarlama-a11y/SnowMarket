@@ -20,4 +20,8 @@ export const CATEGORY_LABELS: Record<string, string> = {
   cascos: "Cascos",
   antiparras: "Antiparras",
   otros_accesorios: "Otros accesorios",
+  tablas_snowboard: "Tablas de Snowboard",
+  botas_snowboard: "Botas de Snowboard",
+  fijaciones_snowboard: "Fijaciones de Snowboard",
+  ropa_snowboard: "Ropa de Snowboard",
 };
