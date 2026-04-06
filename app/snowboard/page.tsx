@@ -1,18 +1,18 @@
 import { Suspense } from "react";
 import { getProducts } from "@/actions/products";
 import { getUserFavoriteIds } from "@/actions/favorites";
-import { ProductCatalog } from "./ProductCatalog";
+import { ProductCatalog } from "@/app/productos/ProductCatalog";
 
-const SKI_CATEGORIES = ["esquis", "botas", "ropa_de_esqui", "cascos", "antiparras", "otros_accesorios"];
+const SNOWBOARD_CATEGORIES = ["tablas_snowboard", "botas_snowboard", "fijaciones_snowboard", "ropa_snowboard"];
 
 export const metadata = {
-  title: "Productos de Esquí",
-  description: "Encuentra equipos de esquí nuevos y usados — verificados y de la comunidad",
+  title: "Snowboard",
+  description: "Encuentra tablas, botas y fijaciones de snowboard nuevas y usadas — verificadas y de la comunidad",
 };
 
-export default async function ProductosPage() {
+export default async function SnowboardPage() {
   const [{ data: products, error }, favoriteIds] = await Promise.all([
-    getProducts({ categories: SKI_CATEGORIES }),
+    getProducts({ categories: SNOWBOARD_CATEGORIES }),
     getUserFavoriteIds(),
   ]);
 
@@ -20,10 +20,10 @@ export default async function ProductosPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="mb-8">
         <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-          Productos de Esquí
+          Snowboard
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Explora equipos verificados por AndesMarket y publicaciones de la comunidad.
+          Explora equipos de snowboard verificados por AndesMarket y publicaciones de la comunidad.
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export default async function ProductosPage() {
         <ProductCatalog
           products={products ?? []}
           initialFavoriteIds={favoriteIds}
-          allowedCategories={SKI_CATEGORIES}
+          allowedCategories={SNOWBOARD_CATEGORIES}
         />
       </Suspense>
     </div>

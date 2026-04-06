@@ -46,6 +46,7 @@ export async function createProduct(
 
   revalidatePath("/mis-productos");
   revalidatePath("/productos");
+  revalidatePath("/snowboard");
   return { success: true, data: { id: data.id } };
 }
 
@@ -83,6 +84,7 @@ export async function updateProduct(
 
   revalidatePath("/mis-productos");
   revalidatePath("/productos");
+  revalidatePath("/snowboard");
   revalidatePath(`/productos/${id}`);
   return { success: true, data: null };
 }
@@ -110,6 +112,7 @@ export async function deleteProduct(
 
 export async function getProducts(filters?: {
   category?: string;
+  categories?: string[];
   verified?: boolean;
 }) {
   const supabase = await createSupabaseServerClient();
@@ -118,7 +121,9 @@ export async function getProducts(filters?: {
     .select("*, owner:users!products_owner_id_fkey(id, email)")
     .order("created_at", { ascending: false });
 
-  if (filters?.category) {
+  if (filters?.categories && filters.categories.length > 0) {
+    query = query.in("category", filters.categories);
+  } else if (filters?.category) {
     query = query.eq("category", filters.category);
   }
   if (filters?.verified !== undefined) {
