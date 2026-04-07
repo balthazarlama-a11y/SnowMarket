@@ -99,25 +99,28 @@ export default function NuevoProductoPage() {
       }
     }
 
-    const sizeVal = form.get("size_value") as string;
-    const yearVal = form.get("manufacture_year") as string;
+    const sizeVal = (form.get("size_value") as string).trim();
+    const yearVal = (form.get("manufacture_year") as string).trim();
+    const str = (key: string) => ((form.get(key) as string) ?? "").trim();
+    const optStr = (key: string) => str(key) || null;
+
     const result = await createProduct({
-      title: form.get("title") as string,
-      description: form.get("description") as string,
-      detailed_description: (form.get("detailed_description") as string) || null,
+      title: str("title"),
+      description: str("description"),
+      detailed_description: optStr("detailed_description"),
       price: Number(form.get("price")),
       category: form.get("category") as ProductCategory,
-      whatsapp_number: form.get("whatsapp_number") as string,
+      whatsapp_number: str("whatsapp_number"),
       images: imageUrls,
-      brand: (form.get("brand") as string) || null,
-      model: (form.get("model") as string) || null,
+      brand: optStr("brand"),
+      model: optStr("model"),
       condition: (form.get("condition") as any) || null,
-      size_label: (form.get("size_label") as string) || null,
+      size_label: optStr("size_label"),
       size_value: sizeVal ? Number(sizeVal) : null,
-      binding_type: (form.get("binding_type") as string) || null,
+      binding_type: optStr("binding_type"),
       manufacture_year: yearVal ? Number(yearVal) : null,
-      included_accessories: (form.get("included_accessories") as string) || null,
-      technical_observations: (form.get("technical_observations") as string) || null,
+      included_accessories: optStr("included_accessories"),
+      technical_observations: optStr("technical_observations"),
       ski_modes: skiModes,
     });
 
@@ -400,9 +403,9 @@ export default function NuevoProductoPage() {
                 />
               </div>
               {previews.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-2">
+                <div className="grid grid-cols-3 gap-2 pt-2 sm:grid-cols-4 md:grid-cols-5">
                   {previews.map((src, i) => (
-                    <div key={i} className="group relative size-20 overflow-hidden rounded-lg">
+                    <div key={i} className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary/50">
                       <img
                         src={src}
                         alt={`Preview ${i + 1}`}

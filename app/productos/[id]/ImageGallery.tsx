@@ -69,9 +69,9 @@ export function ImageGallery({ images, title }: { images: string[]; title: strin
               key={i}
               type="button"
               onClick={() => setActiveIndex(i)}
-              className={`relative size-20 shrink-0 overflow-hidden rounded-lg transition-all sm:size-24 ${
+              className={`relative aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg transition-all sm:w-24 ${
                 i === activeIndex
-                  ? "ring-2 ring-primary"
+                  ? "ring-2 ring-primary ring-offset-2"
                   : "opacity-60 hover:opacity-100"
               }`}
             >

@@ -22,43 +22,37 @@ export default async function ProductDetailPage({
   if (error || !product) return notFound();
 
   const entityType = product.is_verified ? "product_verified" : "product_user";
-  const shortDescription = product.description?.trim() || "Sin descripción corta.";
-  const detailedDescription = product.detailed_description?.trim() || shortDescription;
-  const includedAccessories = product.included_accessories?.trim() || "Sin especificar.";
-  const technicalObservations =
-    product.technical_observations?.trim() || "Sin observaciones técnicas.";
+  const shortDescription = product.description?.trim() || null;
+  const detailedDescription = product.detailed_description?.trim() || null;
+  const includedAccessories = product.included_accessories?.trim() || null;
+  const technicalObservations = product.technical_observations?.trim() || null;
   const conditionLabel =
     (product.condition && CONDITION_LABELS[product.condition]) ||
     product.condition ||
-    "Sin especificar";
+    null;
+
   const specifications = [
-    { label: "Marca", value: product.brand || "Sin especificar" },
-    { label: "Modelo", value: product.model || "Sin especificar" },
+    { label: "Marca", value: product.brand || null },
+    { label: "Modelo", value: product.model || null },
     { label: "Estado", value: conditionLabel },
-    { label: "Longitud / Talle", value: product.size_label || "Sin especificar" },
+    { label: "Longitud / Talle", value: product.size_label || null },
     {
       label: "Medida en cm",
       value:
         product.size_value !== null && product.size_value !== undefined
           ? `${product.size_value} cm`
-          : "Sin especificar",
+          : null,
     },
-    {
-      label: "Tipo de fijaciones",
-      value: product.binding_type || "Sin especificar",
-    },
-    {
-      label: "Año",
-      value: product.manufacture_year || "Sin especificar",
-    },
+    { label: "Tipo de fijaciones", value: product.binding_type || null },
+    { label: "Año", value: product.manufacture_year || null },
     {
       label: "Modalidad de ski",
       value:
         product.ski_modes?.length > 0
           ? product.ski_modes.map((m: string) => SKI_MODE_LABELS[m] ?? m).join(", ")
-          : "Sin especificar",
+          : null,
     },
-  ];
+  ].filter((item) => item.value != null);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -116,64 +110,78 @@ export default async function ProductDetailPage({
                     <span className="font-medium">Categoría:</span>{" "}
                     {CATEGORY_LABELS[product.category] ?? product.category}
                   </p>
-                  <p>
-                    <span className="font-medium">Descripción corta:</span>{" "}
-                    {shortDescription}
-                  </p>
+                  {shortDescription && (
+                    <p>
+                      <span className="font-medium">Descripción corta:</span>{" "}
+                      {shortDescription}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <Separator />
+              {specifications.length > 0 && (
+                <>
+                  <Separator />
+                  <div>
+                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                      Ficha técnica
+                    </h2>
+                    <dl className="space-y-2 text-sm">
+                      {specifications.map((item) => (
+                        <div
+                          key={item.label}
+                          className="flex items-center justify-between gap-3 border-b border-border/60 pb-2"
+                        >
+                          <dt className="font-medium text-muted-foreground">{item.label}</dt>
+                          <dd className="text-right">{item.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </>
+              )}
 
-              <div>
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Ficha técnica
-                </h2>
-                <dl className="space-y-2 text-sm">
-                  {specifications.map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex items-center justify-between gap-3 border-b border-border/60 pb-2"
-                    >
-                      <dt className="font-medium text-muted-foreground">{item.label}</dt>
-                      <dd className="text-right">{item.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
+              {detailedDescription && (
+                <>
+                  <Separator />
+                  <div>
+                    <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                      Descripción detallada
+                    </h2>
+                    <p className="whitespace-pre-line leading-relaxed text-sm">
+                      {detailedDescription}
+                    </p>
+                  </div>
+                </>
+              )}
 
-              <Separator />
+              {includedAccessories && (
+                <>
+                  <Separator />
+                  <div>
+                    <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                      Accesorios incluidos
+                    </h2>
+                    <p className="whitespace-pre-line text-sm leading-relaxed">
+                      {includedAccessories}
+                    </p>
+                  </div>
+                </>
+              )}
 
-              <div>
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Descripción detallada
-                </h2>
-                <p className="whitespace-pre-line leading-relaxed text-sm">
-                  {detailedDescription}
-                </p>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Accesorios incluidos
-                </h2>
-                <p className="whitespace-pre-line text-sm leading-relaxed">
-                  {includedAccessories}
-                </p>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Observaciones técnicas
-                </h2>
-                <p className="whitespace-pre-line text-sm leading-relaxed">
-                  {technicalObservations}
-                </p>
-              </div>
+              {technicalObservations && (
+                <>
+                  <Separator />
+                  <div>
+                    <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                      Observaciones técnicas
+                    </h2>
+                    <p className="whitespace-pre-line text-sm leading-relaxed">
+                      {technicalObservations}
+                    </p>
+                  </div>
+                </>
+              )}
 
               <Separator />
 
