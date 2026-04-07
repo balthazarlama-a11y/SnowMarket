@@ -452,7 +452,7 @@ export function ProductCard({ product, isFavorite }: { product: Product; isFavor
           <FavoriteButton itemId={product.id} initialIsFavorite={isFavorite} itemType="product" />
 
           {product.is_verified && (
-            <Badge className="absolute top-3 left-3 gap-1 bg-accent text-accent-foreground shadow-sm z-10">
+            <Badge className="absolute top-3 left-3 gap-1 bg-emerald-600 text-white shadow-sm z-10">
               <ShieldCheck className="size-3" />
               Verificado
             </Badge>

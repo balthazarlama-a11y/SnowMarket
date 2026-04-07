@@ -6,9 +6,10 @@ export const PRODUCT_CATEGORIES = [
   "ropa_de_esqui",
   "cascos",
   "antiparras",
-  "otros_accesorios",
+  "bastones",
   "snowboard",
   "botas_snowboard",
+  "otros_accesorios",
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];

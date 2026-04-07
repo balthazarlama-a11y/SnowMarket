@@ -15,6 +15,7 @@ import {
   Mountain,
   ShoppingBag,
   Building2,
+  LayoutGrid,
   LayoutDashboard,
   Package,
   LogIn,
@@ -70,6 +71,10 @@ export function MobileNav({ user, isAdmin }: MobileNavProps) {
             <Button variant="ghost" className="justify-start" render={<Link href="/productos" />} onClick={() => setOpen(false)}>
               <ShoppingBag className="size-4" data-icon="inline-start" />
               Productos
+            </Button>
+            <Button variant="ghost" className="justify-start" render={<Link href="/categorias" />} onClick={() => setOpen(false)}>
+              <LayoutGrid className="size-4" data-icon="inline-start" />
+              Categorías
             </Button>
             <Button variant="ghost" className="justify-start" render={<Link href="/departamentos" />} onClick={() => setOpen(false)}>
               <Building2 className="size-4" data-icon="inline-start" />

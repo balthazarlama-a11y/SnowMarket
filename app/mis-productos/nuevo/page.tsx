@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, type FormEvent } from "react";
+import { useState, useRef, type FormEvent, type DragEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createProduct } from "@/actions/products";
 import { uploadImages } from "@/actions/upload";
@@ -31,6 +31,7 @@ export default function NuevoProductoPage() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [skiModes, setSkiModes] = useState<SkiMode[]>([]);
   const [category, setCategory] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -57,6 +58,24 @@ export default function NuevoProductoPage() {
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   }
 
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setIsDragging(false);
+    const dropped = Array.from(e.dataTransfer.files).filter((f) =>
+      ["image/jpeg", "image/png", "image/webp"].includes(f.type)
+    );
+    const validFiles = dropped.filter((f) => {
+      if (f.size > 6 * 1024 * 1024) {
+        toast.error(`${f.name} excede 6MB`);
+        return false;
+      }
+      return true;
+    });
+    if (validFiles.length === 0) return;
+    setFiles((prev) => [...prev, ...validFiles]);
+    setPreviews((prev) => [...prev, ...validFiles.map((f) => URL.createObjectURL(f))]);
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setFieldErrors({});
@@ -65,12 +84,6 @@ export default function NuevoProductoPage() {
     const form = new FormData(e.currentTarget);
     const formCategory = form.get("category") as string;
 
-    // Validate ski_modes is required for esquis and snowboard
-    if ((formCategory === "esquis" || formCategory === "snowboard") && skiModes.length === 0) {
-      setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad."] });
-      setLoading(false);
-      return;
-    }
 
     let imageUrls: string[] = [];
     if (files.length > 0) {
@@ -221,7 +234,7 @@ export default function NuevoProductoPage() {
               <SkiModesField
                 selected={skiModes}
                 onChange={setSkiModes}
-                required={category === "esquis" || category === "snowboard"}
+                required={false}
                 error={fieldErrors.ski_modes?.[0]}
                 label={category === "snowboard" ? "Modalidad de snowboard" : "Modalidad de ski"}
               />
@@ -359,12 +372,20 @@ export default function NuevoProductoPage() {
             <div className="space-y-2">
               <Label>Imágenes</Label>
               <div
-                className="cursor-pointer rounded-lg border-2 border-dashed border-border p-6 text-center transition-colors hover:border-accent hover:bg-secondary/30"
+                className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+                  isDragging
+                    ? "border-[#e8622c] bg-orange-50"
+                    : "border-border hover:border-accent hover:bg-secondary/30"
+                }`}
                 onClick={() => fileInputRef.current?.click()}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragEnter={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleDrop}
               >
-                <ImagePlus className="mx-auto mb-2 size-8 text-muted-foreground/50" />
+                <ImagePlus className={`mx-auto mb-2 size-8 transition-colors ${isDragging ? "text-[#e8622c]" : "text-muted-foreground/50"}`} />
                 <p className="text-sm text-muted-foreground">
-                  Haz clic para seleccionar imágenes
+                  {isDragging ? "Suelta las imágenes aquí" : "Arrastra imágenes aquí o haz clic para seleccionar"}
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground/70">
                   JPG, PNG o WebP — máximo 6MB por archivo
