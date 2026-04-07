@@ -18,7 +18,7 @@ export async function Navbar() {
 
       {/* Main nav */}
       <div className="border-b border-slate-200 bg-white">
-        <nav className="mx-auto grid h-14 max-w-7xl grid-cols-3 items-center px-4 sm:px-6 lg:px-8">
+        <nav className="mx-auto flex min-h-14 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
           {/* Left: Logo */}
           <Link
             href="/"
@@ -30,15 +30,15 @@ export async function Navbar() {
             </span>
           </Link>
 
-          {/* Center: Nav links (client component for active state) */}
-          <div className="flex justify-center">
+          {/* Center: Nav links — fill available space */}
+          <div className="hidden min-w-0 flex-1 justify-center md:flex">
             <NavLinks />
           </div>
 
           {/* Right: Auth actions + Mobile trigger */}
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
             {/* Desktop auth */}
-            <div className="hidden items-center gap-2 md:flex">
+            <div className="hidden items-center gap-1.5 md:flex lg:gap-2">
               <Button
                 variant="ghost"
                 size="icon"
@@ -46,6 +46,7 @@ export async function Navbar() {
                 render={<Link href="/favoritos" />}
               >
                 <Heart className="size-4" />
+                <span className="sr-only">Favoritos</span>
               </Button>
 
               {user ? (
@@ -56,20 +57,31 @@ export async function Navbar() {
                     render={<Link href="/mis-productos/nuevo" />}
                   >
                     <PlusCircle className="size-3.5" data-icon="inline-start" />
-                    Publicar
+                    <span className="hidden lg:inline">Publicar</span>
+                    <span className="sr-only lg:hidden">Publicar</span>
                   </Button>
-                  <Button variant="ghost" size="sm" render={<Link href="/mis-productos" />}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="hidden lg:inline-flex"
+                    render={<Link href="/mis-productos" />}
+                  >
                     <Package className="size-3.5" data-icon="inline-start" />
                     Mis Productos
                   </Button>
                   {isAdmin && (
-                    <Button variant="secondary" size="sm" render={<Link href="/dashboard" />}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="hidden lg:inline-flex"
+                      render={<Link href="/dashboard" />}
+                    >
                       <LayoutDashboard className="size-3.5" data-icon="inline-start" />
                       Admin
                     </Button>
                   )}
-                  <Separator orientation="vertical" className="mx-1 h-5" />
-                  <span className="max-w-[140px] truncate text-xs text-muted-foreground">
+                  <Separator orientation="vertical" className="mx-0.5 hidden h-5 xl:block" />
+                  <span className="hidden max-w-[140px] truncate text-xs text-muted-foreground xl:inline">
                     {user.email}
                   </span>
                   <SignOutButton />
@@ -90,7 +102,8 @@ export async function Navbar() {
                     render={<Link href="/auth/sign-up" />}
                   >
                     <UserPlus className="size-3.5" data-icon="inline-start" />
-                    Registrarse
+                    <span className="hidden lg:inline">Registrarse</span>
+                    <span className="sr-only lg:hidden">Registrarse</span>
                   </Button>
                 </>
               )}
