@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, PlusCircle, Heart, UserPlus, Snowflake } from "lucide-react";
+import { Mountain, ShoppingBag, Building2, LayoutDashboard, Package, PlusCircle, Heart, UserPlus } from "lucide-react";
 import { SignOutButton } from "./SignOutButton";
 import { MobileNav } from "./MobileNav";
 
@@ -23,11 +23,7 @@ export async function Navbar() {
         <div className="hidden items-center gap-1 md:flex">
           <Button variant="ghost" size="sm" render={<Link href="/productos" />}>
             <ShoppingBag className="size-4" data-icon="inline-start" />
-            Esquí
-          </Button>
-          <Button variant="ghost" size="sm" render={<Link href="/snowboard" />}>
-            <Snowflake className="size-4" data-icon="inline-start" />
-            Snowboard
+            Productos
           </Button>
           <Button variant="ghost" size="sm" render={<Link href="/departamentos" />}>
             <Building2 className="size-4" data-icon="inline-start" />

@@ -21,7 +21,6 @@ import {
   LogOut,
   PlusCircle,
   UserPlus,
-  Snowflake,
 } from "lucide-react";
 import { signOut } from "@/actions/auth";
 import type { User } from "@supabase/supabase-js";
@@ -70,11 +69,7 @@ export function MobileNav({ user, isAdmin }: MobileNavProps) {
             <Separator className="my-2" />
             <Button variant="ghost" className="justify-start" render={<Link href="/productos" />} onClick={() => setOpen(false)}>
               <ShoppingBag className="size-4" data-icon="inline-start" />
-              Esquí
-            </Button>
-            <Button variant="ghost" className="justify-start" render={<Link href="/snowboard" />} onClick={() => setOpen(false)}>
-              <Snowflake className="size-4" data-icon="inline-start" />
-              Snowboard
+              Productos
             </Button>
             <Button variant="ghost" className="justify-start" render={<Link href="/departamentos" />} onClick={() => setOpen(false)}>
               <Building2 className="size-4" data-icon="inline-start" />

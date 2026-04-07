@@ -61,7 +61,6 @@ interface Product {
 interface ProductCatalogProps {
   products: Product[];
   initialFavoriteIds?: string[];
-  allowedCategories?: string[];
   isLoggedIn?: boolean;
 }
 
@@ -70,7 +69,7 @@ const PRODUCT_PUBLISH_VERIFIED_HREF = buildWhatsAppUrlWithText(
   WHATSAPP_PUBLISH_VERIFIED
 );
 
-export function ProductCatalog({ products, initialFavoriteIds = [], allowedCategories, isLoggedIn = false }: ProductCatalogProps) {
+export function ProductCatalog({ products, initialFavoriteIds = [], isLoggedIn = false }: ProductCatalogProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -195,9 +194,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [], allowedCateg
             <Tag className="size-3.5" data-icon="inline-start" />
             Todas
           </Button>
-          {PRODUCT_CATEGORIES.filter((cat) =>
-            !allowedCategories || allowedCategories.includes(cat)
-          ).map((cat) => (
+          {PRODUCT_CATEGORIES.map((cat) => (
             <Button
               key={cat}
               variant={selectedCategory === cat ? "secondary" : "ghost"}

@@ -46,7 +46,6 @@ export async function createProduct(
 
   revalidatePath("/mis-productos");
   revalidatePath("/productos");
-  revalidatePath("/snowboard");
   return { success: true, data: { id: data.id } };
 }
 
@@ -84,7 +83,6 @@ export async function updateProduct(
 
   revalidatePath("/mis-productos");
   revalidatePath("/productos");
-  revalidatePath("/snowboard");
   revalidatePath(`/productos/${id}`);
   return { success: true, data: null };
 }
