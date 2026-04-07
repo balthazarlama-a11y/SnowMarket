@@ -15,7 +15,6 @@ import { SearchBar } from "@/app/components/SearchBar";
 import { ADMIN_WHATSAPP, CATEGORY_LABELS } from "@/lib/constants";
 import {
   buildWhatsAppUrlWithText,
-  WHATSAPP_PUBLISH_STANDARD,
   WHATSAPP_PUBLISH_VERIFIED,
 } from "@/lib/whatsapp";
 import {
@@ -63,18 +62,15 @@ interface ProductCatalogProps {
   products: Product[];
   initialFavoriteIds?: string[];
   allowedCategories?: string[];
+  isLoggedIn?: boolean;
 }
 
-const PRODUCT_PUBLISH_STANDARD_HREF = buildWhatsAppUrlWithText(
-  ADMIN_WHATSAPP,
-  WHATSAPP_PUBLISH_STANDARD
-);
 const PRODUCT_PUBLISH_VERIFIED_HREF = buildWhatsAppUrlWithText(
   ADMIN_WHATSAPP,
   WHATSAPP_PUBLISH_VERIFIED
 );
 
-export function ProductCatalog({ products, initialFavoriteIds = [], allowedCategories }: ProductCatalogProps) {
+export function ProductCatalog({ products, initialFavoriteIds = [], allowedCategories, isLoggedIn = false }: ProductCatalogProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -390,13 +386,7 @@ export function ProductCatalog({ products, initialFavoriteIds = [], allowedCateg
                 <Button
                   size="sm"
                   className="shrink-0 whitespace-nowrap"
-                  render={
-                    <a
-                      href={PRODUCT_PUBLISH_STANDARD_HREF}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    />
-                  }
+                  render={<Link href={isLoggedIn ? "/mis-productos/nuevo" : "/auth/sign-up"} />}
                 >
                   <ShoppingBag className="size-4" data-icon="inline-start" />
                   Publicar

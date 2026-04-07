@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { getProducts } from "@/actions/products";
 import { getUserFavoriteIds } from "@/actions/favorites";
+import { getCurrentUser } from "@/actions/auth";
 import { ProductCatalog } from "./ProductCatalog";
 
 const SKI_CATEGORIES = ["esquis", "botas", "ropa_de_esqui", "cascos", "antiparras", "otros_accesorios"];
@@ -11,9 +12,10 @@ export const metadata = {
 };
 
 export default async function ProductosPage() {
-  const [{ data: products, error }, favoriteIds] = await Promise.all([
+  const [{ data: products, error }, favoriteIds, user] = await Promise.all([
     getProducts({ categories: SKI_CATEGORIES }),
     getUserFavoriteIds(),
+    getCurrentUser(),
   ]);
 
   return (
@@ -38,6 +40,7 @@ export default async function ProductosPage() {
           products={products ?? []}
           initialFavoriteIds={favoriteIds}
           allowedCategories={SKI_CATEGORIES}
+          isLoggedIn={!!user}
         />
       </Suspense>
     </div>
