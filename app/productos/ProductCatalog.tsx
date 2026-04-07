@@ -123,8 +123,8 @@ export function ProductCatalog({ products, initialFavoriteIds = [], isLoggedIn =
     );
   }
 
-  const showClothingSizes = selectedCategory === "ropa_de_esqui" || selectedCategory === "ropa_snowboard";
-  const showCmRange = selectedCategory === "esquis" || selectedCategory === "tablas_snowboard" || selectedCategory === null;
+  const showClothingSizes = selectedCategory === "ropa_de_esqui";
+  const showCmRange = selectedCategory === "esquis" || selectedCategory === "snowboard" || selectedCategory === null;
   const showBootSizes = selectedCategory === "botas" || selectedCategory === "botas_snowboard";
 
   const filtered = useMemo(() => {

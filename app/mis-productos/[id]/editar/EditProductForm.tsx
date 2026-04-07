@@ -73,7 +73,7 @@ export function EditProductForm({ product }: { product: any }) {
     const form = new FormData(e.currentTarget);
     const formCategory = form.get("category") as string;
 
-    if ((formCategory === "esquis" || formCategory === "tablas_snowboard") && skiModes.length === 0) {
+    if ((formCategory === "esquis" || formCategory === "snowboard") && skiModes.length === 0) {
       setFieldErrors({ ski_modes: ["Debes seleccionar al menos una modalidad."] });
       setLoading(false);
       return;
@@ -228,13 +228,13 @@ export function EditProductForm({ product }: { product: any }) {
             </div>
           </div>
 
-          {(category === "esquis" || category === "tablas_snowboard" || category === "") && (
+          {(category === "esquis" || category === "snowboard" || category === "") && (
             <SkiModesField
               selected={skiModes}
               onChange={setSkiModes}
-              required={category === "esquis" || category === "tablas_snowboard"}
+              required={category === "esquis" || category === "snowboard"}
               error={fieldErrors.ski_modes?.[0]}
-              label={category === "tablas_snowboard" ? "Modalidad de snowboard" : "Modalidad de ski"}
+              label={category === "snowboard" ? "Modalidad de snowboard" : "Modalidad de ski"}
             />
           )}
 
