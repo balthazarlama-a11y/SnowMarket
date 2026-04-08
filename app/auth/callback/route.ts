@@ -1,4 +1,3 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   isPasswordRecoveryPath,
   PASSWORD_RECOVERY_PATH,
@@ -8,7 +7,7 @@ import {
   RECOVERY_REFRESH_TOKEN_MAX_AGE_SECONDS,
 } from "@/lib/auth/password-recovery";
 import { isPasswordRecoveryJwt } from "@/lib/auth/is-password-recovery-jwt";
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -30,6 +29,16 @@ function recoveryCookieOptions(maxAge: number, secure: boolean) {
     path: "/",
     maxAge,
   };
+}
+
+/** Aplica cookies pendientes al NextResponse de redirección. */
+function applyPendingCookies(
+  response: NextResponse,
+  pendingCookies: Array<{ name: string; value: string; options?: CookieOptions }>,
+) {
+  for (const { name, value, options } of pendingCookies) {
+    response.cookies.set(name, value, options);
+  }
 }
 
 export async function GET(request: Request) {
@@ -62,35 +71,33 @@ export async function GET(request: Request) {
       );
     }
 
-    // Use @supabase/ssr client so it can read the PKCE code_verifier cookie
-    // that was stored when resetPasswordForEmail / signUp was called.
-    // The SSR createServerClient defaults to flowType:'pkce' — matching the
-    // client that initiated the flow.  We suppress session writes so the
-    // exchange doesn't pollute regular auth cookies; tokens are handled
-    // manually below (recovery cookies or explicit setSession).
+    // Collect all cookies that the Supabase client wants to set during the
+    // code exchange so we can apply them to the final NextResponse.redirect().
+    // Previously, session cookies were suppressed here and re-set via
+    // cookieStore.set() — but those writes don't propagate to a separately
+    // created NextResponse, causing the session to be lost on redirect.
     const cookieStore = await cookies();
+    const pendingCookies: Array<{ name: string; value: string; options?: CookieOptions }> = [];
+
     const exchangeClient = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
           return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
-          // Allow the client to clear the code_verifier cookie after exchange,
-          // but don't let it persist the new session — we handle that below.
-          for (const { name, value, options } of cookiesToSet) {
-            if (name.endsWith("-code-verifier")) {
-              try { cookieStore.set(name, value, options); } catch { /* read-only ctx */ }
-            }
+          for (const cookie of cookiesToSet) {
+            pendingCookies.push(cookie);
           }
         },
       },
     });
 
+    const isRecovery = isPasswordRecoveryPath(next);
     console.log(
       "[auth/callback] exchangeCodeForSession — next=%s, isRecovery=%s, hasError=%s",
       next,
-      isPasswordRecoveryPath(next),
-      Boolean(authError)
+      isRecovery,
+      Boolean(authError),
     );
 
     const { data, error } = await exchangeClient.auth.exchangeCodeForSession(code);
@@ -102,8 +109,12 @@ export async function GET(request: Request) {
     }
 
     if (!error && accessToken && refreshToken) {
-      const treatAsRecovery =
-        isPasswordRecoveryPath(next) || isPasswordRecoveryJwt(accessToken);
+      const treatAsRecovery = isRecovery || isPasswordRecoveryJwt(accessToken);
+      console.log(
+        "[auth/callback] flow=%s, redirectTo=%s",
+        treatAsRecovery ? "recovery" : "signup-confirmation",
+        treatAsRecovery ? PASSWORD_RECOVERY_PATH : next,
+      );
 
       if (treatAsRecovery) {
         const response = NextResponse.redirect(`${origin}${PASSWORD_RECOVERY_PATH}`);
@@ -120,29 +131,33 @@ export async function GET(request: Request) {
           ...recoveryCookieOptions(RECOVERY_REFRESH_TOKEN_MAX_AGE_SECONDS, isSecure),
         });
 
+        // Apply code-verifier cleanup cookies to the response
+        for (const { name, value, options } of pendingCookies) {
+          if (name.endsWith("-code-verifier")) {
+            response.cookies.set(name, value, options);
+          }
+        }
+
         return response;
       }
 
-      const supabase = await createSupabaseServerClient();
-      const { error: setSessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-
-      if (!setSessionError) {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
+      // Signup email confirmation: apply ALL session cookies from the exchange
+      // (auth tokens + code-verifier cleanup) directly to the redirect response.
+      const response = NextResponse.redirect(`${origin}${next}`);
+      applyPendingCookies(response, pendingCookies);
+      console.log("[auth/callback] signup confirmation success — cookies applied, redirecting to %s", next);
+      return response;
     }
 
-    const dest = isPasswordRecoveryPath(next)
-      ? "/auth/forgot-password"
-      : "/auth/sign-in";
+    // Exchange failed — redirect to appropriate error page
+    const dest = isRecovery ? "/auth/forgot-password" : "/auth/sign-in";
     const url = new URL(dest, origin);
-    if (isPasswordRecoveryPath(next)) {
+    if (isRecovery) {
       url.searchParams.set("error", "invalid_or_expired_reset_link");
     } else {
       url.searchParams.set("error", "confirmation_failed");
     }
+    console.error("[auth/callback] exchange failed — redirecting to %s", dest);
     const response = NextResponse.redirect(url);
     response.cookies.delete(RECOVERY_ACCESS_TOKEN_COOKIE);
     response.cookies.delete(RECOVERY_REFRESH_TOKEN_COOKIE);
