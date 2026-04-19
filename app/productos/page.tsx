@@ -6,7 +6,7 @@ import { ProductCatalog } from "./ProductCatalog";
 
 export const metadata = {
   title: "Productos",
-  description: "Encuentra equipos de esquí y snowboard nuevos y usados — verificados y de la comunidad",
+  description: "Encuentra equipos de esquí y snowboard nuevos y usados — con gestión y envío incluido",
 };
 
 export default async function ProductosPage() {
@@ -23,7 +23,7 @@ export default async function ProductosPage() {
           Productos
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Explora equipos verificados por AndesMarket y publicaciones de la comunidad.
+          Explora equipos con gestión y envío por AndesMarket y publicaciones de la comunidad.
         </p>
       </div>
 

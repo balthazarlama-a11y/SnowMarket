@@ -11,7 +11,7 @@ import {
   Plus,
   Package,
   Eye,
-  ShieldCheck,
+  Truck,
   Pencil,
 } from "lucide-react";
 
@@ -74,8 +74,8 @@ export default async function MisProductosPage() {
                         variant="secondary"
                         className="shrink-0 gap-1 text-accent"
                       >
-                        <ShieldCheck className="size-3" />
-                        Verificado
+                        <Truck className="size-3" />
+                        Envío incluido
                       </Badge>
                     )}
                   </div>

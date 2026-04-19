@@ -23,7 +23,7 @@ export function VerifyToggle({ productId, initialVerified }: VerifyToggleProps) 
     if (result.success) {
       setChecked(result.data.is_verified);
       toast.success(
-        result.data.is_verified ? "Producto verificado" : "Verificación removida"
+        result.data.is_verified ? "Gestión y envío activado" : "Gestión y envío desactivado"
       );
     } else {
       setChecked(!newValue);
@@ -36,7 +36,7 @@ export function VerifyToggle({ productId, initialVerified }: VerifyToggleProps) 
       checked={checked}
       onCheckedChange={handleToggle}
       disabled={loading}
-      aria-label="Verificado"
+      aria-label="Envío incluido"
     />
   );
 }

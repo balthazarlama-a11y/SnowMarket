@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   ShoppingBag,
   Building2,
-  ShieldCheck,
   MessageCircle,
   ArrowRight,
   Upload,
@@ -17,7 +16,6 @@ import {
   Phone,
   HelpCircle,
   CheckCircle2,
-  Star,
   Snowflake,
   Recycle,
   MapPin,
@@ -119,11 +117,11 @@ export default async function Home() {
             <Card className="group border-0 bg-card/80 backdrop-blur-md shadow-xl shadow-black/5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
               <CardContent className="flex flex-col items-center p-6 sm:p-8 text-center">
                 <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/10 to-orange-400/5 ring-1 ring-orange-500/10 group-hover:scale-110 transition-transform duration-300">
-                  <ShieldCheck className="size-7 text-[#e8622c]" />
+                  <Truck className="size-7 text-[#e8622c]" />
                 </div>
-                <h3 className="font-heading text-lg font-semibold">Productos Verificados</h3>
+                <h3 className="font-heading text-lg font-semibold">Gestión y Logística</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  Equipos revisados y certificados para garantizar calidad y autenticidad en cada transacción.
+                  Nos encargamos de la búsqueda, compra y envío de tu equipo directo a tu puerta.
                 </p>
               </CardContent>
             </Card>
@@ -222,11 +220,11 @@ export default async function Home() {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
-                    <ShieldCheck className="size-5 text-amber-600" />
+                    <Truck className="size-5 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-heading text-sm font-semibold">Verificados</p>
-                    <p className="text-xs text-muted-foreground">Calidad garantizada</p>
+                    <p className="font-heading text-sm font-semibold">Envío incluido</p>
+                    <p className="text-xs text-muted-foreground">Gestión puerta a puerta</p>
                   </div>
                 </div>
               </div>
@@ -247,7 +245,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 5 — PRODUCTOS VERIFICADOS
+          SECTION 5 — GESTIÓN Y LOGÍSTICA
       ═══════════════════════════════════════════════════ */}
       <section className="bg-background py-16 sm:py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -255,20 +253,20 @@ export default async function Home() {
             {/* Text */}
             <div className="order-2 lg:order-1 lg:pr-4">
               <Badge variant="secondary" className="mb-4 gap-1.5">
-                <ShieldCheck className="size-3" />
-                Productos Verificados
+                <Truck className="size-3" />
+                Gestión y Logística
               </Badge>
               <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl mb-6">
                 Compra con confianza en la nieve
               </h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
                 <p>
-                  Encuentra equipos revisados por nuestro equipo para asegurar
-                  autenticidad, buen estado y una experiencia de compra más segura.
+                  Nos encargamos de todo: buscamos el equipo que necesitas, gestionamos
+                  la compra y lo enviamos directo a tu puerta.
                 </p>
                 <p>
                   Desde esquís y botas hasta cascos y antiparras: seleccionamos
-                  publicaciones con estándares de calidad para que compres con tranquilidad.
+                  los mejores equipos y coordinamos cada paso para que tú solo disfrutes la montaña.
                 </p>
               </div>
 
@@ -321,8 +319,8 @@ export default async function Home() {
 
               <div className="mt-8">
                 <Button size="lg" className="gap-2 h-12 bg-[#e8622c] hover:bg-[#d4561f]" render={<Link href="/productos" />}>
-                  <ShieldCheck className="size-4" />
-                  Ver productos verificados
+                  <Truck className="size-4" />
+                  Ver productos con envío
                   <ArrowRight className="size-4" />
                 </Button>
               </div>
@@ -332,15 +330,15 @@ export default async function Home() {
             <div className="relative order-1 lg:order-2 aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/10">
               <Image
                 src="/images/productosverificados.png"
-                alt="Productos verificados de esquí en AndesMarket"
+                alt="Productos con gestión y envío en AndesMarket"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               <Badge className="absolute bottom-4 left-4 bg-white/90 text-primary hover:bg-white shadow-md gap-1.5">
-                <Star className="size-3" />
-                Calidad verificada
+                <Truck className="size-3" />
+                Envío incluido
               </Badge>
             </div>
           </div>
@@ -366,7 +364,7 @@ export default async function Home() {
               <div className="space-y-5 text-muted-foreground leading-relaxed">
                 <p>
                   Encuentra el <strong className="text-foreground">departamento ideal</strong> para tu
-                  próxima escapada a la montaña. Arriendos verificados en Farellones,
+                  próxima escapada a la montaña. Arriendos en Farellones,
                   Valle Nevado, La Parva y El Colorado.
                 </p>
                 <p>
@@ -378,7 +376,7 @@ export default async function Home() {
               <div className="mt-8 space-y-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="size-5 shrink-0 text-green-600" />
-                  <span className="text-sm">Departamentos verificados en centros de esquí</span>
+                  <span className="text-sm">Departamentos seleccionados en centros de esquí</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="size-5 shrink-0 text-green-600" />
@@ -495,14 +493,14 @@ export default async function Home() {
 
             <div className="grid grid-cols-12 items-start gap-y-2 px-4 py-4 sm:px-6">
               <div className="col-span-5 sm:col-span-4">
-                <p className="font-heading text-sm font-semibold">Artículos verificados</p>
+                <p className="font-heading text-sm font-semibold">Artículos con gestión</p>
                 <p className="text-xs text-muted-foreground">Servicio premium</p>
               </div>
               <p className="col-span-3 sm:col-span-2 text-sm font-semibold text-amber-600">10%</p>
               <p className="col-span-4 sm:col-span-3 text-sm text-muted-foreground">
-                Verificación del artículo y logística puerta a puerta.
+                Búsqueda, gestión de compra y logística puerta a puerta.
               </p>
-              <p className="col-span-12 sm:col-span-3 text-sm text-muted-foreground">Vendedores que buscan mayor confianza y entrega asistida.</p>
+              <p className="col-span-12 sm:col-span-3 text-sm text-muted-foreground">Compradores que buscan comodidad y entrega asistida.</p>
             </div>
           </div>
         </div>

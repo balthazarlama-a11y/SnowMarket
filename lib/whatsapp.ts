@@ -78,8 +78,8 @@ export function buildWhatsAppUrlWithText(phone: string, text: string): string {
 /** Mensaje para el botón de publicar artículo estándar (catálogo de productos). */
 export const WHATSAPP_PUBLISH_STANDARD = "Hola, quiero publicar un artículo.";
 
-/** Mensaje para publicar con verificación (catálogo de productos). */
-export const WHATSAPP_PUBLISH_VERIFIED = "Hola, quiero publicar un artículo verificado.";
+/** Mensaje para publicar con gestión y envío (catálogo de productos). */
+export const WHATSAPP_PUBLISH_VERIFIED = "Hola, quiero publicar un artículo con gestión y envío.";
 
 /** Mensaje para el botón de publicar departamento (sección Departamentos). */
 export const WHATSAPP_PUBLISH_DEPARTMENT = "Hola, quiero publicar un departamento.";

@@ -27,12 +27,11 @@ import {
   SKI_MODE_LABELS,
 } from "@/lib/validations/product";
 import {
-  ShieldCheck,
+  Truck,
   ShoppingBag,
   Tag,
   X,
   SlidersHorizontal,
-  Check,
   ArrowRight,
 } from "lucide-react";
 import { FavoriteButton } from "@/app/components/FavoriteButton";
@@ -170,8 +169,8 @@ export function ProductCatalog({ products, initialFavoriteIds = [], isLoggedIn =
 
       <div className="flex items-center justify-between gap-3">
         <Label htmlFor="verified-toggle" className="flex items-center gap-2 text-sm font-medium">
-          <ShieldCheck className="size-4 text-accent" />
-          Solo Verificados
+          <Truck className="size-4 text-accent" />
+          Envío incluido
         </Label>
         <Switch
           id="verified-toggle"
@@ -399,8 +398,8 @@ export function ProductCatalog({ products, initialFavoriteIds = [], isLoggedIn =
                     />
                   }
                 >
-                  <Check className="size-4" data-icon="inline-start" strokeWidth={2.5} />
-                  Publicar Verificado
+                  <Truck className="size-4" data-icon="inline-start" />
+                  Publicar con Gestión
                 </Button>
               </div>
             </div>
@@ -453,8 +452,8 @@ export function ProductCard({ product, isFavorite }: { product: Product; isFavor
 
           {product.is_verified && (
             <Badge className="absolute top-3 left-3 gap-1 bg-emerald-600 text-white shadow-sm z-10">
-              <ShieldCheck className="size-3" />
-              Verificado
+              <Truck className="size-3" />
+              Envío incluido
             </Badge>
           )}
         </div>

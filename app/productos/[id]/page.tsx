@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, ShieldCheck, Tag, User } from "lucide-react";
+import { ArrowLeft, Truck, Tag, User } from "lucide-react";
 import { ImageGallery } from "./ImageGallery";
 
 export default async function ProductDetailPage({
@@ -82,8 +82,8 @@ export default async function ProductDetailPage({
               <div className="flex flex-wrap gap-2">
                 {product.is_verified && (
                   <Badge className="gap-1 bg-accent text-accent-foreground">
-                    <ShieldCheck className="size-3" />
-                    Verificado por SnowMarket
+                    <Truck className="size-3" />
+                    Gestión y envío por AndesMarket
                   </Badge>
                 )}
                 <Badge variant="outline">

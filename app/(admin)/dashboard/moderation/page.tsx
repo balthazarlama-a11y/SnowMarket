@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
-  ShieldCheck,
+  Truck,
   Shield,
   Eye,
   Package,
@@ -79,8 +79,8 @@ export default async function ModerationPage() {
                         variant="secondary"
                         className="shrink-0 gap-1 text-accent"
                       >
-                        <ShieldCheck className="size-3" />
-                        Verificado
+                        <Truck className="size-3" />
+                        Envío incluido
                       </Badge>
                     )}
                   </div>
@@ -98,7 +98,7 @@ export default async function ModerationPage() {
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-muted-foreground">Verificado</span>
+                    <span className="text-xs text-muted-foreground">Envío incluido</span>
                     <VerifyToggle
                       productId={p.id}
                       initialVerified={!!p.is_verified}

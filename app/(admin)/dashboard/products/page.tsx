@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, ShieldCheck, ImagePlus, X } from "lucide-react";
+import { Loader2, Truck, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AdminProductsPage() {
@@ -91,7 +91,7 @@ export default function AdminProductsPage() {
     setLoading(false);
 
     if (result.success) {
-      toast.success(`Producto verificado creado (ID: ${result.data.id})`);
+      toast.success(`Producto con gestión creado (ID: ${result.data.id})`);
       formRef.current?.reset();
       setFiles([]);
       previews.forEach((url) => URL.revokeObjectURL(url));
@@ -110,16 +110,16 @@ export default function AdminProductsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <CardTitle className="font-heading text-2xl">
-              Crear Producto Verificado
+              Crear Producto con Gestión
             </CardTitle>
             <Badge className="gap-1 bg-accent text-accent-foreground">
-              <ShieldCheck className="size-3" />
-              Verificado
+              <Truck className="size-3" />
+              Envío incluido
             </Badge>
           </div>
           <CardDescription>
-            Este producto se marcará como verificado por AndesMarket. El contacto
-            de WhatsApp se asociará al administrador.
+            Este producto incluirá gestión de compra, búsqueda y envío por AndesMarket.
+            El contacto de WhatsApp se asociará al administrador.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -223,8 +223,8 @@ export default function AdminProductsPage() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? <Loader2 className="size-4 animate-spin" /> : <ShieldCheck className="size-4" data-icon="inline-start" />}
-              {loading ? "Creando..." : "Crear Producto Verificado"}
+              {loading ? <Loader2 className="size-4 animate-spin" /> : <Truck className="size-4" data-icon="inline-start" />}
+              {loading ? "Creando..." : "Crear Producto con Gestión"}
             </Button>
           </form>
         </CardContent>
