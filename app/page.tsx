@@ -24,7 +24,6 @@ import {
 import { ADMIN_WHATSAPP, CATEGORY_LABELS } from "@/lib/constants";
 import { getCurrentUser } from "@/actions/auth";
 import { HeroLeft } from "./components/home/HeroLeft";
-import { HeroRight } from "./components/home/HeroRight";
 
 export default async function Home() {
   const user = await getCurrentUser();
@@ -74,14 +73,8 @@ export default async function Home() {
 
         {/* ── Content ── */}
         <div className="relative z-[2] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 lg:pb-28">
-          <div className="grid items-end gap-10 lg:grid-cols-2 lg:gap-16">
-            {/* Left column: text + search + stats */}
+          <div className="max-w-2xl">
             <HeroLeft isLoggedIn={!!user} />
-
-            {/* Right column: floating product cards only (image is background now) */}
-            <div className="hidden lg:block">
-              <HeroRight />
-            </div>
           </div>
         </div>
       </section>
