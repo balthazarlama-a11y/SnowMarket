@@ -8,9 +8,7 @@ import {
   Building2,
   MessageCircle,
   ArrowRight,
-  Upload,
   Search,
-  Handshake,
   Percent,
   Mail,
   Phone,
@@ -22,10 +20,11 @@ import {
   Heart,
   Ticket,
   Truck,
-  UserPlus,
 } from "lucide-react";
 import { ADMIN_WHATSAPP, CATEGORY_LABELS } from "@/lib/constants";
 import { getCurrentUser } from "@/actions/auth";
+import { HeroLeft } from "./components/home/HeroLeft";
+import { HeroRight } from "./components/home/HeroRight";
 
 export default async function Home() {
   const user = await getCurrentUser();
@@ -33,79 +32,58 @@ export default async function Home() {
   return (
     <>
       {/* ═══════════════════════════════════════════════════
-          SECTION 1 — HERO  (Skier background)
+          SECTION 1 — HERO (Two-column premium layout)
       ═══════════════════════════════════════════════════ */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Background image */}
-        <Image
-          src="/images/fondoimagen.png"
-          alt="Majestuosas montañas nevadas de los Andes"
-          fill
-          className="object-cover object-center"
-          priority
-          quality={100}
-          unoptimized={true}
-        />
-        {/* Minimal overlay for readability without heavy blur */}
-        <div className="absolute inset-0 bg-black/20" />
-
-        {/* Content */}
-        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-1.5 mb-8 animate-fade-in-up">
-            <Snowflake className="size-3.5 text-cyan-300" />
-            <span className="text-sm font-medium text-white/80 tracking-wide">
-              Marketplace Premium de Nieve — Región Metropolitana
-            </span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-fade-in-up [animation-delay:150ms]">
-            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/90">
-              Tu próxima aventura en la nieve
-            </span>
-            <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-white/95 to-blue-300">
-              comienza aquí.
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-lg md:text-xl text-white/70 mb-10 leading-relaxed font-light tracking-wide max-w-2xl mx-auto animate-fade-in-up [animation-delay:300ms]">
-            ¡Prepárate para la temporada! Renueva tu equipo o encuentra el alojamiento ideal. Todo a través de AndesMarket.
-          </p>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center px-4 animate-fade-in-up [animation-delay:450ms]">
-            <Button
-              size="lg"
-              className="bg-[#e8622c] text-white hover:bg-[#d4561f] h-13 px-7 text-base gap-2 shadow-lg shadow-orange-600/30 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/40 hover:-translate-y-0.5"
-              render={<Link href="/productos" />}
-            >
-              <ShoppingBag className="size-5" data-icon="inline-start" />
-              Ver Equipos Disponibles
-              <ArrowRight className="size-4" data-icon="inline-end" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white h-13 px-7 text-base gap-2 transition-all duration-300 hover:-translate-y-0.5"
-              render={<Link href={user ? "/mis-productos/nuevo" : "/auth/sign-up"} />}
-            >
-              {user ? (
-                <>
-                  <Upload className="size-5" data-icon="inline-start" />
-                  Subir mi Equipo
-                  <ArrowRight className="size-4" data-icon="inline-end" />
-                </>
-              ) : (
-                <>
-                  <UserPlus className="size-5" data-icon="inline-start" />
-                  Registrarse
-                  <ArrowRight className="size-4" data-icon="inline-end" />
-                </>
-              )}
-            </Button>
-          </div>
-
+      <section className="relative min-h-[600px] lg:min-h-[680px] overflow-hidden bg-slate-50">
+        {/* ── Full-bleed background image (right-aligned on desktop) ── */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/imagenfondo.png"
+            alt="Equipamiento de nieve premium"
+            fill
+            className="object-cover object-[75%_top] lg:object-[65%_top]"
+            priority
+            sizes="100vw"
+          />
         </div>
 
+        {/* ── Gradient overlays: fuse image into content area ── */}
+        {/* Left-to-right: solid white fading into the image */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(248,250,252,0.97) 0%, rgba(248,250,252,0.92) 20%, rgba(248,250,252,0.7) 38%, rgba(248,250,252,0.35) 52%, rgba(248,250,252,0) 68%)",
+          }}
+        />
+        {/* Bottom fade for mini-card integration */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(248,250,252,0.7) 0%, rgba(248,250,252,0.25) 18%, rgba(248,250,252,0) 35%)",
+          }}
+        />
+        {/* Mobile: stronger overlay so text stays legible */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none lg:hidden"
+          style={{
+            background: "rgba(248,250,252,0.82)",
+          }}
+        />
+
+        {/* ── Content ── */}
+        <div className="relative z-[2] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 lg:pb-28">
+          <div className="grid items-end gap-10 lg:grid-cols-2 lg:gap-16">
+            {/* Left column: text + search + stats */}
+            <HeroLeft isLoggedIn={!!user} />
+
+            {/* Right column: floating product cards only (image is background now) */}
+            <div className="hidden lg:block">
+              <HeroRight />
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════
@@ -347,7 +325,6 @@ export default async function Home() {
 
       {/* ═══════════════════════════════════════════════════
           SECTION 6 — DEPARTAMENTOS / ARRIENDO SIN COMPLICACIONES
-          (Chalet image + text about departamento rentals)
       ═══════════════════════════════════════════════════ */}
       <section className="bg-background py-16 sm:py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -413,48 +390,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 7 — HOW IT WORKS
-      ═══════════════════════════════════════════════════ */}
-      <section id="como-funciona" className="bg-secondary/20 py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <Badge variant="secondary" className="mb-4 gap-1.5">
-              <HelpCircle className="size-3" />
-              Cómo Funciona
-            </Badge>
-            <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-              Publicar es fácil y rápido
-            </h2>
-            <p className="mt-3 mx-auto max-w-2xl text-muted-foreground">
-              En solo tres pasos puedes tener tus productos o departamentos visibles para miles de usuarios.
-            </p>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-3">
-            {[
-              { icon: Upload, num: "1", title: "Crea tu Cuenta", desc: "Regístrate gratis con tu email. Confirma tu cuenta y ya puedes empezar a publicar." },
-              { icon: ShoppingBag, num: "2", title: "Publica tu Artículo", desc: "Sube fotos, escribe una descripción y establece tu precio. Agrega tu WhatsApp para contacto directo." },
-              { icon: Handshake, num: "3", title: "Conecta y Vende", desc: "Los compradores te contactan por WhatsApp. Coordina la entrega y cierra la venta." },
-            ].map((step) => (
-              <div key={step.num} className="group relative flex flex-col items-center text-center rounded-2xl bg-card p-8 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-[#e8622c] text-white shadow-lg shadow-orange-600/20 transition-transform duration-300 group-hover:scale-110">
-                  <step.icon className="size-7" />
-                </div>
-                <div className="absolute left-1/2 top-4 -translate-x-1/2 font-heading text-7xl font-black text-primary/[0.04]">
-                  {step.num}
-                </div>
-                <h3 className="font-heading text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          SECTION 8 — COMMISSIONS & TRANSPARENCY
+          SECTION 7 — COMMISSIONS & TRANSPARENCY
       ═══════════════════════════════════════════════════ */}
       <section id="comisiones" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -684,9 +620,9 @@ export default async function Home() {
                   </a>
                 </li>
                 <li>
-                  <Link href="/#como-funciona" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
+                  <Link href="/productos" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
                     <HelpCircle className="size-3.5" />
-                    Cómo publicar
+                    Explorar productos
                   </Link>
                 </li>
                 <li>
