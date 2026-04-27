@@ -8,17 +8,17 @@ export function HeroRight() {
         <MiniProductCard
           name="Casco Oakley MOD"
           price="$21.000"
-          image="/images/home1.jpg"
+          image="/images/casco.png"
         />
         <MiniProductCard
           name="Botas Salomon QPro"
           price="$30.000"
-          image="/images/home2.png"
+          image="/images/botas.png"
         />
         <MiniProductCard
-          name="Esquí Supershape"
+          name="Esquís Rossignol"
           price="$300.000"
-          image="/images/home3.jpg"
+          image="/images/esquis.png"
         />
       </div>
     </div>
