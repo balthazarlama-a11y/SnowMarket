@@ -25,6 +25,7 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
           fill
           className="object-cover animate-in fade-in duration-150"
           sizes="(max-width: 1024px) 100vw, 60vw"
+          quality={80}
           priority
         />
       </div>

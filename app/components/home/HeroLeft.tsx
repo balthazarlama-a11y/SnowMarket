@@ -20,7 +20,7 @@ export function HeroLeft({ isLoggedIn }: HeroLeftProps) {
       </div>
 
       {/* Title */}
-      <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.4rem] font-bold tracking-tight leading-[1.12] text-slate-900">
+      <h1 className="text-2xl sm:text-3xl lg:text-5xl xl:text-[3.4rem] font-bold tracking-tight leading-[1.12] text-slate-900">
         Todo el equipamiento
         <br className="hidden sm:block" />
         {" "}que necesitas,
@@ -40,7 +40,7 @@ export function HeroLeft({ isLoggedIn }: HeroLeftProps) {
       <div className="flex flex-col sm:flex-row gap-3">
         <Button
           size="lg"
-          className="bg-[#e8622c] text-white hover:bg-[#d4561f] h-11 px-6 text-sm font-semibold gap-2 shadow-lg shadow-orange-500/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
+          className="bg-[#e8622c] text-white hover:bg-[#d4561f] h-11 min-h-[44px] px-6 text-sm font-semibold gap-2 shadow-lg shadow-orange-500/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
           render={<Link href="/productos" />}
         >
           <ShoppingBag className="size-4" data-icon="inline-start" />
@@ -50,7 +50,7 @@ export function HeroLeft({ isLoggedIn }: HeroLeftProps) {
         <Button
           size="lg"
           variant="outline"
-          className="h-11 px-6 text-sm font-semibold gap-2 border-slate-300 text-slate-700 hover:bg-slate-50 transition-all hover:-translate-y-0.5"
+          className="h-11 min-h-[44px] px-6 text-sm font-semibold gap-2 border-slate-300 text-slate-700 hover:bg-slate-50 transition-all hover:-translate-y-0.5"
           render={<Link href={isLoggedIn ? "/mis-productos/nuevo" : "/auth/sign-up"} />}
         >
           <Upload className="size-4" data-icon="inline-start" />

@@ -23,7 +23,7 @@ export function NavLinks() {
             key={href}
             href={href}
             className={cn(
-              "flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm transition-colors lg:px-3.5",
+              "flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-2 min-h-[44px] text-sm transition-colors lg:px-3.5",
               isActive
                 ? "bg-slate-100 font-semibold text-foreground"
                 : "font-medium text-muted-foreground hover:bg-slate-50 hover:text-foreground"

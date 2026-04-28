@@ -33,7 +33,7 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO (Two-column premium layout)
       ═══════════════════════════════════════════════════ */}
-      <section className="relative min-h-[600px] lg:min-h-[680px] overflow-hidden bg-slate-50">
+      <section className="relative min-h-[60vh] lg:min-h-screen overflow-hidden bg-slate-50">
         {/* ── Full-bleed background image (right-aligned on desktop) ── */}
         <div className="absolute inset-0">
           <Image
@@ -43,6 +43,7 @@ export default async function Home() {
             className="object-cover object-[75%_top] lg:object-[65%_top]"
             priority
             sizes="100vw"
+            quality={60}
           />
         </div>
 
@@ -82,9 +83,9 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 2 — VALUE PROPOSITIONS
       ═══════════════════════════════════════════════════ */}
-      <section className="relative z-20 pt-8 pb-16 sm:pt-10 sm:pb-20">
+      <section className="relative z-20 py-12 px-4 sm:pt-10 sm:pb-20 sm:px-0">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-4 sm:gap-6 sm:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3">
             <Card className="group border-0 bg-card/80 backdrop-blur-md shadow-xl shadow-black/5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
               <CardContent className="flex flex-col items-center p-6 sm:p-8 text-center">
                 <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/10 to-orange-400/5 ring-1 ring-orange-500/10 group-hover:scale-110 transition-transform duration-300">
@@ -129,7 +130,7 @@ export default async function Home() {
           SECTION 4 — COMMUNITY / ¿CÓMO FUNCIONA SNOWMARKET?
           (Market image + text)
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-secondary/30 py-16 sm:py-24 overflow-hidden">
+      <section className="bg-secondary/30 py-12 sm:py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Image */}
@@ -154,7 +155,7 @@ export default async function Home() {
                 <Heart className="size-3" />
                 Nuestra Comunidad
               </Badge>
-              <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl mb-6">
+              <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl mb-6">
                 ¿Cómo funciona AndesMarket?
               </h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
@@ -170,14 +171,14 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-4">
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="flex items-start gap-3">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                     <Recycle className="size-5 text-primary" />
                   </div>
                   <div>
                     <p className="font-heading text-sm font-semibold">Sustentable</p>
-                    <p className="text-xs text-muted-foreground">Dale nueva vida a tu equipo</p>
+                    <p className="text-sm text-muted-foreground">Dale nueva vida a tu equipo</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -186,7 +187,7 @@ export default async function Home() {
                   </div>
                   <div>
                     <p className="font-heading text-sm font-semibold">Local</p>
-                    <p className="text-xs text-muted-foreground">Enfocado en la RM</p>
+                    <p className="text-sm text-muted-foreground">Enfocado en la RM</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -195,7 +196,7 @@ export default async function Home() {
                   </div>
                   <div>
                     <p className="font-heading text-sm font-semibold">Envío incluido</p>
-                    <p className="text-xs text-muted-foreground">Gestión puerta a puerta</p>
+                    <p className="text-sm text-muted-foreground">Gestión puerta a puerta</p>
                   </div>
                 </div>
               </div>
@@ -218,7 +219,7 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 5 — GESTIÓN Y LOGÍSTICA
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-background py-16 sm:py-24 overflow-hidden">
+      <section className="bg-background py-12 sm:py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Text */}
@@ -227,7 +228,7 @@ export default async function Home() {
                 <Truck className="size-3" />
                 Gestión y Logística
               </Badge>
-              <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl mb-6">
+              <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl mb-6">
                 Compra con confianza en la nieve
               </h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
@@ -319,7 +320,7 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 6 — DEPARTAMENTOS / ARRIENDO SIN COMPLICACIONES
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-background py-16 sm:py-24 overflow-hidden">
+      <section className="bg-background py-12 sm:py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Text (left on desktop) */}
@@ -328,7 +329,7 @@ export default async function Home() {
                 <Building2 className="size-3" />
                 Departamentos
               </Badge>
-              <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl mb-6">
+              <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl mb-6">
                 Arrienda tu departamento en la nieve
               </h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
@@ -385,14 +386,14 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 7 — COMMISSIONS & TRANSPARENCY
       ═══════════════════════════════════════════════════ */}
-      <section id="comisiones" className="bg-background py-16 sm:py-24">
+      <section id="comisiones" className="bg-background py-12 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <Badge variant="secondary" className="mb-4 gap-1.5">
               <Percent className="size-3" />
               Transparencia
             </Badge>
-            <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
               Comisiones claras, sin sorpresas
             </h2>
             <p className="mt-3 mx-auto max-w-2xl text-muted-foreground">
@@ -400,36 +401,40 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-border/70 bg-card">
-            <div className="grid grid-cols-12 border-b border-border/70 bg-secondary/40 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:px-6">
-              <p className="col-span-5 sm:col-span-4">Servicio</p>
-              <p className="col-span-3 sm:col-span-2">Comisión</p>
-              <p className="col-span-4 sm:col-span-3">Incluye</p>
-              <p className="hidden sm:block sm:col-span-3">Ideal para</p>
+          {/* Mobile: stacked cards / Desktop: table grid */}
+          <div className="overflow-x-auto rounded-2xl border border-border/70 bg-card">
+            {/* Desktop table header */}
+            <div className="hidden sm:grid grid-cols-12 border-b border-border/70 bg-secondary/40 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <p className="col-span-4">Servicio</p>
+              <p className="col-span-2">Comisión</p>
+              <p className="col-span-3">Incluye</p>
+              <p className="col-span-3">Ideal para</p>
             </div>
 
-            <div className="grid grid-cols-12 items-start gap-y-2 border-b border-border/60 px-4 py-4 sm:px-6">
-              <div className="col-span-5 sm:col-span-4">
+            {/* Row 1 - Departamentos */}
+            <div className="flex flex-col gap-2 border-b border-border/60 px-4 py-4 sm:grid sm:grid-cols-12 sm:items-start sm:gap-y-2 sm:px-6">
+              <div className="sm:col-span-4">
                 <p className="font-heading text-sm font-semibold">Departamentos</p>
-                <p className="text-xs text-muted-foreground">Arriendos administrados</p>
+                <p className="text-sm text-muted-foreground">Arriendos administrados</p>
               </div>
-              <p className="col-span-3 sm:col-span-2 text-sm font-semibold text-primary">7%</p>
-              <p className="col-span-4 sm:col-span-3 text-sm text-muted-foreground">
+              <p className="text-lg font-bold text-primary sm:text-sm sm:font-semibold sm:col-span-2">7%</p>
+              <p className="text-sm text-muted-foreground sm:col-span-3">
                 Publicación, calendario y soporte de reservas.
               </p>
-              <p className="col-span-12 sm:col-span-3 text-sm text-muted-foreground">Propietarios que quieren gestionar su propiedad con visibilidad local.</p>
+              <p className="text-sm text-muted-foreground sm:col-span-3">Propietarios que quieren gestionar su propiedad con visibilidad local.</p>
             </div>
 
-            <div className="grid grid-cols-12 items-start gap-y-2 px-4 py-4 sm:px-6">
-              <div className="col-span-5 sm:col-span-4">
+            {/* Row 2 - Artículos con gestión */}
+            <div className="flex flex-col gap-2 px-4 py-4 sm:grid sm:grid-cols-12 sm:items-start sm:gap-y-2 sm:px-6">
+              <div className="sm:col-span-4">
                 <p className="font-heading text-sm font-semibold">Artículos con gestión</p>
-                <p className="text-xs text-muted-foreground">Servicio premium</p>
+                <p className="text-sm text-muted-foreground">Servicio premium</p>
               </div>
-              <p className="col-span-3 sm:col-span-2 text-sm font-semibold text-amber-600">10%</p>
-              <p className="col-span-4 sm:col-span-3 text-sm text-muted-foreground">
+              <p className="text-lg font-bold text-amber-600 sm:text-sm sm:font-semibold sm:col-span-2">10%</p>
+              <p className="text-sm text-muted-foreground sm:col-span-3">
                 Búsqueda, gestión de compra y logística puerta a puerta.
               </p>
-              <p className="col-span-12 sm:col-span-3 text-sm text-muted-foreground">Compradores que buscan comodidad y entrega asistida.</p>
+              <p className="text-sm text-muted-foreground sm:col-span-3">Compradores que buscan comodidad y entrega asistida.</p>
             </div>
           </div>
         </div>
@@ -438,7 +443,7 @@ export default async function Home() {
       {/* ═══════════════════════════════════════════════════
           SECTION 9 — CONTACT / HELP
       ═══════════════════════════════════════════════════ */}
-      <section className="bg-background py-16 sm:py-20">
+      <section className="bg-background py-12 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
@@ -546,26 +551,26 @@ export default async function Home() {
               <h4 className="font-heading text-sm font-semibold uppercase tracking-wider text-primary-foreground/80 mb-4">
                 Marketplace
               </h4>
-              <ul className="space-y-2.5 text-sm text-primary-foreground/60">
+              <ul className="space-y-1 text-sm text-primary-foreground/60">
                 <li>
-                  <Link href="/productos" className="hover:text-primary-foreground transition-colors">
+                  <Link href="/productos" className="inline-flex min-h-[44px] items-center hover:text-primary-foreground transition-colors">
                     Productos
                   </Link>
                 </li>
                 <li>
-                  <Link href="/categorias" className="hover:text-primary-foreground transition-colors">
+                  <Link href="/categorias" className="inline-flex min-h-[44px] items-center hover:text-primary-foreground transition-colors">
                     Categorías
                   </Link>
                 </li>
                 <li>
-                  <Link href="/departamentos" className="hover:text-primary-foreground transition-colors">
+                  <Link href="/departamentos" className="inline-flex min-h-[44px] items-center hover:text-primary-foreground transition-colors">
                     Departamentos
                   </Link>
                 </li>
                 <li>
                   <Link
                     href={user ? "/mis-productos/nuevo" : "/auth/sign-up"}
-                    className="hover:text-primary-foreground transition-colors"
+                    className="inline-flex min-h-[44px] items-center hover:text-primary-foreground transition-colors"
                   >
                     {user ? "Publicar Equipo" : "Registrarse"}
                   </Link>
@@ -578,10 +583,10 @@ export default async function Home() {
               <h4 className="font-heading text-sm font-semibold uppercase tracking-wider text-primary-foreground/80 mb-4">
                 Categorías
               </h4>
-              <ul className="space-y-2.5 text-sm text-primary-foreground/60">
+              <ul className="space-y-1 text-sm text-primary-foreground/60">
                 {Object.entries(CATEGORY_LABELS).slice(0, 4).map(([key, label]) => (
                   <li key={key}>
-                    <Link href={`/productos?category=${key}`} className="hover:text-primary-foreground transition-colors">
+                    <Link href={`/productos?category=${key}`} className="inline-flex min-h-[44px] items-center hover:text-primary-foreground transition-colors">
                       {label}
                     </Link>
                   </li>
@@ -594,26 +599,26 @@ export default async function Home() {
               <h4 className="font-heading text-sm font-semibold uppercase tracking-wider text-primary-foreground/80 mb-4">
                 Contacto
               </h4>
-              <ul className="space-y-2.5 text-sm text-primary-foreground/60">
+              <ul className="space-y-1 text-sm text-primary-foreground/60">
                 <li>
                   <a
                     href={`https://wa.me/${ADMIN_WHATSAPP.replace(/[^0-9]/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5"
+                    className="hover:text-primary-foreground transition-colors inline-flex min-h-[44px] items-center gap-1.5"
                   >
                     <Phone className="size-3.5" />
                     WhatsApp
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:contacto@andes-market.cl" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
+                  <a href="mailto:contacto@andes-market.cl" className="hover:text-primary-foreground transition-colors inline-flex min-h-[44px] items-center gap-1.5">
                     <Mail className="size-3.5" />
                     contacto@andes-market.cl
                   </a>
                 </li>
                 <li>
-                  <Link href="/productos" className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5">
+                  <Link href="/productos" className="hover:text-primary-foreground transition-colors inline-flex min-h-[44px] items-center gap-1.5">
                     <HelpCircle className="size-3.5" />
                     Explorar productos
                   </Link>
@@ -623,7 +628,7 @@ export default async function Home() {
                     href={`https://wa.me/${ADMIN_WHATSAPP.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hola, tengo dudas frecuentes sobre publicar en AndesMarket")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5"
+                    className="hover:text-primary-foreground transition-colors inline-flex min-h-[44px] items-center gap-1.5"
                   >
                     <MessageCircle className="size-3.5" />
                     Preguntas frecuentes

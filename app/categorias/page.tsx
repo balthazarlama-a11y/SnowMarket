@@ -65,7 +65,7 @@ export default async function CategoriasPage() {
             <LayoutGrid className="size-3" />
             Catálogo
           </Badge>
-          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
             Explora por categoría
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">

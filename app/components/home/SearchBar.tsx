@@ -37,7 +37,7 @@ export function SearchBar() {
 
       <button
         type="submit"
-        className="shrink-0 bg-[#e8622c] hover:bg-[#d4561f] text-white font-semibold px-6 py-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8622c]"
+        className="shrink-0 bg-[#e8622c] hover:bg-[#d4561f] text-white font-semibold px-6 py-3 min-h-[44px] min-w-[44px] text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8622c]"
       >
         Buscar
       </button>

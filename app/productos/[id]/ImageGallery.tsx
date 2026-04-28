@@ -25,6 +25,7 @@ export function ImageGallery({ images, title }: { images: string[]; title: strin
           fill
           className="object-cover"
           sizes="(max-width: 1024px) 100vw, 60vw"
+          quality={80}
           priority={activeIndex === 0}
         />
         {images.length > 1 && (
@@ -32,7 +33,7 @@ export function ImageGallery({ images, title }: { images: string[]; title: strin
             <button
               type="button"
               onClick={prev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 flex size-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+              className="absolute left-2 top-1/2 -translate-y-1/2 flex size-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
               aria-label="Imagen anterior"
             >
               <ChevronLeft className="size-5" />
@@ -40,7 +41,7 @@ export function ImageGallery({ images, title }: { images: string[]; title: strin
             <button
               type="button"
               onClick={next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 flex size-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex size-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
               aria-label="Imagen siguiente"
             >
               <ChevronRight className="size-5" />

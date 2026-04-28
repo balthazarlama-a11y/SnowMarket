@@ -68,15 +68,15 @@ export function MobileNav({ user, isAdmin }: MobileNavProps) {
               {user ? "Publicar Equipo" : "Registrarse"}
             </Button>
             <Separator className="my-2" />
-            <Button variant="ghost" className="justify-start" render={<Link href="/productos" />} onClick={() => setOpen(false)}>
+            <Button variant="ghost" className="justify-start min-h-[44px]" render={<Link href="/productos" />} onClick={() => setOpen(false)}>
               <ShoppingBag className="size-4" data-icon="inline-start" />
               Productos
             </Button>
-            <Button variant="ghost" className="justify-start" render={<Link href="/categorias" />} onClick={() => setOpen(false)}>
+            <Button variant="ghost" className="justify-start min-h-[44px]" render={<Link href="/categorias" />} onClick={() => setOpen(false)}>
               <LayoutGrid className="size-4" data-icon="inline-start" />
               Categorías
             </Button>
-            <Button variant="ghost" className="justify-start" render={<Link href="/departamentos" />} onClick={() => setOpen(false)}>
+            <Button variant="ghost" className="justify-start min-h-[44px]" render={<Link href="/departamentos" />} onClick={() => setOpen(false)}>
               <Building2 className="size-4" data-icon="inline-start" />
               Departamentos
             </Button>
@@ -84,7 +84,7 @@ export function MobileNav({ user, isAdmin }: MobileNavProps) {
             {user && (
               <>
                 <Separator className="my-2" />
-                <Button variant="ghost" className="justify-start" render={<Link href="/mis-productos" />} onClick={() => setOpen(false)}>
+                <Button variant="ghost" className="justify-start min-h-[44px]" render={<Link href="/mis-productos" />} onClick={() => setOpen(false)}>
                   <Package className="size-4" data-icon="inline-start" />
                   Mis Productos
                 </Button>

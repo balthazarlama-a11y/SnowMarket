@@ -33,7 +33,7 @@ export function Stats() {
           </div>
           <div className="min-w-0">
             <p className="text-xs font-bold text-slate-800 leading-tight">{stat.title}</p>
-            <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{stat.desc}</p>
+            <p className="text-xs text-slate-500 leading-tight mt-0.5">{stat.desc}</p>
           </div>
         </div>
       ))}
